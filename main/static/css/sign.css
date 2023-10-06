@@ -1,0 +1,90 @@
+:root{
+--white:#f2f2f2;
+--black:#00000090;
+--primaryTextColor: #ffffff80; /*light white */
+--secondaryTextColor: #FF1111;/*red color*/
+--headingFont:Arial Verdana;
+--paraFont:Popins Sans-sarif;
+}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+.container{
+width:100vw;
+height:100vh;
+background:#010409;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+h2{
+font-family:Arial Verdana;
+color:#ffffff80;
+font-size:3em;
+margin-bottom:.5em;
+padding:.2em;
+}
+
+form{
+border:1px solid var(--white);
+width:80%;
+display:flex;
+flex-direction:column;
+gap:.5em;
+padding:.5em;
+color: var(--primaryTextColor);
+}
+form div{
+width:100%;
+margin:.5em 0;
+padding:.5em;
+}
+
+form div label{
+display:block;
+font-size:1em;
+font-family:Arial;
+margin:.5em;
+font-weight:600;
+color:var(--secondaryTextColor);
+}
+form div .input{
+width:100%;
+}
+form input[type="text"],form input[type="password"],
+form input[type="email"],form input[type="number"]
+{
+width:100%;
+padding:1em;
+background:C9D0D6;
+font-weight:600;
+color:var(--secondaryTextColor);
+}
+
+form  input[type="submit"]{
+padding:.5em;
+font-weight:600;
+width:50%;
+border-radius:.5em;
+font-family:Arial;
+border: none;
+cursor: pointer;
+font-weight: bold;
+transition: background-color 0.3s ease;
+}
+input[type="submit"]:hover {
+    color: var(--secondaryTextColor); /* red color on hover */
+}
+
+div h5{
+text-align:center;
+}
+div h5 a{
+text-decoration:none;
+font-size:.8;
+color:#ffffff80;
+}

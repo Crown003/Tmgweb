@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/UserProfile.css' %}"/>
+{% endblock %}
+{% block title %} UserProfile {% endblock %}
+{% block body %}
+<div class="profileContainer">
+	<div class="userDetailsContainer">
+		<div class="userDetails">
+				<h2> Hello {{ user.username }}!</h2>
+				<h4> Email : {{ user.email }}</h4>
+				<div class="profileButtons">
+					{% if "none" in user.userprofile.role %}
+					<div id="myOrder" class="neumo"> <img src="static/images/Account.png"></div>
+					<div id="myCart" class="neumo"> <img src="static/images/Cart.png">  </div>
+					{% endif %}
+					<a href="{% url 'EditUserProfile' %}"><div id="editProfile" class="neumo"><img style="padding:1em;" src="static/images/Pen.png"><p>Edit Profile</p> </div></a>
+					<div id="createTeam"  onclick="showCreateTeam()" class="neumo"> <img style="padding:1em;" src="static/images/Add.png"><p>Add Team</p> </div>
+					{% if user.is_staff %}
+						<a href="{% url 'Management' %}"><div id="managementSiteButton" class="neumo"><img src=""></div></a>
+					{% endif %}
+				</div>
+		</div>
+		<div class="userImage">
+			<img src="{{ request.user.userprofile.user_profile_image }}">
+		</div>
+	</div>
+	<!-- Create Team Form Using Create Team Btn -->
+	<div id="createTeamForm" class="createTeamFormCont">
+		<div id="closeCreateTeamBtn" onclick="hideCreateTeam()"> 
+			&#10060;
+		</div>
+		<h1>Create Team</h1>
+		<form action="#" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<div style="display:flex;justify-content:center;">
+					<input id="createTeamSubmit" onclick="hideCreateTeam()" type="submit" value="Submit"/>
+			</div>
+		</form>
+	</div>
+	<!-- Teams of user -->
+		<div class="teamContainer">
+		{% if teamData.count != 0 %}
+		<H2>YOUR TEAMS</H2>
+			<Table class ="teamTable">
+				<thead>
+					<tr>
+						<td>TEAMNAME</td>
+						<td>TEAMBIO</td>
+						<td>TEAM GAME</td>
+						<td>PLAYERS </td>
+					</tr>
+				</thead>
+				<tbody>
+					{% for team in teamData %}
+						<tr>
+							<td>{{ team.teamname }}</td>
+							<td>{{ team.teamBio }}</td>
+							<td>{{ team.game }}</td>
+							<td>{{ team.numberOfPlayers }}</td>
+							<td style="border:transparent"><a class="editBtn" href="{% url 'EditTeamDetails'  team.id %}">Edit</a></td>
+							<td style="border:transparent"><a class="deleteBtn" href='delTeam/{{ team.id }}'>Delete</a></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</Table>
+			{% else %}
+				<h2> No Team Exist. Create a new team.</h2>
+			{% endif %}
+		</div>
+		<!-- Team details of user-->
+</div>
+{% endblock %}
+{% block script %}
+<script>
+function showCreateTeam() {
+	let element = document.getElementById("createTeamForm");
+	element.style.display = "block";
+	};
+function hideCreateTeam() {
+	let element = document.getElementById("createTeamForm")
+	element.style.display = "none";
+	};
+//let createTeamBtn = documents.getElementById("createTeam").addEventListner("click", showCreateTeam);
+//let createTeamSubBtn = documents.getElementById("createTeamSubmit").addEventListner("click",hideCreateTeam);
+</script> 
+{% endblock %}

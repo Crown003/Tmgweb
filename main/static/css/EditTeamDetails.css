@@ -1,0 +1,29 @@
+.EditTeamContainer{
+width:100%;
+}
+.EditTeamFormCont{
+width:90%;
+margin:0 auto;
+background:var(--white);
+}
+.EditTeamFormCont form p label{
+color:var(--black);
+}
+
+.EditTeamFormCont form p input,
+.EditTeamFormCont form p select,
+.EditTeamFormCont form p textarea{
+width:100%;
+padding:.5em;
+color:var(--navBgColor);
+}
+.EditTeamFormCont form p{
+display:flex;
+flex-direction:column;
+padding:.5em;
+}
+.EditTeamFormCont form div input[type="submit"]{
+margin:1em;
+width:60%;
+padding:.5em;
+}

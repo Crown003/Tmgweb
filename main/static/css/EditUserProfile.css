@@ -1,0 +1,49 @@
+.EditUserContainer{
+width:100%;
+position:relative;
+top:4.5em;
+}
+.FormContainer{
+width:95%;
+padding:1em;
+margin:0 auto;
+display:flex;
+flex-direction:column;
+background:var(--white);
+}
+.FormContainer form p span{
+disply:block;
+color:var(--black);
+font-family:sans-sarif;
+font-weight:500;
+font-size:1rem;
+}
+.FormContainer form p label{
+display:block;
+font-size:1em;
+font-family:Arial;
+margin:.3em;
+font-weight:600;
+color:var(--black);
+}
+.FormContainer form p input,.FormContainer form p select{
+width:100%;
+padding:1em;
+color:var(--navBgColor);
+font-weight:600;
+}
+.FormContainer form div input[type="submit"]{
+padding:.5em;
+width:50%;
+border-radius:.5em;
+font-size:1em;
+margin:.9em;
+font-family:Arial;
+border: 1px solid black;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+.FormContainer form div input[type="submit"]:hover {
+    color: var(--navBgColor); /* red color on hover */
+    border: 2px solid var(--navBgColor);
+}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block cssPath %}<link rel="stylesheet" href="static/css/management.css"/>{% endblock %}
+{% block title %} managementArea {% endblock %}
+{% block body %}
+<div class="managementAreaContainer">
+	<div class="formContainer">
+		<form action="#" method="POST">
+			{% csrf_token %}
+				<div>
+					{{ form.game.label }}
+					<p class="input">{{ form.game }}</p>
+				</div>
+				<div>
+					{{ form.group.label }}
+					<p class="input" >{{ form.group }}</p>
+				</div>
+				<div>
+					{{ form.roomDate.label }}
+					<p class="input" >{{ form.roomDate }}</p>
+				</div>
+				<div>
+					{{ form.roomStartTiming.label }}
+					<p class="input" >{{ form.roomStartTiming }}</p>
+				</div>
+				<div>
+					{{ form.roomId.label }}
+					<p class="input" >{{ form.roomId }}</p>
+				</div>
+				<div>
+					{{ form.roomPassword.label }}
+					<p class="input" >{{ form.roomPassword }}</p>
+				</div>
+				<div style="display:flex;justify-content:center;">
+					<input type="submit" value="Submit"/>
+				</div>
+			</form>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/EditTeamDetails.css' %}"/>{% endblock %}
+{% block title %} UserProfile | EditTeam {% endblock %}
+{% block body %}
+<div class="EditTeamContainer">
+	<div class="userDetailsContainer">
+		<div class="userDetails">
+				<h2> Hello {{ user.username }}!</h2>
+				<h4> Email : {{ user.email }}</h4>
+		</div>
+		<div class="userImage">
+			<img src="#">
+		</div>
+	</div>
+	<!-- Create Team Form Using Create Team Btn -->
+	<div id="EditTeamForm" class="EditTeamFormCont">
+		<h1>Edit Your Team Details</h1>
+		<form action="#" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<table>
+		        {{ form.team_members.management_form }}
+		        {% for form in form.team_members %}
+		            {{ form.as_p }}
+		        {% endfor %}
+    		</table>
+			<div style="display:flex;justify-content:center;">
+					<input id="EditTeamSubmit" type="submit" value="Submit"/>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

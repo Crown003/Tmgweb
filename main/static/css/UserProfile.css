@@ -1,0 +1,160 @@
+.profileContainer{
+width:100%;
+position:relative;
+display:flex;
+flex-direction:column;
+align-items:center;
+top:4.5em;
+background:#000;
+}
+.userDetailsContainer{
+display:flex;
+width:95%;
+background:var(--white);
+padding:1em;
+margin-bottom:1em;
+justify-content:space-around;
+}
+.userDetails{
+width:60%;
+display:flex;
+flex-direction:column;
+gap:1em;
+}
+.userImage{
+width:20%;
+}
+.userImage img{
+width:100%;
+}
+.userDetails h2{
+color:var(--black);
+font-family:var(--headingFont);
+align-self:left;
+font-weight:800;
+font-size:3em;
+}
+.userDetails h4{
+color:var(--black);
+font-family:var(--headingFont);
+align-self:left;
+font-weight:500;
+font-size:1.5em;
+}
+.profileButtons{
+display:flex;
+gap:1em;
+justify-content:flex-start;
+padding-left:5em;
+}
+.neumo{
+width:5em;
+height:5em;
+border-radius: 25px;
+background: #e0e0e0;
+box-shadow:  11px 11px 17px #b5b5b5,
+             -11px -11px 17px #ffffff;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+a{
+text-decoration:none;
+color:black;
+}
+.neumo img{
+width:80%;
+}
+.neumo p{
+font-weight:600;
+text-align:center;
+font-size: .5em;
+}
+.createTeamFormCont{
+margin:1em auto;
+width:95%;
+border-radius:1em;
+padding:1em;
+border:2px solid #ffffff;
+background:#f2f2f2;
+position:relative;
+display:none;
+}
+.createTeamFormCont h1{
+padding-left:.2em;
+font-family:var(--headingFont);
+}
+form p{
+display:flex;
+padding:.2em;
+align-items:center;
+}
+form p label{
+align-self:flex-start;
+padding:.5em;
+}
+form p input,form p select,form p textarea{
+width:80%;
+padding:.5em;
+color:var(--navBgColor);
+}
+form p textarea{
+height:5em;
+}
+form div input[type="submit"]{
+width:60%;
+padding:.2em;
+background:var(--navBgColor);
+color:#fff;
+font-weight:600;
+font-size:1em;
+margin-top:.5em;
+border:none;
+}
+#closeCreateTeamBtn{
+	position:absolute;
+	top:1em;
+	right:1em;
+}
+.teamContainer{
+background:#fff;
+width:95%;
+min-height:10vh;
+padding:.5em;
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+}
+.teamContainer h2{
+color:var(--black);
+font-family:var(--headingFont);
+font-size:2em;
+paddig:.2em;
+}
+.teamTable{
+border-spacing:.5em;
+}
+.teamTable tbody tr,.teamTable thead tr{
+background:#ff000070;
+text-align:center;
+font-family:var(--headingFont);
+font-size:1.2em;
+}
+.teamTable tbody tr{
+background:transparent;
+}
+.teamTable tbody tr td a{
+text-decoration:none;
+}
+.editBtn,.deleteBtn{
+padding:.2em;
+color:#fff;
+border-radius:.2em;
+}
+.editBtn{
+background:green;
+}
+.deleteBtn{
+background:red;
+}
+.teamTable tbody tr td,.teamTable thead tr td{border:1px solid black}

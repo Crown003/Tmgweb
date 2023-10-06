@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block cssPath %}<link rel="stylesheet" href="static/css/EditUserProfile.css"/>{% endblock %}
+{% block title %} UserProfile {% endblock %}
+{% block body %}
+<div class="EditUserContainer">
+	<div class="FormContainer">	
+		<h1>EDIT YOUR PROFILE</h1>
+		<form action="{% url 'EditUserProfile' %}" method="POST">
+			{% csrf_token %}	
+			{{ user_form.as_p }}
+			{{ profile_form.as_p }}
+			<div style="display:flex;justify-content:center;">
+					<input id="EditUserSubmit" type="submit" value="Submit"/>
+			</div>
+		</form>
+	</div>	
+{% endblock %}
