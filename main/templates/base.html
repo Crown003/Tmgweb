@@ -16,7 +16,8 @@
 			<li><a href="{% url 'Home' %}">Home</a></li>
 			<li><a href="{% url 'Contact' %}">Contact Us</a></li>
 			{% if user.is_authenticated %}
-			<li><a href="{% url 'UserProfile' %}">{{ user.username }}</a>
+			<li><a href="{% url 'UserProfile' %}">{{ user.username }}</a></li>
+			<li><a href="{% url 'Tournament' %}"> TOURNAMENTS </a></li>
 			<Button style="margin-left:1em;padding:.5em 1.5em;"class="signbtn"><a href="{% url  'SignOut'%}">Log Out</a></Button>
 			{% else %}
 			<Button class="signbtn"><a href="{% url  'SignIn'%}">SignIn</a></Button>	

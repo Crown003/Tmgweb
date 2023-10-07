@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/Tournaments.css' %}"/>
+{% endblock %}
+{% block title %} managementArea {% endblock %}
+{% block body %}
+<div class="TournamentBaseContainer" >
+<section class="gameSection">
+	<h2>BGMI TOURNAMENTS</h2>
+	{% if bgmiTournaments.count < 1 %}
+		<h2>Comming soon</h2>
+	{% else %}
+		{% for tournament in bgmiTournaments %}
+			<div class="gamebox">
+				<h4>{{ tournament.name }}</h4>
+				<Button>Register</Button>
+			</div>
+	{% endfor %}
+	{% endif %}
+</section>
+<section class="gameSection">
+</section>
+<section class="gameSection">
+</section>
+<section class="gameSection">
+</section>
+</div>
+{% endblock %}

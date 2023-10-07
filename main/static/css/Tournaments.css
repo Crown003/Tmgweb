@@ -1,0 +1,21 @@
+.TournamentBaseContainer{
+padding-top:5em;
+width:100%;
+display:flex;
+flex-direction:column;
+gap:1em;
+}
+.gameSection{
+width:100%;
+height:15vh;
+background:var(--white);
+display:flex;
+}
+.gamebox{
+width:5em;
+background:#fff;
+border-radius:10px;
+}
+.gamebox h4{
+color:var(--black);
+}

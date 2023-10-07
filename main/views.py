@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .forms import (UserResistration,UserLogin,MatchData,
 CreateTeamForm,EditProfileForm,EditTeamForm,EditUserForm,UserRegRoleForm)
-from .models import UserProfile,Team,Tournament,RegOfTournaments
+from .models import UserProfile,Team,Tournament,RegOfTournaments,Game
 from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
@@ -145,6 +145,10 @@ def viewTournament(request,id):
 	tournament = Tournament.objects.get(id=id)
 	registered_teams = RegOfTournaments.objects.filter(tournament=tournament)
 	slots_left = (tournament.slots - len(registered_teams))
-	for details in registered_teams:
-		print(details.team)
 	return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})
+
+def TournamentPage(request):
+	bgmi_game = Game.objects.get(name="Battle Ground Mobile India")
+	BgmiTourny = Tournament.objects.filter(game=bgmi_game)
+	#CocTourny = BgmiTourny = Tournament.objects.filter(game="Clash of Clans")
+	return render(request,"Tournaments.html",{"bgmiTournaments":BgmiTourny})#,"cocTournaments":CocTourny})
