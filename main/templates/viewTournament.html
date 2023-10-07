@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/viewTournament.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
+{% endblock %}
+{% block title %} ViewTournament {% endblock %}
+{% block body %}
+<div class="DataContainer">
+	<h1> Tournament {{ tourny }} | <span> slots left: {{ slots_left }}</h1>
+	<div class="RegTourneyDetails">
+	<table class="teamTable">
+		<thead>
+		<tr>
+			<td> Team Name</td>
+			<td> Registered On</td>
+			<td> Registered By</td>
+		</tr>
+		</thead>
+		<tbody>
+		{% for  details in tournamentDetails %}
+		<tr>
+			<td>{{ details.team.teamname }}</td>
+			<td>{{ details.regOn }}</td>
+			<td>{{ details.regBy }}</td>
+		</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	</div>
+</div>
+{% endblock %}

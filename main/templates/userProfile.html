@@ -17,8 +17,8 @@
 					{% endif %}
 					<a href="{% url 'EditUserProfile' %}"><div id="editProfile" class="neumo"><img style="padding:1em;" src="static/images/Pen.png"><p>Edit Profile</p> </div></a>
 					<div id="createTeam"  onclick="showCreateTeam()" class="neumo"> <img style="padding:1em;" src="static/images/Add.png"><p>Add Team</p> </div>
-					{% if user.is_staff %}
-						<a href="{% url 'Management' %}"><div id="managementSiteButton" class="neumo"><img src=""></div></a>
+					{% if user.is_staff or request.user.userprofile.is_organiser %}
+						<a href="{% url 'Management' %}"><div id="managementSiteButton" class="neumo"><img style="padding:.5em;" src="static/images/Management.png"><p>Management</p></div></a>
 					{% endif %}
 				</div>
 		</div>

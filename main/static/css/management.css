@@ -2,7 +2,19 @@
 padding-top:5em;
 width:100%;
 }
-.formContainer{
+.organiserDetails{
+width:95%;
+background:var(--white);
+margin:0 auto;
+}
+.organiserDetails h2{
+font-family:var(--headingFont);
+font-size:2em;
+color:var(--black);
+padding:.5em;
+text-transform:uppercase;
+}
+/*.formContainer{
 width:100%;
 display:flex;
 flex-direction:column;
@@ -56,5 +68,6 @@ font-weight: bold;
 transition: background-color 0.3s ease;
 }
 input[type="submit"]:hover {
-    color: var(--navBgColor); /* red color on hover */
+    color: var(--navBgColor);  red color on hover 
 }
+*/

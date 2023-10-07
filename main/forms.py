@@ -7,11 +7,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from django.forms import formset_factory
 
-ROLE_CHOICES= [
-    ('teamManager', 'Team Manager'),
-    ('player', 'Player'),
-    ('none', 'Guest'),
-    ]
 
 class UserResistration(forms.Form):
 	username = forms.CharField()
@@ -39,10 +34,15 @@ class EditUserForm(UserChangeForm):
 				del self.fields[field_name]
 		
 class EditProfileForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = [ 'roles', 'selected_games']
-    
+	class Meta:
+		model = UserProfile
+		fields = [ 'roles', 'selected_games']
+	def __init__(self, *args, **kwargs):
+		super(EditProfileForm, self).__init__(*args, **kwargs)   
+		selected_games = self.instance.selected_games.all()        
+		for game in selected_games:
+			self.fields[f"{game}.replace(" ","")_id"] = forms.CharField(label=f"{game} ID", required=False)
+			self.fields[f"{game}.replace(" ","")_ign"] = forms.CharField(label=f"{game} IGN", required=False)
 
 class MatchData(forms.Form):
 	#game = forms.CharField(widget=forms.Select(choices=GAME_CHOICES))
@@ -53,24 +53,24 @@ class MatchData(forms.Form):
 	roomPassword = forms.CharField()
 
 class CreateTeamForm(forms.ModelForm):
-    class Meta:
-        model = Team
-        fields = ['teamname', 'teamBio', 'game','numberOfPlayers']
-        exclude = ['members']
-        def __init__(self, *args, **kwargs):
-        	super().__init__(*args, **kwargs)
-        	self.fields["teamname"].label = 'Team Name'
-	        self.fields["game"].label = 'Select Game'
-	        self.fields["game"].queryset = Game.objects.all()  # Provide a queryset of available games
+	class Meta:
+		model = Team
+		fields = ['teamname', 'teamBio', 'game','numberOfPlayers']
+		exclude = ['members']
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields["teamname"].label = 'Team Name'
+		self.fields["game"].label = 'Select Game'
+		self.fields["game"].queryset = Game.objects.all()  # Provide a queryset of available games
 
 class TeamMemberForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['email','username']  # Include other fields as needed
-        def __init__(self, *args, **kwargs):
-        	super().__init__(*args, **kwargs)
-        	self.fields['email'].label = "EMAIL"
-        	self.fields['username'].label = "PLAYER"
+	class Meta:
+		model = User
+		fields = ['email','username']
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['email'].label = "EMAIL"
+		self.fields['username'].label = "PLAYER"
 
 
 TeamMemberFormSet = formset_factory(TeamMemberForm, extra=5)
@@ -80,8 +80,9 @@ class EditTeamForm(forms.ModelForm):
 		model = Team
 		fields = ['teamname', 'teamBio', 'game','numberOfPlayers']
 		#exclude = ['members']
-		def __init__(self, *args, **kwargs):
-			super().__init__(*args, **kwargs)
-			self.fields[0].label = 'Team Name'
-			self.fields[2].label = 'Select Game'
-			self.fields[2].queryset = Game.objects.all()  # Provide a queryset of available games
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['teamname'].label = 'Team Name'
+		self.fields['game'].label = 'Selected Game'
+		#self.fields['game'].widget.attrs['disabled'] = True
+		self.fields['game'].queryset = Game.objects.all()  # Provide a queryset of available games

@@ -1,0 +1,15 @@
+.DataContainer{
+padding-top:5em;
+width:100%;
+background:var(--white)
+}
+.DataContainer h1{
+color:var(--black);
+}
+.RegTourneyDetails{
+background:#fff;
+width:100%;
+}
+.RegTourneyDetails p{
+color:var(--black);
+}

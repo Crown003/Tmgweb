@@ -6,24 +6,16 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .forms import (UserResistration,UserLogin,MatchData,
 CreateTeamForm,EditProfileForm,EditTeamForm,EditUserForm,UserRegRoleForm)
-from .models import UserProfile,Team
-#from django.contrib import sessions
+from .models import UserProfile,Team,Tournament,RegOfTournaments
 from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 def manageSite(request):
-	form = MatchData()
-	if request.method == "POST":
-		form = MatchData(request.POST)
-		if form.is_valid():
-			game = form.cleaned_data["game"].strip().lower()
-			group = form.cleaned_data["group"]
-			roomDate = form.cleaned_data["roomDate"]
-			roomStartTiming = form.cleaned_data["roomStartTiming"]
-			roomId = form.cleaned_data["roomId"]
-			roompassword = form.cleaned_data["roomPassword"]
-			print(game,group,roomDate,roomStartTiming,roomId,roompassword)
-	return render(request,"managementSite.html",{"form":form})
+	if request.user.userprofile.is_organiser != True:
+		messages.warning(request,"You are not a organiser.")
+		return redirect("UserProfile")
+	orgTourny = Tournament.objects.filter(manager=request.user)
+	return render(request,"managementSite.html",{"tournaments":orgTourny})
 
 def UserSignIn(request):
 	form = UserLogin()
@@ -93,13 +85,12 @@ def userProfile(request):
 			teamBio = data.cleaned_data["teamBio"]
 			game= data.cleaned_data["game"]
 			numberOfPlayers = data.cleaned_data["numberOfPlayers"]
-			try:
-				task = Team(creator=creator,teamname=teamname,teamBio=teamBio,game=game,numberOfPlayers=numberOfPlayers)
-				task.save()
-				messages.success(request,"Team created successfully.")
-			except Exception as e:
-				messages.error(request,e)
-				print(e)
+			task = Team(creator=creator,teamname=teamname,teamBio=teamBio,game=game,numberOfPlayers=numberOfPlayers)
+			task.save()
+			messages.success(request,"Team created successfully.")		
+		else:
+			messages.warning(request,"error")
+			return redirect("UserProfile")
 	return render(request,"userProfile.html",{"form":createTeam, "teamData":TeamData})
 
 def editUserProfile(request):
@@ -141,10 +132,19 @@ def deleteTeam(request,id):
 def editTeamDetails(request,id):
     instance = Team.objects.get(creator=request.user,id=id)	
     form = EditTeamForm(instance=instance)
-    print(form.team_members)
     if request.method == "POST":
     	form = EditTeamForm(request.POST,instance=instance)
     	if form.is_valid():
-    		messages.success(request,"DATA REACHED.")
-    		print(request.POST)
+    		form.save()
+    		messages.success(request,"Prodile Updated successfully.")
+    	else:
+    		messages.warning(request,"Check Your details properly & Try again.")
     return render(request,"EditTeamDetails.html",{"form":form})		
+
+def viewTournament(request,id):
+	tournament = Tournament.objects.get(id=id)
+	registered_teams = RegOfTournaments.objects.filter(tournament=tournament)
+	slots_left = (tournament.slots - len(registered_teams))
+	for details in registered_teams:
+		print(details.team)
+	return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})

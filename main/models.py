@@ -9,12 +9,18 @@ class Game(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_organiser = models.BooleanField(default=False)
     user_profile_image = models.ImageField(upload_to="images/",default="static/images/Profile.png")
     roles = models.ManyToManyField('Role', related_name='user_profiles')
     selected_games = models.ManyToManyField(Game)  # Assuming you have a Game model
-    bgmi_id = models.CharField(max_length=100,default="None")
-    bgmi_ign = models.CharField(max_length=100,default="None")
-    
+    BatttleGroundMobileIndia_id = models.CharField(max_length=100,default="None")
+    BatttleGroundMobileIndia_ign = models.CharField(max_length=100,default="None")
+    Volrant_id = models.CharField(max_length=100,default="None")
+    Volrant_ign = models.CharField(max_length=100,default="None")
+    ClashofClans_id = models.CharField(max_length=100,default="None")
+    ClashofClans_ign = models.CharField(max_length=100,default="None")
+    CallOfDuty_id = models.CharField(max_length=100,default="None")
+    CallOfDuty_ign = models.CharField(max_length=100,default="None")
     def __str__(self):
         return f"{self.user.username}"
 
@@ -30,21 +36,25 @@ class MyIntegerChoices(models.IntegerChoices):
     OPTION3 = 6, '6 players'
 		
 class Team(models.Model):
-	creator = models.ForeignKey(User,null=True,on_delete=models.CASCADE,related_name="team")
+	creator = models.ForeignKey(User,null=True,on_delete=models.CASCADE,related_name="teamCreator")
 	created_on = models.DateTimeField(auto_now_add=True)
-	teamname = models.CharField("Team Name",max_length=40,blank=False,unique=False)
+	teamname = models.CharField("Team Name",max_length=40,blank=False,unique=True)
 	teamBio = models.TextField("Description",max_length=250,blank=False)
-	game= models.OneToOneField(Game, on_delete=models.CASCADE,related_name="game")   
+	game= models.ForeignKey(Game, blank=True,null=True,on_delete=models.CASCADE,related_name="game")   
 	numberOfPlayers = models.IntegerField(choices=MyIntegerChoices.choices)
-	members = models.ManyToManyField(User, related_name='teams', blank=True)		
+	members = models.ManyToManyField(User, related_name='teamMembers', blank=True)		
 	def __str__(self):
 		return f"{self.teamname}"
 
 class Tournament(models.Model):
+	manager = models.ManyToManyField(User,related_name="tournamentManagers")
 	name = models.CharField(max_length=100)
+	game = models.OneToOneField(Game,related_name="tournamentGame", blank=True,on_delete=models.CASCADE,default="")
 	main_image = models.ImageField(upload_to="images/",blank=True,null=True)
-	logo = models.ImageField(upload_to="images/")
+	logo = models.ImageField(upload_to="images/",blank=True,null=True)
 	slots = models.IntegerField("SLOTS",blank=True)
+	is_paid = models.BooleanField(default=False)
+	price = models.IntegerField(default=0)
 	starts_on = models.DateTimeField()
 	ends_on = models.DateTimeField()
 	def __str__(self):
@@ -53,7 +63,7 @@ class Tournament(models.Model):
 class RegOfTournaments(models.Model):
 	regOn = models.DateTimeField(auto_now_add=True)
 	regBy = models.OneToOneField(User,related_name='registeredBy', blank=True,on_delete=models.CASCADE)
-	tournament = models.OneToOneField(Tournament, related_name='teams', blank=True,on_delete=models.CASCADE)
-	team = models.OneToOneField(Team, related_name='teams', blank=True,on_delete=models.CASCADE)
+	tournament = models.OneToOneField(Tournament, related_name='tournament', blank=True,on_delete=models.CASCADE)
+	team = models.OneToOneField(Team, related_name='teamName', blank=True,on_delete=models.CASCADE)
 	def __str__(self):
 		return str(self.tournament)+str(self.team)

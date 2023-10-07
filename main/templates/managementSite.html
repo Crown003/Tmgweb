@@ -1,39 +1,40 @@
 {% extends "base.html" %}
-{% block cssPath %}<link rel="stylesheet" href="static/css/management.css"/>{% endblock %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/management.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
+{% endblock %}
 {% block title %} managementArea {% endblock %}
 {% block body %}
 <div class="managementAreaContainer">
-	<div class="formContainer">
-		<form action="#" method="POST">
-			{% csrf_token %}
-				<div>
-					{{ form.game.label }}
-					<p class="input">{{ form.game }}</p>
-				</div>
-				<div>
-					{{ form.group.label }}
-					<p class="input" >{{ form.group }}</p>
-				</div>
-				<div>
-					{{ form.roomDate.label }}
-					<p class="input" >{{ form.roomDate }}</p>
-				</div>
-				<div>
-					{{ form.roomStartTiming.label }}
-					<p class="input" >{{ form.roomStartTiming }}</p>
-				</div>
-				<div>
-					{{ form.roomId.label }}
-					<p class="input" >{{ form.roomId }}</p>
-				</div>
-				<div>
-					{{ form.roomPassword.label }}
-					<p class="input" >{{ form.roomPassword }}</p>
-				</div>
-				<div style="display:flex;justify-content:center;">
-					<input type="submit" value="Submit"/>
-				</div>
-			</form>
+	<div class="organiserDetails">
+		<h2>{{ request.user }}</h2>
+		<div class="teamContainer" style="margin:0 auto;width:100%;">
+		{% if tournaments.count != 0 %}
+		<H2>YOUR TOURNAMENTS</H2>
+			<Table class ="teamTable">
+				<thead>
+					<tr>
+						<td>TOURNAMENT NAME</td>
+						<td>TOURNAMENT GAME</td>
+						<td>TOTAL SLOTS</td>
+					</tr>
+				</thead>
+				<tbody>
+					{% for tourny in tournaments %}
+						<tr>
+							<td>{{ tourny.name }}</td>
+							<td>{{ tourny.game }}</td>
+							<td>{{ tourny.slots }}</td>
+							<td><a href="{% url 'ViewTourny' tourny.id %}">View</a></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</Table>
+			{% else %}
+				<h2> No Tournament Exist. Launch a Tournament.</h2>
+			{% endif %}
+		</div>
 	</div>
 </div>
 {% endblock %}
