@@ -1,5 +1,5 @@
 #pylint:disable=E1101
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render,HttpResponse,redirect,get_list_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
@@ -147,8 +147,13 @@ def viewTournament(request,id):
 	slots_left = (tournament.slots - len(registered_teams))
 	return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})
 
+def fetch_tournaments(game_name):
+    try:
+        game = Game.objects.get(name=game_name)
+        tournaments = Tournament.objects.filter(game=game)
+        return tournaments
+    except Game.DoesNotExist:
+        return []
+
 def TournamentPage(request):
-	bgmi_game = Game.objects.get(name="Battle Ground Mobile India")
-	BgmiTourny = Tournament.objects.filter(game=bgmi_game)
-	#CocTourny = BgmiTourny = Tournament.objects.filter(game="Clash of Clans")
-	return render(request,"Tournaments.html",{"bgmiTournaments":BgmiTourny})#,"cocTournaments":CocTourny})
+    return render(request, "Tournaments.html", {"bgmiTournaments": fetch_tournaments("Battle Ground Mobile India"), "cocTournaments": fetch_tournaments("Clash Of Clans"), "codmTournaments": fetch_tournaments("Call Of Duty Mobile"),"volrantTournaments":fetch_tournaments("Volrant")})

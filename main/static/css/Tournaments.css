@@ -3,19 +3,48 @@ padding-top:5em;
 width:100%;
 display:flex;
 flex-direction:column;
-gap:1em;
 }
 .gameSection{
 width:100%;
 height:15vh;
 background:var(--white);
 display:flex;
+padding:.5em;
+margin-bottom:1em;
+gap:1em;
+spacing:1em;
 }
-.gamebox{
-width:5em;
+.gameBox{
+width:10em;
 background:#fff;
 border-radius:10px;
+box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+transition: 0.3s;
 }
-.gamebox h4{
-color:var(--black);
+.gameBox:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+.gameBox .gameBoxDetails{
+color:var(--white);
+background:var(--black);
+padding:.2em;
+display:flex;
+flex-direction:column;
+justify-content:center;
+height:40%;
+}
+.gameBoxImgCont{
+height:60%;
+width:100%;
+padding:.3em;
+}
+.gameBoxDetails h4{
+font-size:.8em;
+font-family:var(--headingFont);
+}
+.gameBoxDetails Button{
+padding:.2em;
+background:#00ff0080;
+color:var(--white);
+border-radius:.1em;
 }

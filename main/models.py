@@ -49,12 +49,16 @@ class Team(models.Model):
 class Tournament(models.Model):
 	manager = models.ManyToManyField(User,related_name="tournamentManagers")
 	name = models.CharField(max_length=100)
-	game = models.OneToOneField(Game,related_name="tournamentGame", blank=True,on_delete=models.CASCADE,default="")
+	description = models.TextField(null=True)
+	game = models.ForeignKey(Game,related_name="tournamentGame", blank=True,on_delete=models.CASCADE,default="")
 	main_image = models.ImageField(upload_to="images/",blank=True,null=True)
 	logo = models.ImageField(upload_to="images/",blank=True,null=True)
 	slots = models.IntegerField("SLOTS",blank=True)
+	pricePool = models.IntegerField(default=0)
 	is_paid = models.BooleanField(default=False)
-	price = models.IntegerField(default=0)
+	priceOfSlot = models.IntegerField(default=0)
+	registrations_starts_from = models.DateTimeField(null=True,auto_now_add=True)
+	registrations_ends_on = models.DateTimeField(null=True)
 	starts_on = models.DateTimeField()
 	ends_on = models.DateTimeField()
 	def __str__(self):

@@ -39,12 +39,15 @@ margin-left:2em;
 .logo a{
 text-decoration:none;
 color:var(--secondaryTextColor);
+font-style:bold;
+text-transform:capitalize;
+font-family:var(--headingFont);
 }
 .navbar ul{
 align-self:flex-end;
 display:flex;
-gap:5rem;
-padding:.8em 1em;
+gap:2em;
+padding:.8em 0;
 margin-right:2em;
 }
 .navbar ul li{
@@ -57,6 +60,9 @@ text-decoration:none;
 color:var(--primaryBgColor);
 font-size:1em;
 position:relative;
+font-style:bold;
+text-transform:capitalize;
+font-family:var(--headingFont);
 }
 .navbar ul li a::before,.navbar ul a::before{
 content:"";
