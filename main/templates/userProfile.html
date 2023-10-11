@@ -16,7 +16,7 @@
 					<div id="myCart" class="neumo"> <img src="static/images/Cart.png">  </div>
 					{% endif %}
 					<a href="{% url 'EditUserProfile' %}"><div id="editProfile" class="neumo"><img style="padding:1em;" src="static/images/Pen.png"><p>Edit Profile</p> </div></a>
-					<div id="createTeam"  onclick="showCreateTeam()" class="neumo"> <img style="padding:1em;" src="static/images/Add.png"><p>Add Team</p> </div>
+					<div id="createTeam"   class="neumo"> <img style="padding:1em;" src="static/images/Add.png"><p>Add Team</p> </div>
 					{% if user.is_staff or request.user.userprofile.is_organiser %}
 						<a href="{% url 'Management' %}"><div id="managementSiteButton" class="neumo"><img style="padding:.5em;" src="static/images/Management.png"><p>Management</p></div></a>
 					{% endif %}
@@ -28,7 +28,7 @@
 	</div>
 	<!-- Create Team Form Using Create Team Btn -->
 	<div id="createTeamForm" class="createTeamFormCont">
-		<div id="closeCreateTeamBtn" onclick="hideCreateTeam()"> 
+		<div id="closeCreateTeamBtn" > 
 			&#10060;
 		</div>
 		<h1>Create Team</h1>
@@ -36,7 +36,7 @@
 			{% csrf_token %}
 			{{ form.as_p }}
 			<div style="display:flex;justify-content:center;">
-					<input id="createTeamSubmit" onclick="hideCreateTeam()" type="submit" value="Submit"/>
+					<input id="createTeamSubmit"  type="submit" value="Submit"/>
 			</div>
 		</form>
 	</div>
@@ -83,7 +83,11 @@ function hideCreateTeam() {
 	let element = document.getElementById("createTeamForm")
 	element.style.display = "none";
 	};
-//let createTeamBtn = documents.getElementById("createTeam").addEventListner("click", showCreateTeam);
-//let createTeamSubBtn = documents.getElementById("createTeamSubmit").addEventListner("click",hideCreateTeam);
-</script> 
+let createTeamBtn = document.getElementById("createTeam")
+createTeamBtn.addEventListener("click", showCreateTeam);
+let createTeamSubBtn = document.getElementById("createTeamSubmit")
+createTeamSubBtn.addEventListener("click",hideCreateTeam);
+let closeFormBtn = document.getElementById("closeCreateTeamBtn")
+closeFormBtn.addEventListener("click",hideCreateTeam);
+</script>
 {% endblock %}

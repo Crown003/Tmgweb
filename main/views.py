@@ -1,10 +1,10 @@
 #pylint:disable=E1101
-from django.shortcuts import render,HttpResponse,redirect,get_list_or_404
+from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
-from .forms import (UserResistration,UserLogin,MatchData,
+from .forms import (UserRegistration,UserLogin,MatchData,
 CreateTeamForm,EditProfileForm,EditTeamForm,EditUserForm,UserRegRoleForm)
 from .models import UserProfile,Team,Tournament,RegOfTournaments,Game
 from django.contrib.auth import update_session_auth_hash
@@ -27,15 +27,14 @@ def UserSignIn(request):
 			user = authenticate(request,username=username,password=password)
 			if user is not None:
 				login(request,user)
+				messages.success(request,"Logged In successfully.")
 				return redirect("Home")
 	return render(request,"SignIn.html",{"signinform":form})
 	
 def UserSignUp(request):
-	form = UserResistration()
-	user_role_form = UserRegRoleForm()
+	form = UserRegistration()
 	if request.method == "POST":
-		data = UserResistration(request.POST)
-		role = UserRegRoleForm(request.POST)
+		data = UserRegistration(request.POST)
 		if data.is_valid():
 			username = data.cleaned_data["username"].strip().lower()
 			email = data.cleaned_data["email"].lower()
@@ -44,18 +43,14 @@ def UserSignUp(request):
 			user.set_password(password)
 			user.save()
 			user_profile = UserProfile.objects.create(user=user)
-			user_profile.save()	
-			if role.is_valid():
-				role.save()
-			form = UserResistration()
-			return redirect("SignIn")
-	return render(request,"SignUp.html",{"signupform":form,"user_role_form":user_role_form})
+			user_profile.save()
+			messages.success(request,"Your account created successfully.")	
+		form = UserRegistration()
+		return redirect("SignIn")
+	return render(request,"SignUp.html",{"signupform":form})
+
 
 def signout(request):
-	request.session.flush()
-	request.session["user"] = ""
-	request.session["csrftoken"] = ""
-	request.session["sessionid"] = ""
 	logout(request)	
 	messages.success(request,"Loggedout Successfully.")
 	return redirect("Home")
@@ -126,7 +121,7 @@ def deleteTeam(request,id):
 		messages.success(request,"Team Deleted successfully.")
 		return redirect("UserProfile")
 	except Exception as e:
-		print(e)
+		messages.error(request,"Something wents wrong unable to delete your team at this moment try agin later.")
 		return redirect("UserProfile")
 
 def editTeamDetails(request,id):
@@ -141,19 +136,25 @@ def editTeamDetails(request,id):
     		messages.warning(request,"Check Your details properly & Try again.")
     return render(request,"EditTeamDetails.html",{"form":form})		
 
-def viewTournament(request,id):
-	tournament = Tournament.objects.get(id=id)
-	registered_teams = RegOfTournaments.objects.filter(tournament=tournament)
-	slots_left = (tournament.slots - len(registered_teams))
-	return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})
+def viewTournamentPage(request,id):
+	#this window is for user side tournament view.
+	tournamentDetails = Tournament.objects.get(id=id)
+	return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
 
-def fetch_tournaments(game_name):
-    try:
-        game = Game.objects.get(name=game_name)
-        tournaments = Tournament.objects.filter(game=game)
-        return tournaments
-    except Game.DoesNotExist:
-        return []
+def viewTournament(request,id):
+	#this window is for organiser side tournament view.
+	if request.user.userprofile.is_organiser == True:
+		tournament = Tournament.objects.get(id=id)
+		registered_teams = RegOfTournaments.objects.filter(tournament=tournament)
+		slots_left = (tournament.slots - len(registered_teams))
+		return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})
+	else:
+		return redirect("Home")
 
 def TournamentPage(request):
-    return render(request, "Tournaments.html", {"bgmiTournaments": fetch_tournaments("Battle Ground Mobile India"), "cocTournaments": fetch_tournaments("Clash Of Clans"), "codmTournaments": fetch_tournaments("Call Of Duty Mobile"),"volrantTournaments":fetch_tournaments("Volrant")})
+	try:
+		games = Game.objects.all()
+		tournaments = Tournament.objects.all()
+	except Game.DoesNotExist:
+		messages.warning(request,"Something wents wrong. Unable to get tournaments at this moment please try again later after some time. ")
+	return render(request, "Tournaments.html", {"games":games if games else [],"tournaments":tournaments if tournaments else []})

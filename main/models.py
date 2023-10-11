@@ -47,6 +47,7 @@ class Team(models.Model):
 		return f"{self.teamname}"
 
 class Tournament(models.Model):
+	organiser = models.CharField(max_length=100,default="Tmg esports.")
 	manager = models.ManyToManyField(User,related_name="tournamentManagers")
 	name = models.CharField(max_length=100)
 	description = models.TextField(null=True)

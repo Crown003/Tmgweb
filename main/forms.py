@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.forms import formset_factory
 
 
-class UserResistration(forms.Form):
+class UserRegistration(forms.Form):
 	username = forms.CharField()
 	email = forms.EmailField()
 	password = forms.CharField(widget=forms.PasswordInput())

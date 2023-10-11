@@ -26,7 +26,7 @@
 							<td>{{ tourny.name }}</td>
 							<td>{{ tourny.game }}</td>
 							<td>{{ tourny.slots }}</td>
-							<td><a href="{% url 'ViewTourny' tourny.id %}">View</a></td>
+							<td><a href="{% url 'OrgViewTournament' tourny.id %}">View</a></td>
 						</tr>
 					{% endfor %}
 				</tbody>

@@ -6,92 +6,26 @@
 {% block title %} managementArea {% endblock %}
 {% block body %}
 <div class="TournamentBaseContainer" >
-<h2 style="color:#fff;">BATTLE GROUND MOBILE INDIA TOURNAMENTS</h2>
+{% for game in games %}
+<h2 style="color:#fff;text-transform:uppercase;">{{ game }} TOURNAMENTS</h2>
 <section class="gameSection">
-	{% if bgmiTournaments.count < 1 %}
-		<h2>Comming soon</h2>
-	{% else %}
-		{% for tournament in bgmiTournaments %}
-		<div class="gameBox">
-			<div class="gameBoxImgCont">
-			  <img src="{% static 'images/Main.webp' %}" alt="Avatar" style="width:100%;">
-			 </div>
-			  <div class="gameBoxDetails">
-			    <h4><b>{{ tournament.name }}</b></h4>
-			    <p>Total Slots :{{ tournament.slots }}</p>
-			    <p>PricePool : {{ tournament.pricePool }}</p>
-			    <p>Paid: {{ tournament.is_paid }}</p>
-			    <Button>REGISTER</Button>
+	{% for tournament in tournaments %}
+		{% if tournament.game == game %}		
+			  <div class="gameBox">
+				<div class="gameBoxImgCont">
+				  <img src="{% static 'images/Main.webp' %}" alt="Avatar" style="width:100%;">
+				 </div>
+				  <div class="gameBoxDetails">
+				    <h4><b>{{ tournament.name }}</b></h4>
+				    <p>Total Slots :{{ tournament.slots }}</p>
+				    <p>PricePool : {{ tournament.pricePool }}</p>
+				    <p>Paid: {{ tournament.is_paid }}</p>
+				    <a href="{% url 'UserViewTournament' tournament.id %}"><Button>View</Button></a>
+				  </div>
 			  </div>
-		  </div>
+		{% endif %}
 	{% endfor %}
-	{% endif %}
 </section>
-<h2 style="color:#fff;">CLASH OF CLANS TOURNAMENTS</h2>
-<section class="gameSection">
-{% if cocTournaments.count < 1 %}
-		<h2>Comming soon</h2>
-	{% else %}
-		{% for tournament in cocTournaments %}
-		<div class="gameBox">
-			<div class="gameBoxImgCont">
-			  <img src="{% static 'images/Main.webp' %}" alt="Avatar" style="width:100%;">
-			 </div>
-			  <div class="gameBoxDetails">
-			    <h4><b>{{ tournament.name }}</b></h4>
-			    <p>Total Slots :{{ tournament.slots }}</p>
-			    <p>PricePool : {{ tournament.pricePool }}</p>
-			    <p>Paid: {{ tournament.is_paid }}</p>
-			    <p>PricePool : {{ tournament.pricePool }}</p>
-			    <p>Paid: {{ tournament.is_paid }}</p>
-			    <Button>REGISTER</Button>
-			  </div>
-		  </div>
-	{% endfor %}
-	{% endif %}
-</section>
-<h2 style="color:#fff;">CALL OF DUTY MOBILE TOURNAMENTS</h2>
-<section class="gameSection">
-{% if codmTournaments.count < 1 %}
-		<h2>Comming soon</h2>
-	{% else %}
-		{% for tournament in codmTournaments %}
-		<div class="gameBox">
-			<div class="gameBoxImgCont">
-			  <img src="{% static 'images/Main.webp' %}" alt="Avatar" style="width:100%;">
-			 </div>
-			  <div class="gameBoxDetails">
-			    <h4><b>{{ tournament.name }}</b></h4>
-			    <p>Total Slots :{{ tournament.slots }}</p>
-			    <p>PricePool : {{ tournament.pricePool }}</p>
-			    <p>Paid: {{ tournament.is_paid }}</p>
-			    <Button>REGISTER</Button>
-			  </div>
-		  </div>
-	{% endfor %}
-	{% endif %}
-</section>
-
-<h2 style="color:#fff;">VOLRANT TOURNAMENTS</h2>
-<section class="gameSection">
-{% if volrantTournaments.count < 1 %}
-		<h2>Comming soon</h2>
-	{% else %}
-		{% for tournament in volrantTournaments %}
-		<div class="gameBox">
-			<div class="gameBoxImgCont">
-			  <img src="{% static 'images/Main.webp' %}" alt="Avatar" style="width:100%;">
-			 </div>
-			  <div class="gameBoxDetails">
-			    <h4><b>{{ tournament.name }}</b></h4>
-			    <p>Total Slots :{{ tournament.slots }}</p>
-			    <p>PricePool : {{ tournament.pricePool }}</p>
-			    <p>Paid: {{ tournament.is_paid }}</p>
-			    <Button>REGISTER</Button>
-			  </div>
-		  </div>
-	{% endfor %}
-	{% endif %}
-</section>
+{% endfor %}
 </div>
 {% endblock %}

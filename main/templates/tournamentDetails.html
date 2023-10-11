@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tournamentDetails.css' %}"/>
+{% endblock %}
+{% block title %} UserProfile {% endblock %}
+{% block body %}
+<main class="tournamentDetailsContainer">
+<div class="mainImg">
+	<img src="{% static 'images/MainBg.jpg' %}">
+</div>
+<section class="detailsSection">
+	<h2>{{ tournament.name }} | organisedBy : <span>{{ tournament.organiser }}</span></h2>
+	<h3>PRICEPOOL : {{ tournament.pricePool }}</h3>
+	<p>TOTAL SLOTS : {{ tournament.slots }} | Paid : {{ tournament.is_paid }}</p>
+	<p> PRICE (per slot): {{ tournament.priceOfSlot }}
+	<p>REGISTRATIONS STARTS FROM : {{ tournament.registrations_starts_from }}</p>
+	<p>REGISTRATIONS ENDS ON : {{ tournament.registrations_ends_on }}</p>
+</section>
+<div class="registerBtn">
+	<a><button>Register</button></a>
+</div>
+</main>
+{% endblock %}

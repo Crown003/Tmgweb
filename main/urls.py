@@ -17,5 +17,7 @@ urlpatterns = [
     path("editTeamDetails/<int:id>",views.editTeamDetails,name="EditTeamDetails"),
     path("delTeam/<int:id>",views.deleteTeam,name="DeleteTeam"),
     path("tournamentPage",views.TournamentPage,name="Tournament"),
-    path("tournament/<int:id>",views.viewTournament,name="ViewTourny"),
+    path("tournamentDetails/<int:id>",views.viewTournamentPage,name="UserViewTournament"),
+    path("orgainsertournamentDetails/<int:id>",views.viewTournament,name="OrgViewTournament"),
+
 ] + static("/media/",document_root = os.path.join(os.path.abspath(__file__),"/media/"))

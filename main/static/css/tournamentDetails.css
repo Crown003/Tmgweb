@@ -1,0 +1,72 @@
+.tournamentDetailsContainer{
+padding-top:4em;
+width:95%;
+margin:0 auto;
+background:var(--white);
+}
+.mainImg{
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+.mainImg img{
+width:100%;
+height:auto;
+}
+
+.detailsSection{
+padding:1em .5em;
+	
+	& h2{
+		font-family:var(--headingFont);
+		font-size:2.2em;
+		color:var(--black);
+		line-height:1em;
+		text-transform:capitalize;
+	}
+	& h2 span{
+		 background:var(--navBgColor);
+		 color:var(--white);
+		 padding:0 .5em;
+		 border-radius:.4em;
+	}
+	& h3{
+	font-family:var(--headingFont);
+	font-size:2em;
+	color:var(--black);
+	}
+	&p{
+	color:var(--black);
+	font-size:1.5em;
+	font-style:var(--paraFont);
+	font-weight:500;
+	line-height:.5em;
+	}
+}
+.registerBtn{
+padding:1em;
+display:flex;
+border:1px solid green;
+justify-content:center;
+	& a{
+	text-decoration:none;
+	width:70%;
+	}
+	& a button{
+		width:100%;
+		text-align:center;
+		text-transform:uppercase;
+		background:#2AAA8A;
+		color:var(--white);
+		border:transparent;
+		border-radius:.4em;
+		padding:.3em;
+		font-weight:700;
+		font-family:var(--paraFont);
+		font-size:1em
+		}
+	& :hover{
+			background:#2ADA8A;
+		}
+}
