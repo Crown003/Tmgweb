@@ -8,7 +8,7 @@ from .forms import (UserRegistration,UserLogin,MatchData,
 CreateTeamForm,EditProfileForm,EditTeamForm,EditUserForm,UserRegRoleForm)
 from .models import UserProfile,Team,Tournament,RegOfTournaments,Game
 from django.contrib.auth import update_session_auth_hash
-
+from django.db import IntegrityError
 # Create your views here.
 def manageSite(request):
 	if request.user.userprofile.is_organiser != True:
@@ -137,12 +137,27 @@ def editTeamDetails(request,id):
     return render(request,"EditTeamDetails.html",{"form":form})		
 
 def viewTournamentPage(request,id):
-	#this window is for user side tournament view.
+	#this window is for user side tournament Details. view.
 	tournamentDetails = Tournament.objects.get(id=id)
+	if request.method == "POST":
+		selectedTeamId = request.POST.get("teamId")
+		regTeamDetails = Team.objects.get(id=int(selectedTeamId))
+		#print(regTeamDetails.numberOfPlayers,regTeamDetails.members.count())
+		if regTeamDetails.members.count() < 4:
+			messages.warning(request,"Your Team does'nt have 4 players, Complete your team and try again.")
+			return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
+		try:
+			RegOfTournaments.objects.create(regBy=request.user,tournament=tournamentDetails,team=regTeamDetails)
+			messages.success(request,"Registration successfull.")
+			return redirect("UserProfile")
+		except IntegrityError:
+			messages.warning(request,"Team already registered.")
+		except Exception:
+			messages.error(request,"Oops something wents wrong please try again after some time.")
 	return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
 
 def viewTournament(request,id):
-	#this window is for organiser side tournament view.
+	#this window is for organiser side tournament Details view.
 	if request.user.userprofile.is_organiser == True:
 		tournament = Tournament.objects.get(id=id)
 		registered_teams = RegOfTournaments.objects.filter(tournament=tournament)
@@ -152,6 +167,7 @@ def viewTournament(request,id):
 		return redirect("Home")
 
 def TournamentPage(request):
+	# this view shows the Tournaments on portal.
 	try:
 		games = Game.objects.all()
 		tournaments = Tournament.objects.all()

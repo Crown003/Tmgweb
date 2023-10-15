@@ -5,7 +5,7 @@ class Game(models.Model):
 	name = models.CharField(max_length=100, unique=True)
 	description = models.TextField()	
 	def __str__(self):
-		return f"{self.name}"
+		return str(self.name)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -22,7 +22,7 @@ class UserProfile(models.Model):
     CallOfDuty_id = models.CharField(max_length=100,default="None")
     CallOfDuty_ign = models.CharField(max_length=100,default="None")
     def __str__(self):
-        return f"{self.user.username}"
+        return str(self.user.username)
 
 class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
@@ -44,7 +44,7 @@ class Team(models.Model):
 	numberOfPlayers = models.IntegerField(choices=MyIntegerChoices.choices)
 	members = models.ManyToManyField(User, related_name='teamMembers', blank=True)		
 	def __str__(self):
-		return f"{self.teamname}"
+		return str(self.teamname)
 
 class Tournament(models.Model):
 	organiser = models.CharField(max_length=100,default="Tmg esports.")

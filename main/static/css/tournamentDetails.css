@@ -2,7 +2,7 @@
 padding-top:4em;
 width:95%;
 margin:0 auto;
-background:var(--white);
+position:relative;
 }
 .mainImg{
 width:100%;
@@ -17,7 +17,7 @@ height:auto;
 
 .detailsSection{
 padding:1em .5em;
-	
+background:var(--white);	
 	& h2{
 		font-family:var(--headingFont);
 		font-size:2.2em;
@@ -36,12 +36,12 @@ padding:1em .5em;
 	font-size:2em;
 	color:var(--black);
 	}
-	&p{
+	& p{
 	color:var(--black);
 	font-size:1.5em;
 	font-style:var(--paraFont);
 	font-weight:500;
-	line-height:.5em;
+	line-height:1.2em;
 	}
 }
 .registerBtn{
@@ -49,13 +49,10 @@ padding:1em;
 display:flex;
 border:1px solid green;
 justify-content:center;
-	& a{
-	text-decoration:none;
-	width:70%;
-	}
-	& a button{
+	& button{
 		width:100%;
 		text-align:center;
+		width:70%;
 		text-transform:uppercase;
 		background:#2AAA8A;
 		color:var(--white);
@@ -68,5 +65,80 @@ justify-content:center;
 		}
 	& :hover{
 			background:#2ADA8A;
+		}
+}
+.descriptionDetails{
+ padding:.5em;
+ background:var(--white);
+ 	& h2{
+	 	font-family:var(--headingFont);
+	 	font-size:2em;
+	 	color:var(--black);
+	 	line-height:1em;
+	 	text-transform:capitalize;
+	 	margin:.5em;
+		}
+	& p{
+		color:var(--black);
+		font-size:1em;
+		font-family:var(--paraFont);
+		font-weight:700;
+		line-height:1em;
+		}
+
+}
+#SelectTeamPopUp{
+position:absolute;
+background:#fff;
+width:95%;
+color:black;
+top:50%;
+left:2.5%;
+padding:.5em;
+transform: translateY(-50%);
+border-radius:1em;
+display:none;
+	& #closeRegTeamBtn{
+		position:absolute;
+		top:1.5em;
+		right:1em;
+		}
+	& h2{
+		text-align:center;
+		font-size:2em;
+		color:var(--black);
+		font-family:var(--headingFont);
+		margin:.5em;
+		}
+	& a{
+		text-decoration:none;
+		color:darked;
+		font-size:1.2em;
+		font-weight:600;
+	}
+	& form{
+		display:flex;
+		flex-direction:column;
+		align-items:center;
+		gap:1em;
+		padding:1em;
+		border:1px solid green;
+			& label{
+					font-size:1.5em;
+					font-weight:600;
+					font-family:var(--headingFont);
+					color:var(--black);
+				}
+			& input[type="submit"]{
+					background:#2AAA8A;
+					color:#f6f6f6;
+					width:50%;
+					padding:.5em;
+					text-transform:uppercase;
+					font-weight:900;
+					border-radius:.5em;
+					border:transparent;
+					font-size:1.5em;
+				}
 		}
 }

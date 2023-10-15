@@ -17,8 +17,54 @@
 	<p>REGISTRATIONS STARTS FROM : {{ tournament.registrations_starts_from }}</p>
 	<p>REGISTRATIONS ENDS ON : {{ tournament.registrations_ends_on }}</p>
 </section>
+<section id="SelectTeamPopUp">
+	<h2>SELECT YOUR TEAM</h2>
+	<div id="closeRegTeamBtn" > 
+			&#10060;
+	</div>
+	<form id="regForm" action="" method="post">
+	{% csrf_token %}
+	{% for team in user.teamCreator.all %}
+	<div>
+		<input type="text" hidden value="{{ team.id }}" name="teamId">
+		<label for="teamSelected">{{ team.teamname }} | {{ team.game }}</label>
+		<input type="radio" value="{{ team.teamname }}" name="teamSelected"><br>		
+	</div>
+	{% endfor %}
+	<h2> or </h2>
+	<a href="{% url 'UserProfile' %}"><p>CREATE TEAM</p></a>
+	<input id="submitRegData" type="submit" value="submit">
+	</form>
+</section>
 <div class="registerBtn">
-	<a><button>Register</button></a>
+	<button id="registerBtn">Register</button>
 </div>
+<section class="descriptionDetails">
+<div>
+<h2>ABOUT TOURNAMENT</h2>
+<p> {{tournament.description}}</p>
+</div>
+<div>
+</div>
+</section>
 </main>
+{% endblock %}
+{% block script %}
+<script>
+function showSelectTeam() {
+	let element = document.getElementById("SelectTeamPopUp");
+	element.style.display = "block";
+	};
+function hideSelectTeam() {
+	document.getElementById("regForm").reset();
+	let element = document.getElementById("SelectTeamPopUp");
+	element.style.display = "none";
+	};
+let registerBTN = document.getElementById("registerBtn")
+registerBTN.addEventListener("click", showSelectTeam);
+let SubBtn = document.getElementById("submitRegData")
+SubBtn.addEventListener("click",hideSelectTeam);
+let closeFormBtn = document.getElementById("closeRegTeamBtn")
+closeFormBtn.addEventListener("click",hideSelectTeam);
+</script>
 {% endblock %}
