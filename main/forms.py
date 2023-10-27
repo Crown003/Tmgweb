@@ -2,7 +2,7 @@
 #pylint:disable=E1126
 from django import forms
 from django.utils import timezone
-from main.models import UserProfile,Team,Game,Role
+from main.models import UserProfile,Team,Game,Role,Tournament
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 from django.forms import formset_factory
@@ -86,3 +86,19 @@ class EditTeamForm(forms.ModelForm):
 		self.fields['game'].label = 'Selected Game'
 		#self.fields['game'].widget.attrs['disabled'] = True
 		self.fields['game'].queryset = Game.objects.all()  # Provide a queryset of available games
+		
+class DateInput(forms.DateInput):
+	input_type = 'date'
+	def __init__(self, attrs=None, format='%Y-%m-%d'):
+		super().__init__(attrs={'data-date-format': format})
+
+class CreateTournament(forms.ModelForm):
+	class Meta:
+		model = Tournament
+		fields = "__all__"
+		exclude = ["registrations_starts_from"]	
+		widgets = {
+		"registrations_ends_on":DateInput(),
+		"starts_on":DateInput(),
+		"ends_on":DateInput(),	
+		}

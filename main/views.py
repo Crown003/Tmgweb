@@ -5,17 +5,26 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .forms import (UserRegistration,UserLogin,MatchData,
-CreateTeamForm,EditProfileForm,EditTeamForm,EditUserForm,UserRegRoleForm)
+CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,UserRegRoleForm)
 from .models import UserProfile,Team,Tournament,RegOfTournaments,Game
 from django.contrib.auth import update_session_auth_hash
 from django.db import IntegrityError
+from django.http import JsonResponse
+
 # Create your views here.
 def manageSite(request):
 	if request.user.userprofile.is_organiser != True:
 		messages.warning(request,"You are not a organiser.")
 		return redirect("UserProfile")
+	if request.method == "POST":
+		createTournament = CreateTournament(request.POST)
+		if createTournament.is_valid():
+			createTournament.save()
+			messages.success(request,"Tournament created successfully.")
+			return redirect("Management")
+	createTournament = CreateTournament()
 	orgTourny = Tournament.objects.filter(manager=request.user)
-	return render(request,"managementSite.html",{"tournaments":orgTourny})
+	return render(request,"managementSite.html",{"tournaments":orgTourny,"createTournamentForm":createTournament})
 
 def UserSignIn(request):
 	form = UserLogin()
@@ -131,9 +140,9 @@ def editTeamDetails(request,id):
     	form = EditTeamForm(request.POST,instance=instance)
     	if form.is_valid():
     		form.save()
-    		messages.success(request,"Prodile Updated successfully.")
+    		messages.success(request,"Team Details Updated successfully.")
     	else:
-    		messages.warning(request,"Check Your details properly & Try again.")
+    		messages.warning(request,"Invalid Data ! Check Your details properly & Try again.")
     return render(request,"EditTeamDetails.html",{"form":form})		
 
 def viewTournamentPage(request,id):

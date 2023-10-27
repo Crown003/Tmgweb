@@ -24,13 +24,19 @@
 	</div>
 	<form id="regForm" action="" method="post">
 	{% csrf_token %}
-	{% for team in user.teamCreator.all %}
-	<div>
-		<input type="text" hidden value="{{ team.id }}" name="teamId">
-		<label for="teamSelected">{{ team.teamname }} | {{ team.game }}</label>
-		<input type="radio" value="{{ team.teamname }}" name="teamSelected"><br>		
-	</div>
-	{% endfor %}
+	{% if user.teamCreator.all.count != 0 %}
+		{% for team in user.teamCreator.all %}
+		<div>
+			<input type="text" hidden value="{{ team.id }}" name="teamId">
+			<label for="teamSelected">{{ team.teamname }} | {{ team.game }}</label>
+			<input type="radio" value="{{ team.teamname }}" name="teamSelected"><br>		
+		</div>
+		{% endfor %}
+	{% else %}
+		<div>
+			<label>You have no Team created.</label>
+		</div>
+	{% endif %}
 	<h2> or </h2>
 	<a href="{% url 'UserProfile' %}"><p>CREATE TEAM</p></a>
 	<input id="submitRegData" type="submit" value="submit">

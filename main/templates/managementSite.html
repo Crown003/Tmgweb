@@ -9,6 +9,20 @@
 <div class="managementAreaContainer">
 	<div class="organiserDetails">
 		<h2>{{ request.user }}</h2>
+		<h3>email : {{ request.user.email }}</h3>
+		<Button id="createTourny" class="createTournyBtn">CREATE TOURNAMENT</Button>
+		<div id="formShow">
+			<div class="formContainer">
+				<form action="" method="post">
+				<div id="closeCreateTournamentBtn" > 
+					&#10060;
+				</div>
+				{% csrf_token %}
+				{{ createTournamentForm.as_p }}
+				<input type="submit" value="SUBMIT">
+				</form>
+			</div>
+		</div>
 		<div class="teamContainer" style="margin:0 auto;width:100%;">
 		{% if tournaments.count != 0 %}
 		<H2>YOUR TOURNAMENTS</H2>
@@ -37,4 +51,20 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+function showForm(){
+let form = document.getElementById("formShow")
+form.style.display = "block";
+}
+function hideForm(){
+let form = document.getElementById("formShow")
+form.style.display = "none";
+}
+let OpenFormBtn = document.getElementById("createTourny")
+OpenFormBtn.addEventListener("click",showForm);
+let CloseFormBtn = document.getElementById("closeCreateTournamentBtn")
+CloseFormBtn.addEventListener("click",hideForm)
+</script>
 {% endblock %}

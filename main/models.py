@@ -58,10 +58,10 @@ class Tournament(models.Model):
 	pricePool = models.IntegerField(default=0)
 	is_paid = models.BooleanField(default=False)
 	priceOfSlot = models.IntegerField(default=0)
-	registrations_starts_from = models.DateTimeField(null=True,auto_now_add=True)
-	registrations_ends_on = models.DateTimeField(null=True)
-	starts_on = models.DateTimeField()
-	ends_on = models.DateTimeField()
+	registrations_starts_from = models.DateField(null=True,auto_now_add=True)
+	registrations_ends_on = models.DateField(null=True)
+	starts_on = models.DateField()
+	ends_on = models.DateField()
 	def __str__(self):
 		return str(self.name)
 
