@@ -9,7 +9,7 @@ color:var(--black);
 .RegTourneyDetails{
 background:#fff;
 width:100%;
-}
-.RegTourneyDetails p{
-color:var(--black);
+	& .teamTable{
+		width:100%;
+	}
 }

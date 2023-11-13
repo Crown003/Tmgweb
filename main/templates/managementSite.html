@@ -10,7 +10,8 @@
 	<div class="organiserDetails">
 		<h2>{{ request.user }}</h2>
 		<h3>email : {{ request.user.email }}</h3>
-		<Button id="createTourny" class="createTournyBtn">CREATE TOURNAMENT</Button>
+	{% if request.user.userprofile.is_organiser %}
+    <Button id="createTournyBtn" class="createTournyBtn">CREATE TOURNAMENT</Button>
 		<div id="formShow">
 			<div class="formContainer">
 				<form action="" method="post">
@@ -22,8 +23,9 @@
 				<input type="submit" value="SUBMIT">
 				</form>
 			</div>
-		</div>
-		<div class="teamContainer" style="margin:0 auto;width:100%;">
+		{% endif %}
+		</div>	
+		<div class="teamContainer" style="margin:0 auto;width:95%;">
 		{% if tournaments.count != 0 %}
 		<H2>YOUR TOURNAMENTS</H2>
 			<Table class ="teamTable">
@@ -48,23 +50,29 @@
 			{% else %}
 				<h2> No Tournament Exist. Launch a Tournament.</h2>
 			{% endif %}
+			<div id="recived"></div>
 		</div>
 	</div>
 </div>
 {% endblock %}
 {% block script %}
 <script>
-function showForm(){
-let form = document.getElementById("formShow")
-form.style.display = "block";
-}
-function hideForm(){
-let form = document.getElementById("formShow")
-form.style.display = "none";
-}
-let OpenFormBtn = document.getElementById("createTourny")
+let createFromBtn = document.getElementById("createTournyBtn")
+let OpenFormBtn = document.getElementById("createTournyBtn")
 OpenFormBtn.addEventListener("click",showForm);
+
 let CloseFormBtn = document.getElementById("closeCreateTournamentBtn")
 CloseFormBtn.addEventListener("click",hideForm)
+
+function showForm(){
+	let form = document.getElementById("formShow")
+	form.style.display = "block";
+	createFromBtn.style.opacity = "0";
+}
+function hideForm(){
+	let form = document.getElementById("formShow")
+	form.style.display = "none";
+	createFromBtn.style.opacity = "1";
+}
 </script>
 {% endblock %}

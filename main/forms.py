@@ -2,10 +2,10 @@
 #pylint:disable=E1126
 from django import forms
 from django.utils import timezone
-from main.models import UserProfile,Team,Game,Role,Tournament
+from main.models import UserProfile,Team,Game,Role,Tournament,TeamMember
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
-from django.forms import formset_factory
+
 
 
 class UserRegistration(forms.Form):
@@ -65,26 +65,21 @@ class CreateTeamForm(forms.ModelForm):
 
 class TeamMemberForm(forms.ModelForm):
 	class Meta:
-		model = User
-		fields = ['email','username']
+		model = TeamMember
+		fields = "__all__"#["player_one","player_two","player_three","player_four","player_five","player_six"]
 	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		self.fields['email'].label = "EMAIL"
-		self.fields['username'].label = "PLAYER"
-
-
-TeamMemberFormSet = formset_factory(TeamMemberForm, extra=5)
+		super().__init__(*args, **kwargs)# Iterate through all fields and add a class
+		for field in self.fields:
+			self.fields[field].widget.attrs['class'] = 'team-member-username'
+		
 class EditTeamForm(forms.ModelForm):
-	team_members = TeamMemberFormSet()
 	class Meta:
 		model = Team
-		fields = ['teamname', 'teamBio', 'game','numberOfPlayers']
-		#exclude = ['members']
+		fields = ['teamname', 'teamBio', 'game','numberOfPlayers']	
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.fields['teamname'].label = 'Team Name'
 		self.fields['game'].label = 'Selected Game'
-		#self.fields['game'].widget.attrs['disabled'] = True
 		self.fields['game'].queryset = Game.objects.all()  # Provide a queryset of available games
 		
 class DateInput(forms.DateInput):

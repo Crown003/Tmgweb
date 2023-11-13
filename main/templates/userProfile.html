@@ -63,6 +63,17 @@
 							<td style="border:transparent"><a class="editBtn" href="{% url 'EditTeamDetails'  team.id %}">Edit</a></td>
 							<td style="border:transparent"><a class="deleteBtn" href='delTeam/{{ team.id }}'>Delete</a></td>
 						</tr>
+						<tr>
+							<td rowspan=4>
+							{{ team.members.player_one }}<br>
+							{{ team.members.player_two }}<br>
+							{{ team.members.player_three }}<br>
+							{{ team.members.player_four }}<br>
+							{{ team.members.player_five }}<br>
+							{{ team.members.player_six }}<br>
+							</td>
+						</tr>
+						
 					{% endfor %}
 				</tbody>
 			</Table>

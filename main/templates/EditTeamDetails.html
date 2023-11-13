@@ -20,16 +20,101 @@
 		<form action="#" method="POST">
 			{% csrf_token %}
 			{{ form.as_p }}
-			<table>
-		        {{ form.team_members.management_form }}
-		        {% for form in form.team_members %}
-		            {{ form.as_p }}
-		        {% endfor %}
-    		</table>
-			<div style="display:flex;justify-content:center;">
+			<h1>Edit PLAYER DETAILS</h1>
+			{{ team_member_form.management_form }}
+			<table>	
+					{{ team_member_form.as_p }}    	
+			</table>
+    	<div style="display:flex;justify-content:center;">
 					<input id="EditTeamSubmit" type="submit" value="Submit"/>
 			</div>
 		</form>
 	</div>
 </div>
 {% endblock %}
+{% block script %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var existingUsernames = [];  // Initialize an array to store existing usernames
+
+    var teamMemberNameFields = document.querySelectorAll('.team-member-username');
+
+    teamMemberNameFields.forEach(function (teamMemberNameField) {
+      var suggestionBox = document.createElement('div');
+      suggestionBox.className = 'suggestion-box';
+      teamMemberNameField.parentNode.appendChild(suggestionBox);
+
+      teamMemberNameField.addEventListener('input', function (event) {
+        var inputValue = event.target.value.trim().toLowerCase();
+
+        // Clear suggestion box if input value is empty
+        if (inputValue === '') {
+          suggestionBox.innerHTML = '';
+          return;
+        }
+
+        // Update suggestion box content
+        suggestionBox.innerHTML = '';
+
+        // Modify the URL to match your Django URL configuration
+        var apiUrl = "{% url 'GetUser' %}?search=" + inputValue;
+
+        fetch(apiUrl)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Handle the fetched data
+            //console.log(data);
+
+            if (data.users.length > 0) {
+              data.users.forEach(function (user) {
+                var suggestionItem = document.createElement('div');
+                suggestionItem.className = 'suggestion-item';
+                suggestionItem.textContent = user.name;
+
+                // Add click event to select suggestion
+                if (!existingUsernames.includes(inputValue)) {
+                  suggestionItem.addEventListener('click', function () {
+                    teamMemberNameField.value = user.name;
+                    suggestionBox.innerHTML = ''; // Clear suggestion box after selection
+
+                    // Push only the selected username into the array
+                    existingUsernames.push(user.name.toLowerCase());
+                  });
+                }
+
+                suggestionBox.appendChild(suggestionItem);
+              });
+            } else {
+              suggestionBox.innerHTML = '<div class="no-suggestions">No matching users found.</div>';
+            }
+          })
+          .catch(error => {
+            // Handle errors
+            alert('There was a problem with the fetch operation: ' + error);
+          });
+      });
+
+      // Handle when the user leaves the input field (for example, on Enter key)
+      if (teamMemberNameField.value.trim() !== '') {
+        teamMemberNameField.addEventListener('focusout', function () {
+          var inputValue = teamMemberNameField.value.trim().toLowerCase();
+
+          // Check if the username already exists in the array
+          if (existingUsernames.includes(inputValue)) {
+            alert('Username already exists. Choose a different one.');
+            teamMemberNameField.value = '';  // Clear the input field on error
+            return;
+          }
+          // Push the complete name into the array
+          existingUsernames.push(inputValue);
+        });
+      }
+    });
+  });
+</script>
+  {% endblock %}

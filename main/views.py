@@ -5,16 +5,14 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .forms import (UserRegistration,UserLogin,MatchData,
-CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,UserRegRoleForm)
-from .models import UserProfile,Team,Tournament,RegOfTournaments,Game
-from django.contrib.auth import update_session_auth_hash
+CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,TeamMemberForm)
+from .models import UserProfile,Team,Tournament,RegOfTournaments,Game,TeamMember
 from django.db import IntegrityError
-from django.http import JsonResponse
-
+from django.forms import formset_factory
 # Create your views here.
 def manageSite(request):
-	if request.user.userprofile.is_organiser != True:
-		messages.warning(request,"You are not a organiser.")
+	if request.user.userprofile.is_organiser != True and request.user.userprofile.is_organiser_staff != True:
+		messages.warning(request,"You are not a organiser/orgainsing staff.")
 		return redirect("UserProfile")
 	if request.method == "POST":
 		createTournament = CreateTournament(request.POST)
@@ -134,16 +132,39 @@ def deleteTeam(request,id):
 		return redirect("UserProfile")
 
 def editTeamDetails(request,id):
-    instance = Team.objects.get(creator=request.user,id=id)	
-    form = EditTeamForm(instance=instance)
-    if request.method == "POST":
-    	form = EditTeamForm(request.POST,instance=instance)
-    	if form.is_valid():
-    		form.save()
-    		messages.success(request,"Team Details Updated successfully.")
-    	else:
-    		messages.warning(request,"Invalid Data ! Check Your details properly & Try again.")
-    return render(request,"EditTeamDetails.html",{"form":form})		
+	instance = Team.objects.get(creator=request.user,id=id)
+	TeamMemberFormSet = formset_factory(TeamMemberForm,extra=1)	
+	form = EditTeamForm(instance=instance) 
+	team_member_form = TeamMemberFormSet()
+	if request.method == "POST":
+		form = EditTeamForm(request.POST,instance=instance)
+		team_member_form = TeamMemberFormSet(request.POST)
+		if form.is_valid():
+			form.save(commit=False)
+			if team_member_form.is_valid():
+				player_one = team_member_form.cleaned_data[0]["player_one"]	
+				player_two = team_member_form.cleaned_data[0]["player_two"]
+				player_three = team_member_form.cleaned_data[0]["player_three"]
+				player_four = team_member_form.cleaned_data[0]["player_four"]
+				player_five = team_member_form.cleaned_data[0]["player_five"]
+				player_six = team_member_form.cleaned_data[0]["player_six"]
+				data_of_players = TeamMember(
+					player_one=player_one,
+					player_two=player_two,
+					player_three=player_three,
+					player_four=player_four,
+					player_five=player_five,
+					player_six=player_six
+				)
+				data_of_players.save()
+				instance.members = data_of_players
+				form.save()
+				messages.success(request,"Team details updated successfully.")
+				return redirect("UserProfile")
+			else:
+				print("Errors : ",team_member_form.errors)
+				messages.warning(request,"Invalid Data ! Check Your details properly & Try again.")
+	return render(request,"EditTeamDetails.html",{"form":form,"team_member_form":team_member_form})		
 
 def viewTournamentPage(request,id):
 	#this window is for user side tournament Details. view.
@@ -151,8 +172,8 @@ def viewTournamentPage(request,id):
 	if request.method == "POST":
 		selectedTeamId = request.POST.get("teamId")
 		regTeamDetails = Team.objects.get(id=int(selectedTeamId))
-		#print(regTeamDetails.numberOfPlayers,regTeamDetails.members.count())
-		if regTeamDetails.members.count() < 4:
+		print(regTeamDetails.members)
+		if not regTeamDetails.members:
 			messages.warning(request,"Your Team does'nt have 4 players, Complete your team and try again.")
 			return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
 		try:
@@ -167,13 +188,14 @@ def viewTournamentPage(request,id):
 
 def viewTournament(request,id):
 	#this window is for organiser side tournament Details view.
-	if request.user.userprofile.is_organiser == True:
-		tournament = Tournament.objects.get(id=id)
-		registered_teams = RegOfTournaments.objects.filter(tournament=tournament)
-		slots_left = (tournament.slots - len(registered_teams))
-		return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})
-	else:
+	if request.user.userprofile.is_organiser != True and request.user.userprofile.is_organiser_staff != True :
+		messages.warning(request,"You are not a Organiser/Organiser staff")
 		return redirect("Home")
+	tournament = Tournament.objects.get(id=id)
+	registered_teams = RegOfTournaments.objects.filter(tournament=tournament)
+	slots_left = (tournament.slots - len(registered_teams))
+	return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})
+		
 
 def TournamentPage(request):
 	# this view shows the Tournaments on portal.
@@ -183,3 +205,14 @@ def TournamentPage(request):
 	except Game.DoesNotExist:
 		messages.warning(request,"Something wents wrong. Unable to get tournaments at this moment please try again later after some time. ")
 	return render(request, "Tournaments.html", {"games":games if games else [],"tournaments":tournaments if tournaments else []})
+	
+	
+####api#####
+from django.http import JsonResponse
+def getUser(request):
+    search_query = request.GET.get('search', '')
+    users = UserProfile.objects.filter(user__username__startswith=search_query)
+    # Serialize the queryset to JSON
+    #print(users)
+    users_data = [{'name': user.user.username, 'email': user.user.email} for user in users]
+    return JsonResponse({'users': users_data})

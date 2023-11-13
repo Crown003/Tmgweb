@@ -27,3 +27,23 @@ margin:1em;
 width:60%;
 padding:.5em;
 }
+.suggestion-box {
+      /*position: absolute;*/
+      width:60%;
+      max-height: 100px;
+      overflow-y: auto;
+      background: #fff;
+      /*border: 1px solid #ccc;*/
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.suggestion-item {
+padding: 8px;
+cursor: pointer;
+border-bottom: 1px solid #eee;
+}
+.suggestion-item:hover {
+background-color: #f2f2f2;
+}
+.no-suggestions {
+padding: 8px;
+}
