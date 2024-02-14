@@ -37,7 +37,6 @@ class MyIntegerChoices(models.IntegerChoices):
     OPTION3 = 6, '6 players'
     
 class TeamMember(models.Model):
-	#team_info = models.ForeignKey(Team,null=True,on_delete=models.CASCADE,related_name="teamInfo")
 	player_one = models.CharField("Player One",max_length=100,default="---",blank=False,unique=True)
 	player_two = models.CharField("Player Two",max_length=100,default="---",blank=False,unique=True)
 	player_three = models.CharField("Player Three",max_length=100,default="---",blank=False,unique=True)
@@ -59,7 +58,7 @@ class Team(models.Model):
 		return str(self.teamname)
 
 class Tournament(models.Model):
-	organiser = models.CharField(max_length=100,default="Tmg esports.")
+	organisation = models.CharField(max_length=100,default="Tmg esports.")
 	manager = models.ManyToManyField(User,related_name="tournamentManagers")
 	name = models.CharField(max_length=100)
 	description = models.TextField(null=True)
@@ -72,8 +71,6 @@ class Tournament(models.Model):
 	priceOfSlot = models.IntegerField(default=0)
 	registrations_starts_from = models.DateField(null=True,auto_now_add=True)
 	registrations_ends_on = models.DateField(null=True)
-	starts_on = models.DateField()
-	ends_on = models.DateField()
 	def __str__(self):
 		return str(self.name)
 

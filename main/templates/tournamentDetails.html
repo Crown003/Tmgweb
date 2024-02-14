@@ -10,7 +10,7 @@
 	<img src="{% static 'images/MainBg.jpg' %}">
 </div>
 <section class="detailsSection">
-	<h2>{{ tournament.name }} | organisedBy : <span>{{ tournament.organiser }}</span></h2>
+	<h2>{{ tournament.name }} | organisedBy : <span>{{ tournament.organisation }}</span></h2>
 	<h3>PRICEPOOL : {{ tournament.pricePool }}</h3>
 	<p>TOTAL SLOTS : {{ tournament.slots }} | Paid : {{ tournament.is_paid }}</p>
 	<p> PRICE (per slot): {{ tournament.priceOfSlot }}

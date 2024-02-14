@@ -8,7 +8,8 @@ from .forms import (UserRegistration,UserLogin,MatchData,
 CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,TeamMemberForm)
 from .models import UserProfile,Team,Tournament,RegOfTournaments,Game,TeamMember
 from django.db import IntegrityError
-from django.forms import formset_factory
+from django.db.models import Q
+
 # Create your views here.
 def manageSite(request):
 	if request.user.userprofile.is_organiser != True and request.user.userprofile.is_organiser_staff != True:
@@ -17,11 +18,17 @@ def manageSite(request):
 	if request.method == "POST":
 		createTournament = CreateTournament(request.POST)
 		if createTournament.is_valid():
+			managers = createTournament.cleaned_data["manager"]
+			for user in managers:
+				user_profile_to_update = UserProfile.objects.get(user__username=user)
+				user_profile_to_update.is_organiser_staff = True
+				user_profile_to_update.save()
 			createTournament.save()
 			messages.success(request,"Tournament created successfully.")
 			return redirect("Management")
 	createTournament = CreateTournament()
-	orgTourny = Tournament.objects.filter(manager=request.user)
+	orgTourny =Tournament.objects.filter(manager=request.user)
+	print(orgTourny)
 	return render(request,"managementSite.html",{"tournaments":orgTourny,"createTournamentForm":createTournament})
 
 def UserSignIn(request):
@@ -99,21 +106,15 @@ def editUserProfile(request):
 	if request.method == 'POST':
 		user_form = EditUserForm(request.POST, instance=request.user)
 		profile_form = EditProfileForm(request.POST,instance=request.user.userprofile)
-		#password_form = PasswordChangeForm(request.user, request.POST)
 		if user_form.is_valid():
 			user_form.save()
 		if profile_form.is_valid():
 			profile_form.save()	
-		#if password_form.is_valid():
-#			user = password_form.save()
-#			update_session_auth_hash(request, user)  # Keep the user logged in
-#			messages.success(request, "Password successfully updated!")
 		messages.success(request, "Profile updated successfully!")
 		return redirect('EditUserProfile')
 	else:
 		user_form = EditUserForm(instance=request.user)
 		profile_form = EditProfileForm(instance=request.user.userprofile)
-		#password_form = PasswordChangeForm(request.user)
 	return render(request,"EditUserProfile.html",{'user_form': user_form,'profile_form':profile_form})
 
 def userGameDetails(request):
@@ -133,33 +134,45 @@ def deleteTeam(request,id):
 
 def editTeamDetails(request,id):
 	instance = Team.objects.get(creator=request.user,id=id)
-	TeamMemberFormSet = formset_factory(TeamMemberForm,extra=1)	
 	form = EditTeamForm(instance=instance) 
-	team_member_form = TeamMemberFormSet()
+	team_member_form = TeamMemberForm(instance=instance.members)
 	if request.method == "POST":
-		form = EditTeamForm(request.POST,instance=instance)
-		team_member_form = TeamMemberFormSet(request.POST)
+		form = EditTeamForm(request.POST, instance=instance)
+		team_member_form = TeamMemberForm(request.POST)
 		if form.is_valid():
-			form.save(commit=False)
+			team_member_instance = None
+			if instance.members:
+				team_member_instance = instance.members
+				team_member_form = TeamMemberForm(request.POST, instance=team_member_instance)
 			if team_member_form.is_valid():
-				player_one = team_member_form.cleaned_data[0]["player_one"]	
-				player_two = team_member_form.cleaned_data[0]["player_two"]
-				player_three = team_member_form.cleaned_data[0]["player_three"]
-				player_four = team_member_form.cleaned_data[0]["player_four"]
-				player_five = team_member_form.cleaned_data[0]["player_five"]
-				player_six = team_member_form.cleaned_data[0]["player_six"]
-				data_of_players = TeamMember(
-					player_one=player_one,
-					player_two=player_two,
-					player_three=player_three,
-					player_four=player_four,
-					player_five=player_five,
-					player_six=player_six
-				)
-				data_of_players.save()
-				instance.members = data_of_players
-				form.save()
-				messages.success(request,"Team details updated successfully.")
+				player_one = team_member_form.cleaned_data["player_one"]
+				player_two = team_member_form.cleaned_data["player_two"]
+				player_three = team_member_form.cleaned_data["player_three"]
+				player_four = team_member_form.cleaned_data["player_four"]
+				player_five = team_member_form.cleaned_data["player_five"]
+				player_six = team_member_form.cleaned_data["player_six"]
+				if not team_member_instance:
+					data_of_players = TeamMember(
+						player_one=player_one,
+						player_two=player_two,
+	                    player_three=player_three,
+	                    player_four=player_four,
+	                    player_five=player_five,
+	                    player_six=player_six
+	                )
+					data_of_players.save()
+					instance.members = data_of_players
+				else:
+					team_member_instance.player_one = player_one
+					team_member_instance.player_two = player_two
+					team_member_instance.player_three = player_three
+					team_member_instance.player_four = player_four
+					team_member_instance.player_five = player_five
+					team_member_instance.player_six = player_six 
+					team_member_form.save()    
+				
+				form.save()  # Save team details
+				messages.success(request, "Team details updated successfully.")
 				return redirect("UserProfile")
 			else:
 				print("Errors : ",team_member_form.errors)

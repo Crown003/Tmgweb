@@ -1,12 +1,9 @@
 #pylint:disable=E1101
-#pylint:disable=E1126
 from django import forms
 from django.utils import timezone
 from main.models import UserProfile,Team,Game,Role,Tournament,TeamMember
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
-
-
 
 class UserRegistration(forms.Form):
 	username = forms.CharField()
@@ -66,7 +63,7 @@ class CreateTeamForm(forms.ModelForm):
 class TeamMemberForm(forms.ModelForm):
 	class Meta:
 		model = TeamMember
-		fields = "__all__"#["player_one","player_two","player_three","player_four","player_five","player_six"]
+		fields = "__all__"
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)# Iterate through all fields and add a class
 		for field in self.fields:

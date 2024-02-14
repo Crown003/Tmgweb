@@ -5,15 +5,6 @@
 {% block title %} UserProfile | EditTeam {% endblock %}
 {% block body %}
 <div class="EditTeamContainer">
-	<div class="userDetailsContainer">
-		<div class="userDetails">
-				<h2> Hello {{ user.username }}!</h2>
-				<h4> Email : {{ user.email }}</h4>
-		</div>
-		<div class="userImage">
-			<img src="#">
-		</div>
-	</div>
 	<!-- Create Team Form Using Create Team Btn -->
 	<div id="EditTeamForm" class="EditTeamFormCont">
 		<h1>Edit Your Team Details</h1>
@@ -21,9 +12,8 @@
 			{% csrf_token %}
 			{{ form.as_p }}
 			<h1>Edit PLAYER DETAILS</h1>
-			{{ team_member_form.management_form }}
 			<table>	
-					{{ team_member_form.as_p }}    	
+				{{ team_member_form.as_p }}    	
 			</table>
     	<div style="display:flex;justify-content:center;">
 					<input id="EditTeamSubmit" type="submit" value="Submit"/>

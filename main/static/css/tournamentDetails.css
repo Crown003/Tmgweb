@@ -17,26 +17,26 @@ height:auto;
 
 .detailsSection{
 padding:1em .5em;
-background:var(--white);	
-	& h2{
+background:var(--white);
+	&h2{
 		font-family:var(--headingFont);
 		font-size:2.2em;
-		color:var(--black);
+		color:blue;/*var(--black);*/
 		line-height:1em;
-		text-transform:capitalize;
+		/*text-transform:capitalize;*/
 	}
-	& h2 span{
+	&h2 span{
 		 background:var(--navBgColor);
 		 color:var(--white);
 		 padding:0 .5em;
 		 border-radius:.4em;
 	}
-	& h3{
+	&h3{
 	font-family:var(--headingFont);
 	font-size:2em;
 	color:var(--black);
 	}
-	& p{
+	&p{
 	color:var(--black);
 	font-size:1.5em;
 	font-style:var(--paraFont);
@@ -49,10 +49,9 @@ padding:1em;
 display:flex;
 border:1px solid green;
 justify-content:center;
-	& button{
-		width:100%;
+background:#2AAA8A;
+	&#registerBtn{
 		text-align:center;
-		width:70%;
 		text-transform:uppercase;
 		background:#2AAA8A;
 		color:var(--white);
@@ -63,14 +62,14 @@ justify-content:center;
 		font-family:var(--paraFont);
 		font-size:1em
 		}
-	& :hover{
+	&:hover{
 			background:#2ADA8A;
 		}
 }
 .descriptionDetails{
  padding:.5em;
  background:var(--white);
- 	& h2{
+ 	&h2{
 	 	font-family:var(--headingFont);
 	 	font-size:2em;
 	 	color:var(--black);
@@ -78,7 +77,7 @@ justify-content:center;
 	 	text-transform:capitalize;
 	 	margin:.5em;
 		}
-	& p{
+	&p{
 		color:var(--black);
 		font-size:1em;
 		font-family:var(--paraFont);

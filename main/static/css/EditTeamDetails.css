@@ -1,5 +1,7 @@
 .EditTeamContainer{
 width:100%;
+position:relative;
+top:4.5em;
 }
 .EditTeamFormCont{
 width:90%;
