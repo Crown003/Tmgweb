@@ -37,12 +37,12 @@ class MyIntegerChoices(models.IntegerChoices):
     OPTION3 = 6, '6 players'
     
 class TeamMember(models.Model):
-	player_one = models.CharField("Player One",max_length=100,default="---",blank=False,unique=True)
-	player_two = models.CharField("Player Two",max_length=100,default="---",blank=False,unique=True)
-	player_three = models.CharField("Player Three",max_length=100,default="---",blank=False,unique=True)
-	player_four = models.CharField("Player Four",max_length=100,default="---",blank=False,unique=True)
-	player_five = models.CharField("Player Five",max_length=100,default="---",blank=True,unique=True)
-	player_six = models.CharField("Player Six",max_length=100,default="---",blank=True,unique=True) 	
+	player_one = models.CharField("Player One",max_length=100,default="player name",blank=False,unique=True)
+	player_two = models.CharField("Player Two",max_length=100,default="player name",blank=False,unique=True)
+	player_three = models.CharField("Player Three",max_length=100,default="player name",blank=False,unique=True)
+	player_four = models.CharField("Player Four",max_length=100,default="player name",blank=False,unique=True)
+	player_five = models.CharField("Player Five",max_length=100,default="player name",blank=True,unique=True)
+	player_six = models.CharField("Player Six",max_length=100,default="player name",blank=True,unique=True) 	
 	def __str__(self):
 		return str(f"IGL: {self.player_one}")
 
@@ -53,7 +53,7 @@ class Team(models.Model):
 	teamBio = models.TextField("Description",max_length=250,blank=False)
 	game= models.ForeignKey(Game, blank=True,null=True,on_delete=models.CASCADE,related_name="game")   
 	numberOfPlayers = models.IntegerField(choices=MyIntegerChoices.choices)
-	members = models.OneToOneField(TeamMember, related_name='teamMembers',on_delete=models.SET_NULL,null=True,blank=True)		
+	members = models.OneToOneField(TeamMember,on_delete=models.SET_NULL,null=True,blank=True)		
 	def __str__(self):
 		return str(self.teamname)
 

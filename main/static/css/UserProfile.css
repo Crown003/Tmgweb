@@ -13,19 +13,22 @@ width:95%;
 background:var(--white);
 padding:1em;
 margin-bottom:1em;
-justify-content:space-around;
+justify-content:space-between;
 }
 .userDetails{
-width:60%;
+flex:2;
 display:flex;
 flex-direction:column;
-gap:1em;
+justify-content:space-around;
 }
 .userImage{
-width:20%;
+flex:1;
+text-align:center;
 }
 .userImage img{
 width:100%;
+height:auto;
+max-width:100%;
 }
 .userDetails h2{
 color:var(--black);
@@ -43,32 +46,29 @@ font-size:1.5em;
 }
 .profileButtons{
 display:flex;
-gap:1em;
-justify-content:flex-start;
-padding-left:5em;
+justify-content:space-evenly;
 }
 .neumo{
-width:5em;
-height:5em;
+width:80px;
+height:80px;
 border-radius: 25px;
 background: #e0e0e0;
 box-shadow:  11px 11px 17px #b5b5b5,
              -11px -11px 17px #ffffff;
-display:flex;
-flex-direction:column;
-align-items:center;
+text-align:center;
 }
 a{
 text-decoration:none;
 color:black;
 }
 .neumo img{
-width:80%;
+width:70%;
+height:auto;
+max-width:100%;
 }
 .neumo p{
-font-weight:600;
-text-align:center;
-font-size: .5em;
+font-weight:500;
+font-size: 1em;
 }
 .createTeamFormCont{
 margin:1em auto;

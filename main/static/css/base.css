@@ -14,55 +14,51 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
+ -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 .container{
-width:100vw;
+width:100%;
+min-width:100vw;
 height:100%;
 min-height:100vh;
 background:var(--primaryBgColor);
+z-index:0;
 }
 /* navigation bar styling */
 .navbar{
 background:var(--navBgColor);
 display:flex;
 width:100%;
+align-items:center;
 justify-content:space-between;
+padding:0 20px;
 position:fixed;
 top:0;
 z-index:1000;
 }
 .logo{
-align-self:center;
-display:inline-block;
-margin-left:2em;
+width:7%;
 }
-.logo a{
-text-decoration:none;
-color:var(--secondaryTextColor);
-font-style:bold;
-text-transform:capitalize;
-font-family:var(--headingFont);
+.logo a img{
+max-width:100%;
+height:auto;
 }
 .navbar ul{
-align-self:flex-end;
 display:flex;
-gap:2em;
-padding:.8em 0;
-margin-right:2em;
+gap:1.5em;
 }
 .navbar ul li{
 list-style:none;
-display:flex;
-align-items:center;
+align-self:center;
+font-size:1.5em;
+font-weight:400;
+text-transform:capitalize;
+font-family:var(--headingFont);
 }
 .navbar ul li a,.navbar ul a{
 text-decoration:none;
 color:var(--primaryBgColor);
-font-size:1em;
 position:relative;
-font-style:bold;
-text-transform:capitalize;
-font-family:var(--headingFont);
 }
 .navbar ul li a::before,.navbar ul a::before{
 content:"";
@@ -90,8 +86,7 @@ color:var(--secondaryTextColor);
 cursor: pointer;
 background-color: var(--black);
 padding:.5em 2em;
-border: 1px solid transparent;
-font-size: 1em;
+font-size: 1.5em;
 border: 1px solid var(--secondaryTextColor);
 }
 /* header section styling*/
@@ -152,27 +147,47 @@ position:relative;
 top:3.5em;
 z-index:999;
 }
-.success{
-background:#198754;
-padding:.8em;
+.messagesText{
+padding:1em;
 color:#fff;
 font-family:var(--headingFont);
 font-weight:600;
 list-style:none;
+}
+.success{
+background:#198754;
 }
 .error{
 background:#dc3545;
-padding:.8em;
-color:#fff;
-font-family:var(--headingFont);
-font-weight:600;
-list-style:none;
 }
 .warning{
 background:orange;
-padding:.8em;
-color:#fff;
-font-family:var(--headingFont);
-font-weight:600;
-list-style:none;
+}
+
+
+@media only screen and (max-width: 600px) {
+/*  *{
+  	-webkit-tap-highlight-color:rgba(0,0,0,0);
+  }
+  input,textarea,button,select,a{
+	 -webkit-tap-highlight-color:rgba(0,0,0,0);
+  }*/
+    .navbar {
+    background: lightblue;
+    flex-direction:column;
+  }
+  .navbar .logo{
+  width:20%;
+  }
+  .navbar ul li{
+  	font-size:1em;
+  }
+  .navbar ul{
+   gap:1em;
+   user-select:none;
+  }
+  .navbar .signbtn{
+	padding:.3em 1em;
+	font-size: .8em;
+	}
 }

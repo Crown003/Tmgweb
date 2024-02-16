@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/Home.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}"/>
+{% endblock %}
+{% block title %} HOME {% endblock %}
+{% block body %}
+<main>
+	<section class="heroSection">
+		<video autoplay loop muted plays-inline class="backgroundClip">
+			<source src="static/videos/Bg.mp4" type="video/mp4">
+		</video>
+		<img src="static/images/tmgLogo.png" alt="tmgEsportsLogo">
+		<div>
+			<h1 class="mainHeading"><span>TMG</span> ESPORTS</h1>
+		</div>
+	</section>
+	<section class="aboutSection">
+		<div>
+			<h1 class="mainHeading">ABOUT US</h1>
+			<hr>
+		</div>
+		<p>Welcome to TMG eSports, your gateway to the thrilling world of competitive gaming. TMG eSports is a renowned gaming team fueled by an unyielding passion for the art of competitive gaming. As you explore our website, you'll dive deeper into who we are, discover details about upcoming competitions, get to know our exceptional players, and much more.
+		At TMG eSports, our mission is clear - to assemble the finest gaming talent and provide them with the platform they need to excel on the grandest stages of the gaming world. We take pride in being a collective of passionate and highly skilled gamers, each driven by an unwavering desire to win and dedicated to delivering an exhilarating experience to our devoted fan base.</p>
+		<Button id="primaryButton">EXPLORE</Button>
+	</section>
+	<section class="ourTeamSection">
+		<div>
+			<h1 class="mainHeading">OUR TEAM</h1>
+			<hr>
+		</div>
+		<div id="sliderCont">
+		{% include 'Slider.html' %}
+		</div>
+	</section>
+	<section class="servicesSection">
+		<div>
+			<h1 class="mainHeading">SERVICES</h1>
+			<hr>
+		</div>
+	</section>
+</main>
+<footer class="footer">
+  <h2>TMG ESP GAMING PVT LTD</h2>
+  <h6>&copy; All right reserved to us.</h6>
+</footer>
+{% endblock %}
+{% block script %}
+
+    <!-- Swiper JS -->
+    <script src="static/js/swiper-bundle.min.js"></script>
+
+    <!-- JavaScript -->
+    <script src="static/js/script.js"></script>
+{% endblock %}

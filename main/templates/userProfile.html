@@ -8,15 +8,17 @@
 <div class="profileContainer">
 	<div class="userDetailsContainer">
 		<div class="userDetails">
+				<div>
 				<h2> Hello {{ user.username }}!</h2>
 				<h4> Email : {{ user.email }}</h4>
+				</div>
 				<div class="profileButtons">
-					{% if "none" in user.userprofile.role %}
+					{% if "none" in user.userprofile.role %}	
 					<div id="myOrder" class="neumo"> <img src="static/images/Account.png"></div>
 					<div id="myCart" class="neumo"> <img src="static/images/Cart.png">  </div>
 					{% endif %}
 					<a href="{% url 'EditUserProfile' %}"><div id="editProfile" class="neumo"><img style="padding:1em;" src="static/images/Pen.png"><p>Edit Profile</p> </div></a>
-					<div id="createTeam"   class="neumo"> <img style="padding:1em;" src="static/images/Add.png"><p>Add Team</p> </div>
+					<div id="createTeam"  class="neumo"><img style="padding:1em;" src="static/images/Add.png"><p>Add Team</p> </div>
 					{% if user.is_staff or request.user.userprofile.is_organiser %}
 						<a href="{% url 'Management' %}"><div id="managementSiteButton" class="neumo"><img style="padding:.5em;" src="static/images/Management.png"><p>Management</p></div></a>
 					{% endif %}
@@ -32,7 +34,7 @@
 			&#10060;
 		</div>
 		<h1>Create Team</h1>
-		<form action="#" method="POST">
+		<form action="" method="POST">
 			{% csrf_token %}
 			{{ form.as_p }}
 			<div style="display:flex;justify-content:center;">
@@ -88,10 +90,12 @@
 <script>
 function showCreateTeam() {
 	let element = document.getElementById("createTeamForm");
+	element.style.transition = "height 2s";
 	element.style.display = "block";
 	};
 function hideCreateTeam() {
 	let element = document.getElementById("createTeamForm")
+	element.style.transition = "all 2s";
 	element.style.display = "none";
 	};
 let createTeamBtn = document.getElementById("createTeam")
