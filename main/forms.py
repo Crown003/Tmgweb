@@ -33,13 +33,16 @@ class EditUserForm(UserChangeForm):
 class EditProfileForm(forms.ModelForm):
 	class Meta:
 		model = UserProfile
-		fields = [ 'roles', 'selected_games']
+		exclude =["user","is_organiser","is_organiser_staff","user_profile_image"]
 	def __init__(self, *args, **kwargs):
 		super(EditProfileForm, self).__init__(*args, **kwargs)   
 		selected_games = self.instance.selected_games.all()        
-		for game in selected_games:
-			self.fields[f"{game}.replace(" ","")_id"] = forms.CharField(label=f"{game} ID", required=False)
-			self.fields[f"{game}.replace(" ","")_ign"] = forms.CharField(label=f"{game} IGN", required=False)
+		self.fields['selected_games'] = forms.ModelMultipleChoiceField(
+            queryset=Game.objects.all(),
+            required=False,
+            label='Selected Games',
+            widget=forms.CheckboxSelectMultiple
+        )
 
 class MatchData(forms.Form):
 	#game = forms.CharField(widget=forms.Select(choices=GAME_CHOICES))
@@ -68,6 +71,7 @@ class TeamMemberForm(forms.ModelForm):
 		super().__init__(*args, **kwargs)# Iterate through all fields and add a class
 		for field in self.fields:
 			self.fields[field].widget.attrs['class'] = 'team-member-username'
+			self.fields[field].widget.attrs['placeholder'] = 'Enter player username'
 		
 class EditTeamForm(forms.ModelForm):
 	class Meta:

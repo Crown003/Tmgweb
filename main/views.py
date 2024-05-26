@@ -1,12 +1,13 @@
 #pylint:disable=E1101
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .forms import (UserRegistration,UserLogin,MatchData,
 CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,TeamMemberForm)
-from .models import UserProfile,Team,Tournament,RegOfTournaments,Game,TeamMember
+from .models import (UserProfile,Team,Tournament,
+RegOfTournaments,Game,TeamMember,UserSupport)
 from django.db import IntegrityError
 from django.db.models import Q
 
@@ -77,6 +78,24 @@ def about(request):
 	return render(request,"about.html")
 	
 def contact(request):
+	if request.method == "POST":
+		username = request.POST['Username'].lower().strip()
+		subject = request.POST['Subject'].lower().strip()
+		msg = request.POST['Message'].lower().strip()
+		userSupportReq = UserSupport(
+		user_real_name = username,
+		request_subject = subject,
+		request_message = msg,
+		request_created_by = request.user
+		)
+		try:
+			userSupportReq.save()
+			messages.success(request,"Thank you for contacting us. We will reach out to you shortly.")		
+		except Exception as e:
+			print(e)
+			messages.error(request,"Oops, something went wrong. Please try again later.")
+		finally:
+			return redirect("Contact")
 	return render(request,"contact.html")
 	
 	
@@ -97,12 +116,15 @@ def userProfile(request):
 			task = Team(creator=creator,teamname=teamname,teamBio=teamBio,game=game,numberOfPlayers=numberOfPlayers)
 			task.save()
 			messages.success(request,"Team created successfully.")		
+			return redirect("UserProfile")
 		else:
 			messages.warning(request,"error")
 			return redirect("UserProfile")
 	return render(request,"userProfile.html",{"form":createTeam, "teamData":TeamData})
 
 def editUserProfile(request):
+	user_profile = get_object_or_404(UserProfile, user=request.user)
+	user_selected_games = user_profile.selected_games.all()
 	if request.method == 'POST':
 		user_form = EditUserForm(request.POST, instance=request.user)
 		profile_form = EditProfileForm(request.POST,instance=request.user.userprofile)
@@ -115,7 +137,7 @@ def editUserProfile(request):
 	else:
 		user_form = EditUserForm(instance=request.user)
 		profile_form = EditProfileForm(instance=request.user.userprofile)
-	return render(request,"EditUserProfile.html",{'user_form': user_form,'profile_form':profile_form})
+	return render(request,"EditUserProfile.html",{'user_form': user_form,'profile_form':profile_form,})
 
 def userGameDetails(request):
 	return HttpResponse(request,"gameDetails")
@@ -169,8 +191,7 @@ def editTeamDetails(request,id):
 					team_member_instance.player_four = player_four
 					team_member_instance.player_five = player_five
 					team_member_instance.player_six = player_six 
-					team_member_form.save()    
-				
+					team_member_form.save()    				
 				form.save()  # Save team details
 				messages.success(request, "Team details updated successfully.")
 				return redirect("UserProfile")
@@ -192,11 +213,14 @@ def viewTournamentPage(request,id):
 		try:
 			RegOfTournaments.objects.create(regBy=request.user,tournament=tournamentDetails,team=regTeamDetails)
 			messages.success(request,"Registration successfull.")
-			return redirect("UserProfile")
+			
 		except IntegrityError:
 			messages.warning(request,"Team already registered.")
+			
 		except Exception:
 			messages.error(request,"Oops something wents wrong please try again after some time.")
+		finally:
+			return redirect("UserProfile")
 	return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
 
 def viewTournament(request,id):
@@ -225,7 +249,6 @@ from django.http import JsonResponse
 def getUser(request):
     search_query = request.GET.get('search', '')
     users = UserProfile.objects.filter(user__username__startswith=search_query)
-    # Serialize the queryset to JSON
-    #print(users)
+    # Serialize the queryset to JSON:
     users_data = [{'name': user.user.username, 'email': user.user.email} for user in users]
     return JsonResponse({'users': users_data})

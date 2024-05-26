@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block cssPath %}<link rel="stylesheet" href="static/css/contact.css"/>{% endblock %}
+{% block title %} Contact Us{% endblock %}
+{% block body %}
+<div class="main-div">
+	<h2>Contact Us</h2>
+	<form autocomplete="off" action="#" method="post">
+	{% csrf_token %}
+    <div class="row">
+      <div class="col-25">
+        <label for="Uname">Your Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="Uname" name="Username" placeholder="Your name..">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="subject">Subject</label>
+      </div>
+      <div class="col-75">
+        <input type="text" name="Subject" placeholder="Write subject.." ></input>
+      </div>
+    </div>
+     <div class="row">
+      <div class="col-25">
+        <label for="message">Your Message</label>
+      </div>
+      <div class="col-75">
+        <textarea id="message" name="Message" placeholder="Write your message.." style="height:200px"></textarea>
+      </div>
+    </div>
+    <div class="row" style="text-align:center;">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</div>
+{% endblock %}
