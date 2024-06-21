@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.conf.urls.static import static
 import os
+
 urlpatterns = [
     path("",views.home,name="Home"),
     path("UserSignIn",views.UserSignIn,name="SignIn"),
@@ -16,8 +17,8 @@ urlpatterns = [
     path("editUserProfile",views.editUserProfile,name="EditUserProfile"),
     path("editTeamDetails/<int:id>",views.editTeamDetails,name="EditTeamDetails"),
     path("delTeam/<int:id>",views.deleteTeam,name="DeleteTeam"),
+    path("viewTeamDetails/<int:id>",views.viewTeamDetails,name="viewTeamDetails"),
     path("tournamentPage",views.TournamentPage,name="Tournament"),
     path("tournamentDetails/<int:id>",views.viewTournamentPage,name="UserViewTournament"),
     path("orgainsertournamentDetails/<int:id>",views.viewTournament,name="OrgViewTournament"),
-	path("api/User",views.getUser,name="GetUser")
 ] + static("/media/",document_root = os.path.join(os.path.abspath(__file__),"/media/"))

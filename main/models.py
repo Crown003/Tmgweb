@@ -43,18 +43,7 @@ class Role(models.Model):
 class MyIntegerChoices(models.IntegerChoices):
     OPTION1 = 4, '4 players'
     OPTION2 = 5, '5 players'
-    OPTION3 = 6, '6 players'
     
-class TeamMember(models.Model):
-	player_one = models.CharField("Player One",max_length=100,default=" ",blank=True,unique=True)
-	player_two = models.CharField("Player Two",max_length=100,default=" ",blank=True,unique=True)
-	player_three = models.CharField("Player Three",max_length=100,default=" ",blank=True,unique=True)
-	player_four = models.CharField("Player Four",max_length=100,default=" ",blank=True,unique=True)
-	player_five = models.CharField("Player Five",max_length=100,default=" ",blank=True,unique=True)
-	player_six = models.CharField("Player Six",max_length=100,default=" ",blank=True,unique=True) 	
-	def __str__(self):
-		return str(f"IGL: {self.player_one}")
-
 class Team(models.Model):
 	creator = models.ForeignKey(User,null=True,on_delete=models.CASCADE,related_name="teamCreator")
 	created_on = models.DateTimeField(auto_now_add=True)
@@ -62,9 +51,16 @@ class Team(models.Model):
 	teamBio = models.TextField("Description",max_length=250,blank=False)
 	game= models.ForeignKey(Game, blank=True,null=True,on_delete=models.CASCADE,related_name="game")   
 	numberOfPlayers = models.IntegerField(choices=MyIntegerChoices.choices)
-	members = models.OneToOneField(TeamMember,on_delete=models.SET_NULL,null=True,blank=True)		
 	def __str__(self):
 		return str(self.teamname)
+
+class TeamDetail(models.Model):
+	details_of_team = models.ForeignKey(Team,on_delete=models.CASCADE)
+	player_one = models.CharField("Player 1",max_length=80)
+	player_two = models.CharField("Player 2",max_length=80)
+	player_three = models.CharField("Player 3",max_length=80)
+	player_four = models.CharField("Player 4",max_length=80)
+	player_five = models.CharField("Player 5",max_length=80)
 
 class Tournament(models.Model):
 	organisation = models.CharField(max_length=100,default="Tmg esports.")

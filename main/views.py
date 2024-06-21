@@ -5,11 +5,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from .forms import (UserRegistration,UserLogin,MatchData,
-CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,TeamMemberForm)
+CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,EditTeamDetailsForm,EditTeamDetailsForm)
 from .models import (UserProfile,Team,Tournament,
-RegOfTournaments,Game,TeamMember,UserSupport)
+RegOfTournaments,Game,UserSupport,TeamDetail)
 from django.db import IntegrityError
 from django.db.models import Q
+from .utils import send_mail_to_user
 
 # Create your views here.
 def manageSite(request):
@@ -57,9 +58,14 @@ def UserSignUp(request):
 			user = User.objects.create_user(username=username,email=email)
 			user.set_password(password)
 			user.save()
-			user_profile = UserProfile.objects.create(user=user)
+			user_profile = UserProfile.objects.create(user=user)		
 			user_profile.save()
-			messages.success(request,"Your account created successfully.")	
+			messages.success(request,"Your account created successfully.")
+			try:
+				send_mail_to_user(email) #in testing phase.
+			except Exception as e:
+				print("user signup is not sending email due to this error: " + str(e))
+			return redirect("SignIn")
 		form = UserRegistration()
 		return redirect("SignIn")
 	return render(request,"SignUp.html",{"signupform":form})
@@ -83,10 +89,10 @@ def contact(request):
 		subject = request.POST['Subject'].lower().strip()
 		msg = request.POST['Message'].lower().strip()
 		userSupportReq = UserSupport(
-		user_real_name = username,
-		request_subject = subject,
-		request_message = msg,
-		request_created_by = request.user
+			user_real_name = username,
+			request_subject = subject,
+			request_message = msg,
+			request_created_by = request.user
 		)
 		try:
 			userSupportReq.save()
@@ -108,35 +114,34 @@ def userProfile(request):
 	if request.method == "POST":
 		data = CreateTeamForm(request.POST)	
 		if data.is_valid():
-			creator = request.user
 			teamname = data.cleaned_data["teamname"]
-			teamBio = data.cleaned_data["teamBio"]
-			game= data.cleaned_data["game"]
-			numberOfPlayers = data.cleaned_data["numberOfPlayers"]
-			task = Team(creator=creator,teamname=teamname,teamBio=teamBio,game=game,numberOfPlayers=numberOfPlayers)
+			task = CreateTeamForm(request.POST)
+			task.save(commit=False)
+			task.instance.creator = request.user
 			task.save()
+			teamDetailsInst = TeamDetail(details_of_team = Team.objects.get(teamname=teamname))
+			teamDetailsInst.save()
 			messages.success(request,"Team created successfully.")		
-			return redirect("UserProfile")
 		else:
-			messages.warning(request,"error")
-			return redirect("UserProfile")
-	return render(request,"userProfile.html",{"form":createTeam, "teamData":TeamData})
+			messages.warning(request,data.errors)
+		return redirect("UserProfile")
+	return render(request,"userProfile.html",{"form":createTeam, "teamData":TeamData,})
 
 def editUserProfile(request):
 	user_profile = get_object_or_404(UserProfile, user=request.user)
 	user_selected_games = user_profile.selected_games.all()
+	user_form = EditUserForm(instance=request.user)
+	profile_form = EditProfileForm(instance=request.user.userprofile)
 	if request.method == 'POST':
 		user_form = EditUserForm(request.POST, instance=request.user)
 		profile_form = EditProfileForm(request.POST,instance=request.user.userprofile)
-		if user_form.is_valid():
+		if user_form.is_valid() and profile_form.is_valid():
 			user_form.save()
-		if profile_form.is_valid():
-			profile_form.save()	
-		messages.success(request, "Profile updated successfully!")
+			profile_form.save()
+			messages.success(request, "Profile updated successfully!")
+		else:
+			messages.error(request, "Oops something went wrong, Profile not updated!")
 		return redirect('EditUserProfile')
-	else:
-		user_form = EditUserForm(instance=request.user)
-		profile_form = EditProfileForm(instance=request.user.userprofile)
 	return render(request,"EditUserProfile.html",{'user_form': user_form,'profile_form':profile_form,})
 
 def userGameDetails(request):
@@ -146,6 +151,7 @@ def userGameDetails(request):
 def deleteTeam(request,id):
 	user = request.user
 	data = Team.objects.get(creator=user,id=id)
+	print(id)
 	try:
 		data.delete()
 		messages.success(request,"Team Deleted successfully.")
@@ -155,72 +161,58 @@ def deleteTeam(request,id):
 		return redirect("UserProfile")
 
 def editTeamDetails(request,id):
-	instance = Team.objects.get(creator=request.user,id=id)
-	form = EditTeamForm(instance=instance) 
-	team_member_form = TeamMemberForm(instance=instance.members)
+	instanceOfTeam = Team.objects.get(creator=request.user,id=id)
+	teamForm = EditTeamForm(instance=instanceOfTeam)
+	instanceOfTeamDetail = TeamDetail.objects.get(details_of_team=instanceOfTeam.id)
+	teamDetailForm = EditTeamDetailsForm(instance=instanceOfTeamDetail)
 	if request.method == "POST":
-		form = EditTeamForm(request.POST, instance=instance)
-		team_member_form = TeamMemberForm(request.POST)
-		if form.is_valid():
-			team_member_instance = None
-			if instance.members:
-				team_member_instance = instance.members
-				team_member_form = TeamMemberForm(request.POST, instance=team_member_instance)
-			if team_member_form.is_valid():
-				player_one = team_member_form.cleaned_data["player_one"]
-				player_two = team_member_form.cleaned_data["player_two"]
-				player_three = team_member_form.cleaned_data["player_three"]
-				player_four = team_member_form.cleaned_data["player_four"]
-				player_five = team_member_form.cleaned_data["player_five"]
-				player_six = team_member_form.cleaned_data["player_six"]
-				if not team_member_instance:
-					data_of_players = TeamMember(
-						player_one=player_one,
-						player_two=player_two,
-	                    player_three=player_three,
-	                    player_four=player_four,
-	                    player_five=player_five,
-	                    player_six=player_six
-	                )
-					data_of_players.save()
-					instance.members = data_of_players
-				else:
-					team_member_instance.player_one = player_one
-					team_member_instance.player_two = player_two
-					team_member_instance.player_three = player_three
-					team_member_instance.player_four = player_four
-					team_member_instance.player_five = player_five
-					team_member_instance.player_six = player_six 
-					team_member_form.save()    				
-				form.save()  # Save team details
+		teamForm = EditTeamForm(request.POST,instance=instanceOfTeam)
+		teamDetailForm = EditTeamDetailsForm(request.POST,instance=instanceOfTeamDetail)
+		try:
+			if teamForm.is_valid():
+				teamForm.save()  # Save team details
 				messages.success(request, "Team details updated successfully.")
-				return redirect("UserProfile")
-			else:
-				print("Errors : ",team_member_form.errors)
-				messages.warning(request,"Invalid Data ! Check Your details properly & Try again.")
-	return render(request,"EditTeamDetails.html",{"form":form,"team_member_form":team_member_form})		
+			if teamDetailForm.is_valid():
+				task = teamDetailForm.save(commit=False)
+				task.details_of_team = instanceOfTeam
+				task.save()
+		except Exception as EditTeamDetailsFormErrors:
+			print("EditTeamDetailsFormErrors : " + str(EditTeamDetailsFormErrors))
+		finally:
+			return redirect("UserProfile")	
+	return render(request,"EditTeamDetails.html",{"form":teamForm,"teamDetailForm":teamDetailForm})		
+
+def viewTeamDetails(request,id):
+	try:
+		TeamDetailsData = TeamDetail.objects.get(details_of_team=id)
+	except Exception as e:
+		TeamDetailsData = ""
+		print(e)
+	return render(request,"ViewTeamDetails.html",{"teamDetails":TeamDetailsData})
 
 def viewTournamentPage(request,id):
 	#this window is for user side tournament Details. view.
 	tournamentDetails = Tournament.objects.get(id=id)
 	if request.method == "POST":
 		selectedTeamId = request.POST.get("teamId")
-		regTeamDetails = Team.objects.get(id=int(selectedTeamId))
-		print(regTeamDetails.members)
-		if not regTeamDetails.members:
+		regTeam = Team.objects.get(id=selectedTeamId)
+		regTeamDetails = TeamDetail.objects.get(details_of_team=int(selectedTeamId))
+		if regTeamDetails.player_one == "" and regTeamDetails.player_two == "" and regTeamDetails.player_three and regTeamDetails.player_four == "" :
 			messages.warning(request,"Your Team does'nt have 4 players, Complete your team and try again.")
-			return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
+			return redirect("Tournament")
+		if regTeam.game != tournamentDetails.game:
+			messages.warning(request,"The team you are trying to register is of different game ! check you details and try again.")
+			return redirect("Tournament")
 		try:
-			RegOfTournaments.objects.create(regBy=request.user,tournament=tournamentDetails,team=regTeamDetails)
+			RegOfTournaments.objects.create(regBy=request.user,tournament=tournamentDetails,team=regTeamDetails.details_of_team)
 			messages.success(request,"Registration successfull.")
-			
 		except IntegrityError:
-			messages.warning(request,"Team already registered.")
-			
+			messages.warning(request,"A team is  already registered from your account.")			
 		except Exception:
 			messages.error(request,"Oops something wents wrong please try again after some time.")
 		finally:
 			return redirect("UserProfile")
+			
 	return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
 
 def viewTournament(request,id):
@@ -243,12 +235,3 @@ def TournamentPage(request):
 		messages.warning(request,"Something wents wrong. Unable to get tournaments at this moment please try again later after some time. ")
 	return render(request, "Tournaments.html", {"games":games if games else [],"tournaments":tournaments if tournaments else []})
 	
-	
-####api#####
-from django.http import JsonResponse
-def getUser(request):
-    search_query = request.GET.get('search', '')
-    users = UserProfile.objects.filter(user__username__startswith=search_query)
-    # Serialize the queryset to JSON:
-    users_data = [{'name': user.user.username, 'email': user.user.email} for user in users]
-    return JsonResponse({'users': users_data})

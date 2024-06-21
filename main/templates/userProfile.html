@@ -11,6 +11,7 @@
 				<div>
 				<h2> Hello {{ user.username }}!</h2>
 				<h4> Email : {{ user.email }}</h4>
+				<h2>{{ user.userprofile.members }}</h2>
 				</div>
 				<div class="profileButtons">
 					{% if "none" in user.userprofile.role %}	
@@ -66,17 +67,9 @@
 							<td style="border:transparent"><a class="deleteBtn" href='delTeam/{{ team.id }}'>Delete</a></td>
 						</tr>
 						<tr>
-							<td rowspan=4>
-							{{ team.members.player_one }}<br>
-							{{ team.members.player_two }}<br>
-							{{ team.members.player_three }}<br>
-							{{ team.members.player_four }}<br>
-							{{ team.members.player_five }}<br>
-							{{ team.members.player_six }}<br>
-							</td>
+							<td colspan=4 style="border:transparent"><a class="editBtn" href="{% url 'viewTeamDetails'  team.id %}">View Details</a></td>
 						</tr>
-						
-					{% endfor %}
+					{% endfor %}						
 				</tbody>
 			</Table>
 			{% else %}

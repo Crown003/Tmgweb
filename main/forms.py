@@ -1,7 +1,6 @@
-#pylint:disable=E1101
 from django import forms
 from django.utils import timezone
-from main.models import UserProfile,Team,Game,Role,Tournament,TeamMember
+from main.models import UserProfile,Team,Game,Role,Tournament,TeamDetail
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
 
@@ -55,24 +54,13 @@ class MatchData(forms.Form):
 class CreateTeamForm(forms.ModelForm):
 	class Meta:
 		model = Team
-		fields = ['teamname', 'teamBio', 'game','numberOfPlayers']
-		exclude = ['members']
+		fields = ['teamname', 'teamBio', 'game','numberOfPlayers']	
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.fields["teamname"].label = 'Team Name'
 		self.fields["game"].label = 'Select Game'
 		self.fields["game"].queryset = Game.objects.all()  # Provide a queryset of available games
 
-class TeamMemberForm(forms.ModelForm):
-	class Meta:
-		model = TeamMember
-		fields = "__all__"
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)# Iterate through all fields and add a class
-		for field in self.fields:
-			self.fields[field].widget.attrs['class'] = 'team-member-username'
-			self.fields[field].widget.attrs['placeholder'] = 'Enter player username'
-		
 class EditTeamForm(forms.ModelForm):
 	class Meta:
 		model = Team
@@ -82,7 +70,30 @@ class EditTeamForm(forms.ModelForm):
 		self.fields['teamname'].label = 'Team Name'
 		self.fields['game'].label = 'Selected Game'
 		self.fields['game'].queryset = Game.objects.all()  # Provide a queryset of available games
-		
+
+class EditTeamDetailsForm(forms.ModelForm):
+	class Meta:
+		model = TeamDetail
+		exclude = ["details_of_team"] #team_name exvluded form form.		
+		from django import forms
+from .models import TeamDetail  # Adjust the import path if necessary
+
+class EditTeamDetailsForm(forms.ModelForm):
+	class Meta:
+		model = TeamDetail
+		exclude = ["details_of_team"]
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['player_one'].required = False
+		self.fields['player_two'].required = False
+		self.fields['player_three'].required = False
+		self.fields['player_four'].required = False
+		self.fields['player_five'].required = False
+		self.fields['player_one'].widget.attrs = {'placeholder': 'Enter Player 1 Name (Igl)'}
+		self.fields['player_two'].widget.attrs = {'placeholder': 'Enter Player 2 Name '}
+		self.fields['player_three'].widget.attrs = {'placeholder': 'Enter Player 3 Name '}
+		self.fields['player_four'].widget.attrs = {'placeholder': 'Enter Player 4 Name '}
+		self.fields['player_five'].widget.attrs = {'placeholder': 'Enter Player 5 Name '}
 class DateInput(forms.DateInput):
 	input_type = 'date'
 	def __init__(self, attrs=None, format='%Y-%m-%d'):

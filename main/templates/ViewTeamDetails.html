@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/viewTournament.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
+{% endblock %}
+{% block title %} ViewTournament {% endblock %}
+{% block body %}
+<div class="DataContainer">
+{% if teamDetails != "" %}
+ <h1> Team Name : {{ teamDetails.details_of_team }}</h1>
+ <h1>Player One : {{ teamDetails.player_one }}</h1>
+ <h1>Player Two : {{ teamDetails.player_two }}</h1>
+ <h1>Player Three : {{ teamDetails.player_three }}</h1>
+ <h1>Player Four : {{ teamDetails.player_four }}</h1>
+ <h1>Player Five : {{ teamDetails.player_five }}</h1>
+{% else %}
+ <h1> Your Team Profile is not completed complete it first </h1>
+{% endif %}
+</div>
+{% endblock %}
