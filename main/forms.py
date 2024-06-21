@@ -75,8 +75,6 @@ class EditTeamDetailsForm(forms.ModelForm):
 	class Meta:
 		model = TeamDetail
 		exclude = ["details_of_team"] #team_name exvluded form form.		
-		from django import forms
-from .models import TeamDetail  # Adjust the import path if necessary
 
 class EditTeamDetailsForm(forms.ModelForm):
 	class Meta:
@@ -89,11 +87,11 @@ class EditTeamDetailsForm(forms.ModelForm):
 		self.fields['player_three'].required = False
 		self.fields['player_four'].required = False
 		self.fields['player_five'].required = False
-		self.fields['player_one'].widget.attrs = {'placeholder': 'Enter Player 1 Name (Igl)'}
-		self.fields['player_two'].widget.attrs = {'placeholder': 'Enter Player 2 Name '}
-		self.fields['player_three'].widget.attrs = {'placeholder': 'Enter Player 3 Name '}
-		self.fields['player_four'].widget.attrs = {'placeholder': 'Enter Player 4 Name '}
-		self.fields['player_five'].widget.attrs = {'placeholder': 'Enter Player 5 Name '}
+		self.fields['player_one'].widget.attrs = {'placeholder': 'Enter Player 1 Name (Igl)',"class":"player-name"}
+		self.fields['player_two'].widget.attrs = {'placeholder': 'Enter Player 2 Name ',"class":"player-name"}
+		self.fields['player_three'].widget.attrs = {'placeholder': 'Enter Player 3 Name ',"class":"player-name"}
+		self.fields['player_four'].widget.attrs = {'placeholder': 'Enter Player 4 Name ',"class":"player-name"}
+		self.fields['player_five'].widget.attrs = {'placeholder': 'Enter Player 5 Name ',"class":"player-name"}
 class DateInput(forms.DateInput):
 	input_type = 'date'
 	def __init__(self, attrs=None, format='%Y-%m-%d'):

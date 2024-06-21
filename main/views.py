@@ -164,7 +164,7 @@ def editTeamDetails(request,id):
 	instanceOfTeam = Team.objects.get(creator=request.user,id=id)
 	teamForm = EditTeamForm(instance=instanceOfTeam)
 	instanceOfTeamDetail = TeamDetail.objects.get(details_of_team=instanceOfTeam.id)
-	teamDetailForm = EditTeamDetailsForm(instance=instanceOfTeamDetail)
+	teamDetailForm = EditTeamDetailsForm(auto_id=True,instance=instanceOfTeamDetail)
 	if request.method == "POST":
 		teamForm = EditTeamForm(request.POST,instance=instanceOfTeam)
 		teamDetailForm = EditTeamDetailsForm(request.POST,instance=instanceOfTeamDetail)
@@ -234,4 +234,11 @@ def TournamentPage(request):
 	except Game.DoesNotExist:
 		messages.warning(request,"Something wents wrong. Unable to get tournaments at this moment please try again later after some time. ")
 	return render(request, "Tournaments.html", {"games":games if games else [],"tournaments":tournaments if tournaments else []})
-	
+
+from django.http import JsonResponse
+def getUser(request):
+    search_query = request.GET.get('search', '')
+    users = UserProfile.objects.filter(user__username__startswith=search_query)
+    # Serialize the queryset to JSON:
+    users_data = [{'name': user.user.username, 'email': user.user.email} for user in users]
+    return JsonResponse({'users': users_data})
