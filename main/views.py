@@ -1,4 +1,3 @@
-#pylint:disable=E1101
 from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
@@ -7,15 +6,15 @@ from django.contrib.auth import login,logout,authenticate
 from .forms import (UserRegistration,UserLogin,MatchData,
 CreateTeamForm,EditProfileForm,CreateTournament,EditTeamForm,EditUserForm,EditTeamDetailsForm,EditTeamDetailsForm)
 from .models import (UserProfile,Team,Tournament,
-RegOfTournaments,Game,UserSupport,TeamDetail)
+RegOfTournaments,Game,UserSupport,TeamDetail,RoadmapOfTournament,RoadmapRoundsDetail)
 from django.db import IntegrityError
 from django.db.models import Q
-from .utils import send_mail_to_user
+from .utils import send_mail_to_user,get_number_of_groups
 
 # Create your views here.
 def manageSite(request):
 	if request.user.userprofile.is_organiser != True and request.user.userprofile.is_organiser_staff != True:
-		messages.warning(request,"You are not a organiser/orgainsing staff.")
+		messages.warning(request,"You are not an organiser/orgainsing staff.")
 		return redirect("UserProfile")
 	if request.method == "POST":
 		createTournament = CreateTournament(request.POST)
@@ -25,13 +24,14 @@ def manageSite(request):
 				user_profile_to_update = UserProfile.objects.get(user__username=user)
 				user_profile_to_update.is_organiser_staff = True
 				user_profile_to_update.save()
-			createTournament.save()
+			createTournament.save(commit=False)
+			createTournament.instance.created_by = request.user
+			createTournament.save()	
 			messages.success(request,"Tournament created successfully.")
 			return redirect("Management")
 	createTournament = CreateTournament()
-	orgTourny =Tournament.objects.filter(manager=request.user)
-	print(orgTourny)
-	return render(request,"managementSite.html",{"tournaments":orgTourny,"createTournamentForm":createTournament})
+	orgTourny =Tournament.objects.filter(created_by=request.user)| Tournament.objects.filter(manager = request.user)	
+	return render(request,"managementSite.html",{"tournaments":orgTourny.distinct(),"createTournamentForm":createTournament})
 
 def UserSignIn(request):
 	form = UserLogin()
@@ -151,7 +151,6 @@ def userGameDetails(request):
 def deleteTeam(request,id):
 	user = request.user
 	data = Team.objects.get(creator=user,id=id)
-	print(id)
 	try:
 		data.delete()
 		messages.success(request,"Team Deleted successfully.")
@@ -185,6 +184,7 @@ def editTeamDetails(request,id):
 def viewTeamDetails(request,id):
 	try:
 		TeamDetailsData = TeamDetail.objects.get(details_of_team=id)
+		registrationData = RegOfTournaments.objects.filter(team=TeamDetailsData.details_of_team)
 	except Exception as e:
 		TeamDetailsData = ""
 		print(e)
@@ -193,27 +193,32 @@ def viewTeamDetails(request,id):
 def viewTournamentPage(request,id):
 	#this window is for user side tournament Details. view.
 	tournamentDetails = Tournament.objects.get(id=id)
+	roadmapOfTournament = RoadmapOfTournament.objects.get(tournament=tournamentDetails)	
 	if request.method == "POST":
-		selectedTeamId = request.POST.get("teamId")
-		regTeam = Team.objects.get(id=selectedTeamId)
-		regTeamDetails = TeamDetail.objects.get(details_of_team=int(selectedTeamId))
-		if regTeamDetails.player_one == "" and regTeamDetails.player_two == "" and regTeamDetails.player_three and regTeamDetails.player_four == "" :
-			messages.warning(request,"Your Team does'nt have 4 players, Complete your team and try again.")
-			return redirect("Tournament")
-		if regTeam.game != tournamentDetails.game:
-			messages.warning(request,"The team you are trying to register is of different game ! check you details and try again.")
-			return redirect("Tournament")
 		try:
-			RegOfTournaments.objects.create(regBy=request.user,tournament=tournamentDetails,team=regTeamDetails.details_of_team)
-			messages.success(request,"Registration successfull.")
-		except IntegrityError:
-			messages.warning(request,"A team is  already registered from your account.")			
-		except Exception:
-			messages.error(request,"Oops something wents wrong please try again after some time.")
-		finally:
-			return redirect("UserProfile")
-			
-	return render(request,"tournamentDetails.html",{"tournament":tournamentDetails})
+			selectedTeamId = request.POST.get("teamId")
+			regTeam = Team.objects.get(id=selectedTeamId)
+			regTeamDetails = TeamDetail.objects.get(details_of_team=int(selectedTeamId))
+			#if regTeamDetails.player_one == "" or regTeamDetails.player_two == "" or regTeamDetails.player_three or regTeamDetails.player_four == "" :
+#				messages.warning(request,"Your Team does'nt have 4 players, Complete your team and try again.")
+#				return redirect("Tournament")
+			if regTeam.game != tournamentDetails.game:
+				messages.warning(request,"The team you are trying to register is of different game ! check you details and try again.")
+				return redirect("Tournament")
+			try:
+				RegOfTournaments.objects.create(regBy=request.user,tournament=tournamentDetails,team=regTeamDetails.details_of_team)
+				messages.success(request,"Registration successfull.")
+			except IntegrityError:
+				messages.warning(request,"A team is  already registered from your account.")			
+			except Exception:
+				messages.error(request,"Oops something wents wrong please try again after some time.")
+			finally:
+				return redirect("UserProfile")
+		except Exception as e:
+				print(e)
+				messages.error(request,"Team not found! please select a team and try again.")
+				return redirect("Tournament")		
+	return render(request,"tournamentDetails.html",{"tournament":tournamentDetails,"roadmap":roadmapOfTournament})
 
 def viewTournament(request,id):
 	#this window is for organiser side tournament Details view.
@@ -225,6 +230,52 @@ def viewTournament(request,id):
 	slots_left = (tournament.slots - len(registered_teams))
 	return render(request,"viewTournament.html",{"tourny":tournament,"slots_left":slots_left,"tournamentDetails":registered_teams})
 		
+def createGroup(request):
+	if request.method == "POST":
+		reg_team_object = RegOfTournaments.objects.filter(tournament=request.POST.get("tournament_id"))
+		total_teams_count = reg_team_object.count()
+		team_in_a_group = int(request.POST["teamInAGroup"]) #number of teams in each group.
+		import json
+		a = get_number_of_groups(total_teams_count,team_in_a_group)
+		group_data = {}
+		group_number = 1
+		if a["statusOfGroups"] == "All":
+			for i in range(0,total_teams_count,team_in_a_group):
+				teams_batch = reg_team_object[i:i + team_in_a_group]
+				data_of_one_group = {f"group{group_number}": [x.id for x in teams_batch ]}
+				group_data.update(data_of_one_group)
+				group_number += 1
+				data_of_one_group = {}
+			group_number = 1
+			task, created = RoadmapRoundsDetail.objects.get_or_create(tournament=Tournament.objects.model(id=request.POST.get("tournament_id")))
+			print(group_data)
+			match request.POST["round"]:
+				case "one": 
+				    task.round_one = json.dumps(group_data)
+				case "two":
+					task.round_two = json.dumps(group_data)		
+				case "three":
+					task.round_three = json.dumps(group_data)
+				case "four":
+				    task.round_four = json.dumps(group_data)
+				case "five":
+					task.round_five = json.dumps(group_data)		
+				case "six":
+					task.round_six = json.dumps(group_data)
+				case "seven":
+				    task.round_seven = json.dumps(group_data)
+				case "eight":
+					task.round_eight = json.dumps(group_data)		
+				case "nine":
+					task.round_nine = json.dumps(group_data)
+				case "ten":
+				    task.round_ten = json.dumps(group_data)
+			try:
+				task.save()
+				messages.success(request,"Round details updated successfully!")
+			except Exception as e:
+				message.error(request,str(e))		
+	return redirect("UserProfile")
 
 def TournamentPage(request):
 	# this view shows the Tournaments on portal.

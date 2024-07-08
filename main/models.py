@@ -64,6 +64,7 @@ class TeamDetail(models.Model):
 
 class Tournament(models.Model):
 	organisation = models.CharField(max_length=100,default="Tmg esports.")
+	created_by = models.ForeignKey(User,on_delete=models.CASCADE)
 	manager = models.ManyToManyField(User,related_name="tournamentManagers")
 	name = models.CharField(max_length=100)
 	description = models.TextField(null=True)
@@ -77,12 +78,31 @@ class Tournament(models.Model):
 	registrations_starts_from = models.DateField(null=True,auto_now_add=True)
 	registrations_ends_on = models.DateField(null=True)
 	def __str__(self):
-		return str(self.name)
+		return f"{str(self.name)} organisedBy {self.organisation}"
 
 class RegOfTournaments(models.Model):
 	regOn = models.DateTimeField(auto_now_add=True)
 	regBy = models.OneToOneField(User,related_name='registeredBy', blank=True,on_delete=models.CASCADE)
-	tournament = models.OneToOneField(Tournament, related_name='tournament', blank=True,on_delete=models.CASCADE)
+	tournament = models.ForeignKey(Tournament,blank=True,on_delete=models.CASCADE)
 	team = models.OneToOneField(Team, related_name='teamName', blank=True,on_delete=models.CASCADE)
 	def __str__(self):
 		return str(self.tournament)+str(self.team)
+		
+class RoadmapOfTournament(models.Model):
+	roadmap_data = models.JSONField()
+	tournament = models.OneToOneField(Tournament,on_delete=models.CASCADE,blank=True)
+	created_on = models.DateTimeField(auto_now_add=True)
+	created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+
+class RoadmapRoundsDetail(models.Model):
+	tournament = models.ForeignKey(Tournament,on_delete=models.CASCADE)
+	round_one = models.JSONField(default=None,blank=True,null=True)
+	round_two = models.JSONField(default=None,blank=True,null=True)
+	round_three = models.JSONField(default=None,blank=True,null=True)
+	round_four = models.JSONField(default=None,blank=True,null=True)
+	round_five = models.JSONField(default=None,blank=True,null=True)
+	round_six = models.JSONField(default=None,blank=True,null=True)
+	round_seven = models.JSONField(default=None,blank=True,null=True)
+	round_eight = models.JSONField(default=None,blank=True,null=True)
+	round_nine = models.JSONField(default=None,blank=True,null=True)
+	round_ten = models.JSONField(default=None,blank=True,null=True)

@@ -11,7 +11,6 @@
 				<div>
 				<h2> Hello {{ user.username }}!</h2>
 				<h4> Email : {{ user.email }}</h4>
-				<h2>{{ user.userprofile.members }}</h2>
 				</div>
 				<div class="profileButtons">
 					{% if "none" in user.userprofile.role %}	
@@ -20,7 +19,7 @@
 					{% endif %}
 					<a href="{% url 'EditUserProfile' %}"><div id="editProfile" class="neumo"><img style="padding:1em;" src="static/images/Pen.png"><p>Edit Profile</p> </div></a>
 					<div id="createTeam"  class="neumo"><img style="padding:1em;" src="static/images/Add.png"><p>Add Team</p> </div>
-					{% if user.is_staff or request.user.userprofile.is_organiser %}
+					{% if request.user.userprofile.is_organiser_staff or request.user.userprofile.is_organiser %}
 						<a href="{% url 'Management' %}"><div id="managementSiteButton" class="neumo"><img style="padding:.5em;" src="static/images/Management.png"><p>Management</p></div></a>
 					{% endif %}
 				</div>

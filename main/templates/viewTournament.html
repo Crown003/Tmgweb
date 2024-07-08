@@ -7,7 +7,41 @@
 {% block title %} ViewTournament {% endblock %}
 {% block body %}
 <div class="DataContainer">
-	<h1> Tournament {{ tourny }} | <span> slots left: {{ slots_left }}</h1>
+	<div class="management-section">
+		<section>
+			<button id="createGroupBtn" class="createGroupBtn">CREATE GROUP</button>
+			<form id="createGroupForm" action="{% url 'CreateGroups' %}" method="POST">
+				{% csrf_token %}
+				<div id="closeCreateGroupBtn" > 
+					&#10060;
+				</div>
+				<select name="round">
+					<option value="one">round 1</option>
+					<option value="two">round 2</option>
+					<option value="three">round 3</option>
+					<option value="four">round 4</option>
+					<option value="five">round 5</option>
+					<option value="six">round 6</option>
+					<option value="seven">round 7</option>
+					<option value="eight">round 8</option>
+					<option value="nine">round 9</option>
+					<option value="ten">round 10</option>
+				</select>
+				<input type="number" name="teamInAGroup" placeholder="Teams in one group"></input>
+				<input type="hidden" name="tournament_id" value="{{ tourny.id }}"></input>
+				<input type="submit" id="createGroupSubmit" value="SUBMIT"></input>
+			</form>
+			<div>
+				<button class="button">UPLOAD ROADMAP</button>
+				<button class="button">GENERATE ROADMAP</button>
+			</div>
+			<div>
+				<button class="button">DOWNLOAD ROADMAP EXCEL</button>
+				<button class="button">DOWNLAOD GROUPS EXCEL</button>
+			</div>
+		</section>
+	</div>
+	<h1> Tournament : {{ tourny.name }} | <span> slots left: {{ slots_left }}</h1>
 	<div class="RegTourneyDetails">
 	<table class="teamTable">
 		<thead>
@@ -29,4 +63,24 @@
 	</table>
 	</div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+function showCreateGroupTeam() {
+	let element = document.getElementById("createGroupForm");
+	element.style.transition = "height 2s";
+	element.style.display = "block";
+	};
+function hideCreateGroupTeam() {
+	let element = document.getElementById("createGroupForm")
+	element.style.transition = "all 2s";
+	element.style.display = "none";
+	};
+let createGroupBtn = document.getElementById("createGroupBtn")
+createGroupBtn.addEventListener("click", showCreateGroupTeam);
+let createTeamSubBtn = document.getElementById("createGroupSubmit")
+createTeamSubBtn.addEventListener("click",hideCreateGroupTeam);
+let closeGroupFormBtn = document.getElementById("closeCreateGroupBtn")
+closeGroupFormBtn.addEventListener("click",hideCreateGroupTeam);
+</script>
 {% endblock %}

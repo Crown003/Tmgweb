@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (UserProfile,
-Team,Role,Game,RegOfTournaments,Tournament,UserSupport,TeamDetail)
+Team,Role,Game,RegOfTournaments,Tournament,UserSupport,TeamDetail,RoadmapOfTournament,RoadmapRoundsDetail)
 
 # Register your models here.
 admin.site.register(UserProfile)
@@ -8,7 +8,8 @@ admin.site.register(Tournament)
 admin.site.register(Role)
 admin.site.register(Game)
 admin.site.register(RegOfTournaments)
-
+admin.site.register(RoadmapOfTournament)
+admin.site.register(RoadmapRoundsDetail)
 #registring the Usersupport model this way so that i can see the
 # default hidden fields such as request_created_on etc..
 class UserSupportReqAdmin(admin.ModelAdmin):

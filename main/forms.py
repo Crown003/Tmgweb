@@ -101,7 +101,7 @@ class CreateTournament(forms.ModelForm):
 	class Meta:
 		model = Tournament
 		fields = "__all__"
-		exclude = ["registrations_starts_from"]	
+		exclude = ["registrations_starts_from","created_by"]	
 		widgets = {
 		"registrations_ends_on":DateInput(),
 		"starts_on":DateInput(),
