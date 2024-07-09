@@ -2,6 +2,7 @@
 {% block cssPath %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/viewTournament.css' %}"/>
+
 <link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
 {% endblock %}
 {% block title %} ViewTournament {% endblock %}
@@ -31,6 +32,7 @@
 				<input type="hidden" name="tournament_id" value="{{ tourny.id }}"></input>
 				<input type="submit" id="createGroupSubmit" value="SUBMIT"></input>
 			</form>
+			<a href="{% url 'ViewGroupsAdmin' tourny.id %}"><button class="createGroupBtn">VIEW GROUPS</button></a>
 			<div>
 				<button class="button">UPLOAD ROADMAP</button>
 				<button class="button">GENERATE ROADMAP</button>

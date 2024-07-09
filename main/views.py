@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
@@ -10,7 +11,7 @@ RegOfTournaments,Game,UserSupport,TeamDetail,RoadmapOfTournament,RoadmapRoundsDe
 from django.db import IntegrityError
 from django.db.models import Q
 from .utils import send_mail_to_user,get_number_of_groups
-
+import json
 # Create your views here.
 def manageSite(request):
 	if request.user.userprofile.is_organiser != True and request.user.userprofile.is_organiser_staff != True:
@@ -235,7 +236,6 @@ def createGroup(request):
 		reg_team_object = RegOfTournaments.objects.filter(tournament=request.POST.get("tournament_id"))
 		total_teams_count = reg_team_object.count()
 		team_in_a_group = int(request.POST["teamInAGroup"]) #number of teams in each group.
-		import json
 		a = get_number_of_groups(total_teams_count,team_in_a_group)
 		group_data = {}
 		group_number = 1
@@ -286,6 +286,40 @@ def TournamentPage(request):
 		messages.warning(request,"Something wents wrong. Unable to get tournaments at this moment please try again later after some time. ")
 	return render(request, "Tournaments.html", {"games":games if games else [],"tournaments":tournaments if tournaments else []})
 
+def viewGroups(request,id):
+	if request.method == "POST":
+		data = RoadmapRoundsDetail.objects.get(tournament=id)
+		match request.POST["round"]:
+			case "one":
+				filtered_data = json.loads(data.round_one[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
+			case "two":
+				pass		
+			case "three":
+				pass
+			case "four":
+				pass
+			case "five":
+				pass		
+			case "six":
+				pass
+			case "seven":
+				pass
+			case "eight":
+				pass		
+			case "nine":
+				pass
+			case "ten":
+				pass
+		request.session['teams_data'] = teams_data
+		return redirect(reverse('ViewGroupsAdmin', args=[id]))
+	teams_data = request.session.get('teams_data', {})
+	request.session.pop('teams_data', None)
+	return render(request, "groupsAdminView.html", {"groups_data": teams_data})
+	
 from django.http import JsonResponse
 def getUser(request):
     search_query = request.GET.get('search', '')

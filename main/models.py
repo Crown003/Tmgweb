@@ -86,7 +86,7 @@ class RegOfTournaments(models.Model):
 	tournament = models.ForeignKey(Tournament,blank=True,on_delete=models.CASCADE)
 	team = models.OneToOneField(Team, related_name='teamName', blank=True,on_delete=models.CASCADE)
 	def __str__(self):
-		return str(self.tournament)+str(self.team)
+		return str(self.team)
 		
 class RoadmapOfTournament(models.Model):
 	roadmap_data = models.JSONField()

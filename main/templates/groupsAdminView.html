@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/groupsAdminView.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/viewTournament.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
+{% endblock %}
+{% block title %} View Groups Details {% endblock %}
+{% block body %}
+<div class="view-group-container">
+	<form  action="" method="POST">
+				{% csrf_token %}
+				<label for="label">Tournament Round </label>
+				<select id="round" name="round">
+					<option value="one">round 1</option>
+					<option value="two">round 2</option>
+					<option value="three">round 3</option>
+					<option value="four">round 4</option>
+					<option value="five">round 5</option>
+					<option value="six">round 6</option>
+					<option value="seven">round 7</option>
+					<option value="eight">round 8</option>
+					<option value="nine">round 9</option>
+					<option value="ten">round 10</option>
+				</select>
+				<input type="submit"  value="SUBMIT"></input>
+	</form>
+	<div class="teamTablecontainer">
+	 <h1>Teams Data</h1>
+    {% if groups_data %}
+        {% for group, teams in groups_data.items %}
+            <h2>Group: {{ group }}</h2>
+            <table class ="teamTable">
+                <thead>
+                    <tr>
+                        <th>Team ID</th>
+                        <th>Team Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for team_id, team_name in teams %}
+                        <tr>
+                            <td>{{ team_id }}</td>
+                            <td>{{ team_name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p>No group data available.</p>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
