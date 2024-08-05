@@ -6,6 +6,7 @@ color:#fff;
 .main-div h2{
 text-align:center;
 font-size:3em;
+font-family: var(--headingFont);
 margin:10px 0;
 }
 form{
