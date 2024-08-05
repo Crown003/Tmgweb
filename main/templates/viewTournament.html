@@ -2,7 +2,6 @@
 {% block cssPath %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/viewTournament.css' %}"/>
-
 <link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
 {% endblock %}
 {% block title %} ViewTournament {% endblock %}
@@ -34,8 +33,8 @@
 			</form>
 			<a href="{% url 'ViewGroupsAdmin' tourny.id %}"><button class="createGroupBtn">VIEW GROUPS</button></a>
 			<div>
-				<button class="button">UPLOAD ROADMAP</button>
-				<button class="button">GENERATE ROADMAP</button>
+				<a href="{% url 'createRoadmap' tourny.id %}"><button class="button">UPLOAD ROADMAP</button></a>
+				<a href="{% url 'createRoadmap' tourny.id %}"><button class="button">GENERATE ROADMAP</button></a>
 			</div>
 			<div>
 				<button class="button">DOWNLOAD ROADMAP EXCEL</button>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/roadmapForm.css' %}"/>{% endblock %}
+{% block title %} ViewTournament {% endblock %}
+{% block body %}
+	<form style="background:#fff;padding-top:100px;" method="post" action="">
+  {% csrf_token %}
+  {% for i in list %}
+  <div class="form-container">
+      <legend>Round {{ i }}</legend>
+      <div>
+        <label for="round_name_{{ i }}">Name of Round {{ i }}:</label>
+        <input type="text" id="round_name_{{ i }}" name="round_name_{{ i }}">
+      </div>
+      <div>
+        <label for="number_of_teams_{{ i }}">Number of Teams:</label>
+        <input type="number" id="number_of_teams_{{ i }}" name="number_of_teams_{{ i }}">
+      </div>
+      <div>
+        <label for="teams_qualify_{{ i }}">Number of Teams Qualify for Next Round:</label>
+        <input type="number" id="teams_qualify_{{ i }}" name="teams_qualify_{{ i }}">
+      </div>
+    </div>
+  {% endfor %}
+  <input type="submit">
+</form>
+{% endblock %}

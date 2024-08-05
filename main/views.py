@@ -86,6 +86,9 @@ def about(request):
 	
 def contact(request):
 	if request.method == "POST":
+		if request.POST["Username"] == "" and request.POST["Message"] == "" and request.POST["Subject"] == "":
+			messages.warning(request,"Please fill the form correctly! ")	
+			return redirect("Contact")
 		username = request.POST['Username'].lower().strip()
 		subject = request.POST['Subject'].lower().strip()
 		msg = request.POST['Message'].lower().strip()
@@ -96,7 +99,7 @@ def contact(request):
 			request_created_by = request.user
 		)
 		try:
-			userSupportReq.save()
+			#userSupportReq.save()
 			messages.success(request,"Thank you for contacting us. We will reach out to you shortly.")		
 		except Exception as e:
 			print(e)
@@ -274,7 +277,7 @@ def createGroup(request):
 				task.save()
 				messages.success(request,"Round details updated successfully!")
 			except Exception as e:
-				message.error(request,str(e))		
+				messages.error(request,str(e))		
 	return redirect("UserProfile")
 
 def TournamentPage(request):
@@ -297,28 +300,73 @@ def viewGroups(request,id):
 					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
 					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 			case "two":
-				pass		
+				filtered_data = json.loads(data.round_two[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 			case "three":
-				pass
+				filtered_data = json.loads(data.round_three[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 			case "four":
-				pass
+				filtered_data = json.loads(data.round_four[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 			case "five":
-				pass		
+				filtered_data = json.loads(data.round_five[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))		
 			case "six":
-				pass
+				filtered_data = json.loads(data.round_six[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 			case "seven":
-				pass
+				filtered_data = json.loads(data.round_seven[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 			case "eight":
-				pass		
+				filtered_data = json.loads(data.round_eight[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))		
 			case "nine":
-				pass
+				filtered_data = json.loads(data.round_nine[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 			case "ten":
-				pass
+				filtered_data = json.loads(data.round_ten[::])
+				teams_data = {}
+				for item in filtered_data:
+					queryobject = RegOfTournaments.objects.filter(id__in=filtered_data[item])
+					teams_data[item] = list(queryobject.values_list("team__id","team__teamname"))
 		request.session['teams_data'] = teams_data
 		return redirect(reverse('ViewGroupsAdmin', args=[id]))
 	teams_data = request.session.get('teams_data', {})
 	request.session.pop('teams_data', None)
 	return render(request, "groupsAdminView.html", {"groups_data": teams_data})
+	
+def createRoadmap(request,id):
+	if request.method == "POST":
+		if requet.POST == "":
+			print("none")
+			messages.error(request,"No data ?")	
+			return render(request,"roadmapForm.html",{"list":[x for x in range(1,11)] })
+		print(request.POST.get(round_name_1))
+	return render(request,"roadmapForm.html",{"list":[x for x in range(1,11)] })
 	
 from django.http import JsonResponse
 def getUser(request):
