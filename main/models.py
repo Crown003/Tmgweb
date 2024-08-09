@@ -1,108 +1,143 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Game(models.Model):
-	name = models.CharField(max_length=100, unique=True)
-	description = models.TextField()	
-	def __str__(self):
-		return str(self.name)
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return str(self.name)
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_organiser = models.BooleanField(default=False)
     is_organiser_staff = models.BooleanField(default=False)
-    user_profile_image = models.ImageField(upload_to="images/",default="static/images/Profile.png")
-    roles = models.ManyToManyField('Role', related_name='user_profiles')
+    user_profile_image = models.ImageField(
+        upload_to="images/", default="static/images/Profile.png"
+    )
+    roles = models.ManyToManyField("Role", related_name="user_profiles")
     selected_games = models.ManyToManyField(Game)  # Assuming you have a Game model
-    BatttleGroundMobileIndia_id = models.CharField(max_length=100,default="None")
-    BatttleGroundMobileIndia_ign = models.CharField(max_length=100,default="None")
-    Volrant_id = models.CharField(max_length=100,default="None")
-    Volrant_ign = models.CharField(max_length=100,default="None")
-    ClashofClans_id = models.CharField(max_length=100,default="None")
-    ClashofClans_ign = models.CharField(max_length=100,default="None")
-    CallOfDuty_id = models.CharField(max_length=100,default="None")
-    CallOfDuty_ign = models.CharField(max_length=100,default="None")
+    BatttleGroundMobileIndia_id = models.CharField(max_length=100, default="None")
+    BatttleGroundMobileIndia_ign = models.CharField(max_length=100, default="None")
+    Volrant_id = models.CharField(max_length=100, default="None")
+    Volrant_ign = models.CharField(max_length=100, default="None")
+    ClashofClans_id = models.CharField(max_length=100, default="None")
+    ClashofClans_ign = models.CharField(max_length=100, default="None")
+    CallOfDuty_id = models.CharField(max_length=100, default="None")
+    CallOfDuty_ign = models.CharField(max_length=100, default="None")
+
     def __str__(self):
         return str(self.user.username)
 
+
 class UserSupport(models.Model):
-	request_created_by = models.ForeignKey(User,null=True,on_delete=models.CASCADE,related_name="requestCreator")
-	request_created_on = models.DateTimeField(auto_now_add=True)
-	user_real_name = models.CharField(max_length = 50)
-	request_subject = models.CharField(max_length=200)
-	request_message = models.TextField()
-	def __str__(self):
-		return str(self.request_subject).upper()
+    request_created_by = models.ForeignKey(
+        User, null=True, on_delete=models.CASCADE, related_name="requestCreator"
+    )
+    request_created_on = models.DateTimeField(auto_now_add=True)
+    user_real_name = models.CharField(max_length=50)
+    request_subject = models.CharField(max_length=200)
+    request_message = models.TextField()
+
+    def __str__(self):
+        return str(self.request_subject).upper()
+
 
 class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
+
     def __str__(self):
-    	return str(self.name)
-    	
+        return str(self.name)
+
 
 class MyIntegerChoices(models.IntegerChoices):
-    OPTION1 = 4, '4 players'
-    OPTION2 = 5, '5 players'
-    
+    OPTION1 = 4, "4 players"
+    OPTION2 = 5, "5 players"
+
+
 class Team(models.Model):
-	creator = models.ForeignKey(User,null=True,on_delete=models.CASCADE,related_name="teamCreator")
-	created_on = models.DateTimeField(auto_now_add=True)
-	teamname = models.CharField("Team Name",max_length=40,blank=False,unique=True)
-	teamBio = models.TextField("Description",max_length=250,blank=False)
-	game= models.ForeignKey(Game, blank=True,null=True,on_delete=models.CASCADE,related_name="game")   
-	numberOfPlayers = models.IntegerField(choices=MyIntegerChoices.choices)
-	def __str__(self):
-		return str(self.teamname)
+    creator = models.ForeignKey(
+        User, null=True, on_delete=models.CASCADE, related_name="teamCreator"
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+    teamname = models.CharField("Team Name", max_length=40, blank=False, unique=True)
+    teamBio = models.TextField("Description", max_length=250, blank=False)
+    game = models.ForeignKey(
+        Game, blank=True, null=True, on_delete=models.CASCADE, related_name="game"
+    )
+    numberOfPlayers = models.IntegerField(choices=MyIntegerChoices.choices)
+
+    def __str__(self):
+        return str(self.teamname)
+
 
 class TeamDetail(models.Model):
-	details_of_team = models.ForeignKey(Team,on_delete=models.CASCADE)
-	player_one = models.CharField("Player 1",max_length=80)
-	player_two = models.CharField("Player 2",max_length=80)
-	player_three = models.CharField("Player 3",max_length=80)
-	player_four = models.CharField("Player 4",max_length=80)
-	player_five = models.CharField("Player 5",max_length=80)
+    details_of_team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    player_one = models.CharField("Player 1", max_length=80)
+    player_two = models.CharField("Player 2", max_length=80)
+    player_three = models.CharField("Player 3", max_length=80)
+    player_four = models.CharField("Player 4", max_length=80)
+    player_five = models.CharField("Player 5", max_length=80)
+
 
 class Tournament(models.Model):
-	organisation = models.CharField(max_length=100,default="Tmg esports.")
-	created_by = models.ForeignKey(User,on_delete=models.CASCADE)
-	manager = models.ManyToManyField(User,related_name="tournamentManagers")
-	name = models.CharField(max_length=100)
-	description = models.TextField(null=True)
-	game = models.ForeignKey(Game,related_name="tournamentGame", blank=True,on_delete=models.CASCADE,default="")
-	main_image = models.ImageField(upload_to="images/",blank=True,null=True)
-	logo = models.ImageField(upload_to="images/",blank=True,null=True)
-	slots = models.IntegerField("SLOTS",blank=True)
-	pricePool = models.IntegerField(default=0)
-	is_paid = models.BooleanField(default=False)
-	priceOfSlot = models.IntegerField(default=0)
-	registrations_starts_from = models.DateField(null=True,auto_now_add=True)
-	registrations_ends_on = models.DateField(null=True)
-	def __str__(self):
-		return f"{str(self.name)} organisedBy {self.organisation}"
+    organisation = models.CharField(max_length=100, default="Tmg esports.")
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    manager = models.ManyToManyField(User, related_name="tournamentManagers")
+    name = models.CharField(max_length=100)
+    description = models.TextField(null=True)
+    game = models.ForeignKey(
+        Game,
+        related_name="tournamentGame",
+        blank=True,
+        on_delete=models.CASCADE,
+        default="",
+    )
+    main_image = models.ImageField(upload_to="images/", blank=True, null=True)
+    logo = models.ImageField(upload_to="images/", blank=True, null=True)
+    slots = models.IntegerField("SLOTS", blank=True)
+    pricePool = models.IntegerField(default=0)
+    is_paid = models.BooleanField(default=False)
+    priceOfSlot = models.IntegerField(default=0)
+    registrations_starts_from = models.DateField(null=True, auto_now_add=True)
+    registrations_ends_on = models.DateField(null=True)
+
+    def __str__(self):
+        return f"{str(self.name)} organisedBy {self.organisation}"
+
 
 class RegOfTournaments(models.Model):
-	regOn = models.DateTimeField(auto_now_add=True)
-	regBy = models.OneToOneField(User,related_name='registeredBy', blank=True,on_delete=models.CASCADE)
-	tournament = models.ForeignKey(Tournament,blank=True,on_delete=models.CASCADE)
-	team = models.OneToOneField(Team, related_name='teamName', blank=True,on_delete=models.CASCADE)
-	def __str__(self):
-		return str(self.team)
-		
+    regOn = models.DateTimeField(auto_now_add=True)
+    regBy = models.OneToOneField(
+        User, related_name="registeredBy", blank=True, on_delete=models.CASCADE
+    )
+    tournament = models.ForeignKey(Tournament, blank=True, on_delete=models.CASCADE)
+    team = models.OneToOneField(
+        Team, related_name="teamName", blank=True, on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return str(self.team)
+
+
 class RoadmapOfTournament(models.Model):
-	roadmap_data = models.JSONField()
-	tournament = models.OneToOneField(Tournament,on_delete=models.CASCADE,blank=True)
-	created_on = models.DateTimeField(auto_now_add=True)
-	created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    roadmap_data = models.JSONField()
+    tournament = models.OneToOneField(Tournament, on_delete=models.CASCADE, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 class RoadmapRoundsDetail(models.Model):
-	tournament = models.ForeignKey(Tournament,on_delete=models.CASCADE)
-	round_one = models.JSONField(default=None,blank=True,null=True)
-	round_two = models.JSONField(default=None,blank=True,null=True)
-	round_three = models.JSONField(default=None,blank=True,null=True)
-	round_four = models.JSONField(default=None,blank=True,null=True)
-	round_five = models.JSONField(default=None,blank=True,null=True)
-	round_six = models.JSONField(default=None,blank=True,null=True)
-	round_seven = models.JSONField(default=None,blank=True,null=True)
-	round_eight = models.JSONField(default=None,blank=True,null=True)
-	round_nine = models.JSONField(default=None,blank=True,null=True)
-	round_ten = models.JSONField(default=None,blank=True,null=True)
+    tournament = models.OneToOneField(Tournament, on_delete=models.CASCADE)
+    round_one = models.JSONField(default=None, blank=True, null=True)
+    round_two = models.JSONField(default=None, blank=True, null=True)
+    round_three = models.JSONField(default=None, blank=True, null=True)
+    round_four = models.JSONField(default=None, blank=True, null=True)
+    round_five = models.JSONField(default=None, blank=True, null=True)
+    round_six = models.JSONField(default=None, blank=True, null=True)
+    round_seven = models.JSONField(default=None, blank=True, null=True)
+    round_eight = models.JSONField(default=None, blank=True, null=True)
+    round_nine = models.JSONField(default=None, blank=True, null=True)
+    round_ten = models.JSONField(default=None, blank=True, null=True)

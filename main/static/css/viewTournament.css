@@ -70,10 +70,14 @@ align-items:center;
 		}
  	& div{
  		display:flex;
- 		gap:5px;
+		gap:5px;
+		& a{
+			display: contents;
+		}
  		 .button{
 	        padding:20px;
-	        flex:1;
+			flex:1;
+			margin-bottom:5px;
 			background:#616161;
 			border:transparent;
 			color:black;

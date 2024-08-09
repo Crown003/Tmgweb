@@ -342,6 +342,11 @@ def viewTournament(request, id):
 
 
 def createGroup(request):
+    """
+    a bit of improvement needed in the group distribution logic it is right now not good enough...
+    to handle data.
+    issue: the data adds each time we create groups into db! irrespective of the data was previously added or not.
+    """
     if request.method == "POST":
         reg_team_object = RegOfTournaments.objects.filter(
             tournament=request.POST.get("tournament_id")
@@ -371,25 +376,45 @@ def createGroup(request):
             print(group_data)
             match request.POST["round"]:
                 case "one":
-                    task.round_one = json.dumps(group_data)
+                    _data = json.loads(task.round_one)
+                    _data.update(group_data)
+                    task.round_one = _data
                 case "two":
-                    task.round_two = json.dumps(group_data)
+                    _data = json.loads(task.round_two)
+                    _data.update(group_data)
+                    task.round_two = _data
                 case "three":
-                    task.round_three = json.dumps(group_data)
+                    _data = json.loads(task.round_three)
+                    _data.update(group_data)
+                    task.round_three = _data
                 case "four":
-                    task.round_four = json.dumps(group_data)
+                    _data = json.loads(task.round_four)
+                    _data.update(group_data)
+                    task.round_four = _data
                 case "five":
-                    task.round_five = json.dumps(group_data)
+                    _data = json.loads(task.round_five)
+                    _data.update(group_data)
+                    task.round_five = _data
                 case "six":
-                    task.round_six = json.dumps(group_data)
+                    _data = json.loads(task.round_six)
+                    _data.update(group_data)
+                    task.round_six = _data
                 case "seven":
-                    task.round_seven = json.dumps(group_data)
+                    _data = json.loads(task.round_seven)
+                    _data.update(group_data)
+                    task.round_seven = _data
                 case "eight":
-                    task.round_eight = json.dumps(group_data)
+                    _data = json.loads(task.round_eight)
+                    _data.update(group_data)
+                    task.round_eight = _data
                 case "nine":
-                    task.round_nine = json.dumps(group_data)
+                    _data = json.loads(task.round_nine)
+                    _data.update(group_data)
+                    task.round_nine = _data
                 case "ten":
-                    task.round_ten = json.dumps(group_data)
+                    _data = json.loads(task.round_ten)
+                    _data.update(group_data)
+                    task.round_ten = _data
             try:
                 task.save()
                 messages.success(request, "Round details updated successfully!")
@@ -423,7 +448,8 @@ def viewGroups(request, id):
         data = RoadmapRoundsDetail.objects.get(tournament=id)
         match request.POST["round"]:
             case "one":
-                filtered_data = json.loads(data.round_one[::])
+                data = data.round_one
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -433,8 +459,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "two":
-                filtered_data = json.loads(data.round_two[::])
-                teams_data = {}
+                data = json.loads(data.round_two)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
                         id__in=filtered_data[item]
@@ -443,7 +469,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "three":
-                filtered_data = json.loads(data.round_three[::])
+                data = json.loads(data.round_three)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -453,7 +480,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "four":
-                filtered_data = json.loads(data.round_four[::])
+                data = json.loads(data.round_four)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -463,7 +491,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "five":
-                filtered_data = json.loads(data.round_five[::])
+                data = json.loads(data.round_five)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -473,7 +502,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "six":
-                filtered_data = json.loads(data.round_six[::])
+                data = json.loads(data.round_six)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -483,7 +513,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "seven":
-                filtered_data = json.loads(data.round_seven[::])
+                data = json.loads(data.round_seven)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -493,7 +524,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "eight":
-                filtered_data = json.loads(data.round_eight[::])
+                data = json.loads(data.round_eight)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -503,7 +535,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "nine":
-                filtered_data = json.loads(data.round_nine[::])
+                data = json.loads(data.round_nine)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -513,7 +546,8 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "ten":
-                filtered_data = json.loads(data.round_ten[::])
+                data = json.loads(data.round_ten)
+                filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -531,13 +565,62 @@ def viewGroups(request, id):
 
 def createRoadmap(request, id):
     if request.method == "POST":
-        if request.POST == "":
-            print("none")
-            messages.error(request, "No data ?")
-            return render(
-                request, "roadmapForm.html", {"list": [x for x in range(1, 11)]}
+        rounds = []
+        for i in range(1, 11):
+            round_name = request.POST.get(f"round_name_{i}")
+            teams_in_round = request.POST.get(f"number_of_teams_{i}")
+            advancing_teams = request.POST.get(f"teams_qualify_{i}")
+            is_last_round = request.POST.get(f"last_round_{i}")
+            if is_last_round == "on":
+                if (round_name and teams_in_round) or advancing_teams:
+                    temp = {
+                        "roundName": round_name,
+                        "teamsInRound": teams_in_round,
+                        "advancingTeams": advancing_teams,
+                    }
+                    rounds.append(temp)
+                    break
+            else:
+                if round_name and teams_in_round and advancing_teams:
+                    temp = {
+                        "roundName": round_name,
+                        "teamsInRound": teams_in_round,
+                        "advancingTeams": advancing_teams,
+                    }
+                    rounds.append(temp)
+                    continue
+        try:
+            help_str = [
+                "round_one",
+                "round_two",
+                "round_three",
+                "round_four",
+                "round_five",
+                "round_six",
+                "round_seven",
+                "round_eight",
+                "round_nine",
+                "round_ten",
+            ]  # Using help_str to frame the field names of the model RoadmapRoundsDetails
+            task = RoadmapRoundsDetail(tournament=Tournament.objects.get(id=id))
+            task.save()
+            task, createdOBJ = RoadmapRoundsDetail.objects.get_or_create(
+                tournament=Tournament.objects.get(id=id)
             )
-        print(request.POST.get(round_name_1))
+            for index, round_data in enumerate(rounds):
+                if round_data:  # Ensure that there is data to be set
+                    setattr(task, help_str[index], round_data)
+                else:
+                    break
+            task.save()
+            messages.success(request, "Roadmap Created Successfully.")
+        except Exception as e:
+            print(e)
+            messages.warning(
+                request, "Something went wrong! Check your data and try again."
+            )
+        finally:
+            return redirect(reverse("OrgViewTournament", args=[id]))
     return render(request, "roadmapForm.html", {"list": [x for x in range(1, 11)]})
 
 

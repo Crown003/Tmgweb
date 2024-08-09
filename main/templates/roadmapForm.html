@@ -11,15 +11,19 @@
       <legend>Round {{ i }}</legend>
       <div>
         <label for="round_name_{{ i }}">Name of Round {{ i }}:</label>
-        <input type="text" id="round_name_{{ i }}" name="round_name_{{ i }}">
+        <input type="text" id="round_name_{{ i }}" name="round_name_{{ i }}" placeholder="Enter Round Name">
       </div>
       <div>
         <label for="number_of_teams_{{ i }}">Number of Teams:</label>
-        <input type="number" id="number_of_teams_{{ i }}" name="number_of_teams_{{ i }}">
+        <input type="number" id="number_of_teams_{{ i }}" name="number_of_teams_{{ i }}" placeholder="Enter Number of Teams In This Round">
       </div>
       <div>
         <label for="teams_qualify_{{ i }}">Number of Teams Qualify for Next Round:</label>
-        <input type="number" id="teams_qualify_{{ i }}" name="teams_qualify_{{ i }}">
+        <input type="number" id="teams_qualify_{{ i }}" name="teams_qualify_{{ i }}" placeholder="Enter Total Number OF Teams Qualify For Next Roound">
+      </div>
+      <div>
+        <label style="display:inline-block" for="last_round_{{i}}">is this is last Round ?</label>
+        <input class="confirmCheckbox" type="checkbox" name="last_round_{{ i }}" id="last_round{{ i }}">
       </div>
     </div>
   {% endfor %}
