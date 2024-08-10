@@ -24,12 +24,11 @@ from .models import (
     Game,
     UserSupport,
     TeamDetail,
-    RoadmapOfTournament,
     RoadmapRoundsDetail,
 )
 from django.db import IntegrityError
 from django.db.models import Q
-from .utils import send_mail_to_user, get_number_of_groups
+from .utils import send_mail_to_user, get_number_of_groups, is_groups_distributed
 import json
 
 
@@ -52,7 +51,10 @@ def manageSite(request):
             createTournament.save(commit=False)
             createTournament.instance.created_by = request.user
             createTournament.save()
-            messages.success(request, "Tournament created successfully.")
+            messages.success(
+                request,
+                "Tournament created successfully.important:generate or upload your tournament roadmap.",
+            )
             return redirect("Management")
     createTournament = CreateTournament()
     orgTourny = Tournament.objects.filter(
@@ -273,7 +275,30 @@ def viewTeamDetails(request, id):
 def viewTournamentPage(request, id):
     # this window is for user side tournament Details. view.
     tournamentDetails = Tournament.objects.get(id=id)
-    roadmapOfTournament = RoadmapOfTournament.objects.get(tournament=tournamentDetails)
+    try:
+        roadmapOfTournament = RoadmapRoundsDetail.objects.get(
+            tournament=tournamentDetails
+        )
+        roadmapData = {}
+        for i in [
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+            "ten",
+        ]:
+            round_data = getattr(roadmapOfTournament, f"round_{i}", None)
+            if round_data:
+                roadmapData.update({f"Round {i}": round_data})
+            else:
+                break
+    except:
+        roadmapOfTournament = "tournament roadmap is not yet updated."
     if request.method == "POST":
         try:
             selectedTeamId = request.POST.get("teamId")
@@ -312,10 +337,14 @@ def viewTournamentPage(request, id):
                 request, "Team not found! please select a team and try again."
             )
             return redirect("Tournament")
+    print(roadmapData)
     return render(
         request,
         "tournamentDetails.html",
-        {"tournament": tournamentDetails, "roadmap": roadmapOfTournament},
+        {
+            "tournament": tournamentDetails,
+            "roadmap": roadmapData,
+        },
     )
 
 
@@ -370,7 +399,7 @@ def createGroup(request):
             group_number = 1
             task, created = RoadmapRoundsDetail.objects.get_or_create(
                 tournament=Tournament.objects.model(
-                    id=request.POST.get("tournament_id")
+                    id=request.POST.get("tournament_id"), created_by=request.user
                 )
             )
             print(group_data)
@@ -445,10 +474,21 @@ def TournamentPage(request):
 
 def viewGroups(request, id):
     if request.method == "POST":
-        data = RoadmapRoundsDetail.objects.get(tournament=id)
+        try:
+            data = RoadmapRoundsDetail.objects.get(tournament=id)
+        except Exception as e:
+            if "RoadmapRoundsDetail matching query does not exist" in str(e):
+                messages.warning(request, "Teams Distribution is not happened yet.")
+            return redirect(reverse("ViewGroupsAdmin", args=[id]))
         match request.POST["round"]:
             case "one":
                 data = data.round_one
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -459,7 +499,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "two":
-                data = json.loads(data.round_two)
+                data = data.round_two
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(
@@ -469,7 +515,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "three":
-                data = json.loads(data.round_three)
+                data = data.round_three
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -480,7 +532,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "four":
-                data = json.loads(data.round_four)
+                data = data.round_four
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -491,7 +549,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "five":
-                data = json.loads(data.round_five)
+                data = data.round_five
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -502,7 +566,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "six":
-                data = json.loads(data.round_six)
+                data = data.round_six
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -513,7 +583,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "seven":
-                data = json.loads(data.round_seven)
+                data = data.round_seven
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -524,7 +600,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "eight":
-                data = json.loads(data.round_eight)
+                data = data.round_eight
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -535,7 +617,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "nine":
-                data = json.loads(data.round_nine)
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                data = data.round_nine
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -546,7 +634,13 @@ def viewGroups(request, id):
                         queryobject.values_list("team__id", "team__teamname")
                     )
             case "ten":
-                data = json.loads(data.round_ten)
+                data = data.round_ten
+                if not data:
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
+                if not is_groups_distributed(data):
+                    messages.warning(request, "groups are not distributed yet.")
+                    return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 filtered_data = {k: v for k, v in data.items() if "group" in k}
                 teams_data = {}
                 for item in filtered_data:
@@ -602,10 +696,12 @@ def createRoadmap(request, id):
                 "round_nine",
                 "round_ten",
             ]  # Using help_str to frame the field names of the model RoadmapRoundsDetails
-            task = RoadmapRoundsDetail(tournament=Tournament.objects.get(id=id))
+            task = RoadmapRoundsDetail(
+                tournament=Tournament.objects.get(id=id), created_by=request.user
+            )
             task.save()
             task, createdOBJ = RoadmapRoundsDetail.objects.get_or_create(
-                tournament=Tournament.objects.get(id=id)
+                tournament=Tournament.objects.get(id=id), created_by=request.user
             )
             for index, round_data in enumerate(rounds):
                 if round_data:  # Ensure that there is data to be set

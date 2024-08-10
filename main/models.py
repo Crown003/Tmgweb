@@ -122,13 +122,6 @@ class RegOfTournaments(models.Model):
         return str(self.team)
 
 
-class RoadmapOfTournament(models.Model):
-    roadmap_data = models.JSONField()
-    tournament = models.OneToOneField(Tournament, on_delete=models.CASCADE, blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
 class RoadmapRoundsDetail(models.Model):
     tournament = models.OneToOneField(Tournament, on_delete=models.CASCADE)
     round_one = models.JSONField(default=None, blank=True, null=True)
@@ -141,3 +134,5 @@ class RoadmapRoundsDetail(models.Model):
     round_eight = models.JSONField(default=None, blank=True, null=True)
     round_nine = models.JSONField(default=None, blank=True, null=True)
     round_ten = models.JSONField(default=None, blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, default=None)

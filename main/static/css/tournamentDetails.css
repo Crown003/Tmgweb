@@ -97,6 +97,7 @@ display:none;
 		position:absolute;
 		top:1.5em;
 		right:1em;
+		cursor: pointer;
 		}
 	& h2{
 		text-align:center;
@@ -134,6 +135,40 @@ display:none;
 					border-radius:.5em;
 					border:transparent;
 					font-size:1.5em;
+					cursor: pointer;
 				}
 		}
+}
+.roadmapTableContainer{
+	width:100%;
+	height:fit-content;
+	background: url(https://marketplace.canva.com/EAE_NRav_uY/1/0/1600w/canva-red-neon-organized-desktop-gaming-background---desktop-wallpaper-2eq-ewMjw4U.jpg);
+	background-position: center;
+}
+.roadmapTable, tr, td{
+	border:1px solid darkred;
+	text-align: center;
+}
+.roadmapTable {
+	width:100%;
+	color:white;
+	thead{
+		tr{
+			text-transform:uppercase;
+			font-style:bold;
+		th{
+			padding:8px;
+			background: #e3301470;
+		}
+	}
+}
+	tbody{
+		tr{
+			text-transform:uppercase;
+			font-style:bold;
+			td{
+			padding:10px 5px;
+			}
+		}
+	}
 }

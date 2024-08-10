@@ -50,11 +50,26 @@
 <h2>ABOUT TOURNAMENT</h2>
 <p> {{tournament.description}}</p>
 <h2>ROADMAP OF TOURNAMENT</h2>
-{% for stage in roadmap.roadmap_data.stages %}
-<p>{{ stage }}</p>
-{% endfor %}
-</div>
-<div>
+	<div class="roadmapTableContainer">
+		<table class="roadmapTable">
+			<thead>
+				<tr>
+					<th>Round name</th>
+					<th>Teams in round</th>
+					<th>Advancing teams</th>
+				</tr>
+			</thead>
+			<y>
+				{% for key, value in roadmap.items %}
+				<tr>
+					<td>{{ value.roundName }}</td>
+					<td>{{ value.teamsInRound }}</td>
+					<td>{{ value.advancingTeams }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>	
+		</table>
+	</div>
 </div>
 </section>
 </main>
