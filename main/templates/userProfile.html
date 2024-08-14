@@ -24,9 +24,16 @@
 					{% endif %}
 				</div>
 		</div>
+		{% if request.user.userprofile.user_profile_image.url %}
 		<div class="userImage">
-			<img src="{{ request.user.userprofile.user_profile_image }}">
+			<img src= "{{ request.user.userprofile.user_profile_image.url }}">
 		</div>
+		{% else %}
+		<div class="userImage">
+			<img src="static/images/Profile.png"> 
+		</div>	
+		</div>
+		{% endif %}
 	</div>
 	<!-- Create Team Form Using Create Team Btn -->
 	<div id="createTeamForm" class="createTeamFormCont">

@@ -50,7 +50,7 @@ class EditUserForm(UserChangeForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        exclude = ["user", "is_organiser", "is_organiser_staff", "user_profile_image"]
+        exclude = ["user", "is_organiser", "is_organiser_staff"]  # "user_profile_image"
 
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)

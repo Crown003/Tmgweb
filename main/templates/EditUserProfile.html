@@ -5,7 +5,7 @@
 <div class="EditUserContainer">
 	<div class="FormContainer">	
 		<h1>EDIT YOUR PROFILE</h1>
-		<form action="{% url 'EditUserProfile' %}" method="POST">
+		<form action="{% url 'EditUserProfile' %}" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}	
 			{{ user_form.as_p }}
 			{{ profile_form.as_p }}

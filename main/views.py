@@ -41,7 +41,8 @@ def manageSite(request):
         messages.warning(request, "You are not an organiser/orgainsing staff.")
         return redirect("UserProfile")
     if request.method == "POST":
-        createTournament = CreateTournament(request.POST)
+        createTournament = CreateTournament(request.POST, request.FILES)
+        print(request.POST)
         if createTournament.is_valid():
             managers = createTournament.cleaned_data["manager"]
             for user in managers:
@@ -56,6 +57,7 @@ def manageSite(request):
                 "Tournament created successfully.important:generate or upload your tournament roadmap.",
             )
             return redirect("Management")
+
     createTournament = CreateTournament()
     orgTourny = Tournament.objects.filter(
         created_by=request.user
@@ -194,7 +196,9 @@ def editUserProfile(request):
     profile_form = EditProfileForm(instance=request.user.userprofile)
     if request.method == "POST":
         user_form = EditUserForm(request.POST, instance=request.user)
-        profile_form = EditProfileForm(request.POST, instance=request.user.userprofile)
+        profile_form = EditProfileForm(
+            request.POST, request.FILES, instance=request.user.userprofile
+        )
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -298,7 +302,7 @@ def viewTournamentPage(request, id):
             else:
                 break
     except:
-        roadmapOfTournament = "tournament roadmap is not yet updated."
+        roadmapOfTournament = False
     if request.method == "POST":
         try:
             selectedTeamId = request.POST.get("teamId")
@@ -337,13 +341,12 @@ def viewTournamentPage(request, id):
                 request, "Team not found! please select a team and try again."
             )
             return redirect("Tournament")
-    print(roadmapData)
     return render(
         request,
         "tournamentDetails.html",
         {
             "tournament": tournamentDetails,
-            "roadmap": roadmapData,
+            "roadmap": roadmapOfTournament,
         },
     )
 
@@ -405,44 +408,44 @@ def createGroup(request):
             print(group_data)
             match request.POST["round"]:
                 case "one":
-                    _data = json.loads(task.round_one)
-                    _data.update(group_data)
+                    _data = task.round_one
+                    _data.update({"groupData": group_data})
                     task.round_one = _data
                 case "two":
-                    _data = json.loads(task.round_two)
-                    _data.update(group_data)
+                    _data = task.round_two
+                    _data.update({"groupData": group_data})
                     task.round_two = _data
                 case "three":
-                    _data = json.loads(task.round_three)
-                    _data.update(group_data)
+                    _data = task.round_three
+                    _data.update({"groupData": group_data})
                     task.round_three = _data
                 case "four":
-                    _data = json.loads(task.round_four)
-                    _data.update(group_data)
+                    _data = task.round_four
+                    _data.update({"groupData": group_data})
                     task.round_four = _data
                 case "five":
-                    _data = json.loads(task.round_five)
-                    _data.update(group_data)
+                    _data = task.round_five
+                    _data.update({"groupData": group_data})
                     task.round_five = _data
                 case "six":
-                    _data = json.loads(task.round_six)
-                    _data.update(group_data)
+                    _data = task.round_six
+                    _data.update({"groupData": group_data})
                     task.round_six = _data
                 case "seven":
-                    _data = json.loads(task.round_seven)
-                    _data.update(group_data)
+                    _data = task.round_seven
+                    _data.update({"groupData": group_data})
                     task.round_seven = _data
                 case "eight":
-                    _data = json.loads(task.round_eight)
-                    _data.update(group_data)
+                    _data = task.round_eight
+                    _data.update({"groupData": group_data})
                     task.round_eight = _data
                 case "nine":
-                    _data = json.loads(task.round_nine)
-                    _data.update(group_data)
+                    _data = task.round_nine
+                    _data.update({"groupData": group_data})
                     task.round_nine = _data
                 case "ten":
-                    _data = json.loads(task.round_ten)
-                    _data.update(group_data)
+                    _data = task.round_ten
+                    _data.update({"groupData": group_data})
                     task.round_ten = _data
             try:
                 task.save()
@@ -483,13 +486,14 @@ def viewGroups(request, id):
         match request.POST["round"]:
             case "one":
                 data = data.round_one
+                print(data)
                 if not data:
                     messages.warning(request, "groups are not distributed yet.")
                     return redirect(reverse("ViewGroupsAdmin", args=[id]))
                 if not is_groups_distributed(data):
                     messages.warning(request, "groups are not distributed yet.")
                     return redirect(reverse("ViewGroupsAdmin", args=[id]))
-                filtered_data = {k: v for k, v in data.items() if "group" in k}
+                filtered_data = {k: v for k, v in data["groupData"].items()}
                 teams_data = {}
                 for item in filtered_data:
                     queryobject = RegOfTournaments.objects.filter(

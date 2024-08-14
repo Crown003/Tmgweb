@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.conf.urls.static import static
+from django.conf import settings
 import os
 
 urlpatterns = [
@@ -33,4 +34,4 @@ urlpatterns = [
     path("viewGroupsAdmin/<int:id>", views.viewGroups, name="ViewGroupsAdmin"),
     path("createRoadmap/<int:id>", views.createRoadmap, name="createRoadmap"),
     path("api/User", views.getUser, name="GetUser"),
-] + static("/media/", document_root=os.path.join(os.path.abspath(__file__), "/media/"))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

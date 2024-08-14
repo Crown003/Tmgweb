@@ -15,7 +15,7 @@ class UserProfile(models.Model):
     is_organiser = models.BooleanField(default=False)
     is_organiser_staff = models.BooleanField(default=False)
     user_profile_image = models.ImageField(
-        upload_to="images/", default="static/images/Profile.png"
+        upload_to="userProfile/images/", default="static/images/Profile.png"
     )
     roles = models.ManyToManyField("Role", related_name="user_profiles")
     selected_games = models.ManyToManyField(Game)  # Assuming you have a Game model
@@ -95,8 +95,18 @@ class Tournament(models.Model):
         on_delete=models.CASCADE,
         default="",
     )
-    main_image = models.ImageField(upload_to="images/", blank=True, null=True)
-    logo = models.ImageField(upload_to="images/", blank=True, null=True)
+    main_image = models.ImageField(
+        upload_to="tournament/images/",
+        blank=True,
+        null=True,
+        default="static/images/MainBg.jpg",
+    )
+    logo = models.ImageField(
+        upload_to="tournament/images/",
+        blank=True,
+        null=True,
+        default="static/images/MainBg.jpg",
+    )
     slots = models.IntegerField("SLOTS", blank=True)
     pricePool = models.IntegerField(default=0)
     is_paid = models.BooleanField(default=False)

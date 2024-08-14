@@ -7,7 +7,7 @@
 {% block body %}
 <main class="tournamentDetailsContainer">
 <div class="mainImg">
-	<img src="{% static 'images/MainBg.jpg' %}">
+	<img src="{{tournament.main_image.url|default:'static/images/MainBg.jpg' }}">
 </div>
 <section class="detailsSection">
 	<h2>{{ tournament.name }} | organisedBy : <span>{{ tournament.organisation }}</span></h2>
@@ -50,6 +50,7 @@
 <h2>ABOUT TOURNAMENT</h2>
 <p> {{tournament.description}}</p>
 <h2>ROADMAP OF TOURNAMENT</h2>
+{% if roadmap %}
 	<div class="roadmapTableContainer">
 		<table class="roadmapTable">
 			<thead>
@@ -70,6 +71,9 @@
 			</tbody>	
 		</table>
 	</div>
+	{% else %}
+	<p>tournament roadmap is not updated yet.</p>
+{% endif %}
 </div>
 </section>
 </main>

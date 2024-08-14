@@ -27,7 +27,7 @@ def get_number_of_groups(totalTeams, teamInAGrp):
 
 
 def is_groups_distributed(data):
-    for key in data.keys():
+    for key in data["groupData"]:
         if "group" in key:
             return True
     return False
