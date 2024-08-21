@@ -25,6 +25,7 @@ urlpatterns = [
         views.viewTournamentPage,
         name="UserViewTournament",
     ),
+    path("deleteUserProfile", views.deleteUserProfileImage, name="DeleteProfileImage"),
     path(
         "orgainsertournamentDetails/<int:id>",
         views.viewTournament,

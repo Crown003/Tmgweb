@@ -144,18 +144,27 @@ background-size:130% 100%;
 }
 /* styling messages view */
 .messages{
-width:100%;
-margin:0 auto;
-position:relative;
-top:3.5em;
-z-index:999;
+  width: 100%;
+  margin: 0 auto;
+  position: absolute;
+  top:50px;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
 }
 .messagesText{
-padding:1em;
-color:#fff;
-font-family:var(--headingFont);
-font-weight:600;
-list-style:none;
+  color: #fff;
+    width: 100%;
+    font-family: var(--headingFont);
+    font-weight: 600;
+    list-style: none;
+    padding: 8px;
+}
+.close{
+  color:white;
+  cursor: pointer;
 }
 .success{
 background:#198754;

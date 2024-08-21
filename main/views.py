@@ -216,6 +216,18 @@ def editUserProfile(request):
     )
 
 
+def deleteUserProfileImage(request):
+    try:
+        userObj = UserProfile.objects.get(user=request.user)
+        userObj.user_profile_image = "static/images/Profile.png"
+        userObj.save()
+        messages.success(request, "Profile Image deleted successfully.")
+    except Exception as e:
+        messages.warning(request, "Something went wrong try again after some time.")
+        return redirect("UserProfile")
+    return redirect("UserProfile")
+
+
 def userGameDetails(request):
     return HttpResponse(request, "gameDetails")
 

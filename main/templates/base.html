@@ -31,12 +31,17 @@
 	</nav>	
 	</div>
 	{% if messages %}
-	<ul class="messages">
-	    {% for message in messages %}
-	    <li {% if message.tags %} class="messagesText {{ message.tags }}"{% endif %}>{{ message }}</li>
-	    {% endfor %}
-	</ul>
-	{% endif %}
+	<div style="position:relative">
+		<ul id="message" class="messages">
+			{% for message in messages %}
+			<li {% if message.tags %} class="messagesText {{ message.tags }}"{% endif %}>{{ message }}</li>
+			{% endfor %}
+			<div class="close" onclick="closeMessage()">
+				&#10006;
+			</div>
+		</ul>
+	</div>
+		{% endif %}
 	{% block body %}
 	{% endblock %}
 	<footer class="footer">
@@ -45,6 +50,13 @@
 	</footer>
 </div>
 </body>
+<script>
+	function closeMessage(){
+		let messageDiv = document.querySelector("#message");
+		messageDiv.style.display = "none";
+
+	}
+</script>
 {% block script %}
 {% endblock %}
 </html>

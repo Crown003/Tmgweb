@@ -2,6 +2,7 @@
 {% block cssPath %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/UserProfile.css' %}"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 {% block title %} UserProfile {% endblock %}
 {% block body %}
@@ -24,13 +25,14 @@
 					{% endif %}
 				</div>
 		</div>
-		{% if request.user.userprofile.user_profile_image.url %}
+		{% if not "static/images/Profile.png" in request.user.userprofile.user_profile_image.url  %}
 		<div class="userImage">
 			<img src= "{{ request.user.userprofile.user_profile_image.url }}">
+			<a href="{% url 'DeleteProfileImage' %}"><i class="fa fa-trash-o"></i></a>
 		</div>
 		{% else %}
 		<div class="userImage">
-			<img src="static/images/Profile.png"> 
+			<img src= "{{ request.user.userprofile.user_profile_image.url }}">
 		</div>	
 		</div>
 		{% endif %}
@@ -86,7 +88,7 @@
 </div>
 {% endblock %}
 {% block script %}
-<script>
+<script> 
 function showCreateTeam() {
 	let element = document.getElementById("createTeamForm");
 	element.style.transition = "height 2s";
