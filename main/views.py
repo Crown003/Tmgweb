@@ -71,6 +71,7 @@ def manageSite(request):
 
 
 def UserSignIn(request):
+    print(request.user.is_authenticated)
     form = UserLogin()
     if request.method == "POST":
         form = UserLogin(request.POST)
@@ -221,7 +222,9 @@ def deleteUserProfileImage(request):
     try:
         user_obj = UserProfile.objects.get(user=request.user)
         if user_obj.user_profile_image:
-            user_obj.user_profile_image.delete(save=True)  # Delete and save changes in datafiles tooo.
+            user_obj.user_profile_image.delete(
+                save=True
+            )  # Delete and save changes in datafiles tooo.
             user_obj.save()
             messages.success(request, "Profile Image deleted successfully.")
         else:

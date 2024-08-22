@@ -205,10 +205,12 @@ background:orange;
 }
 .footer{
 	display:flex;
+  height:20vh;
+  padding:10px;
 	flex-direction:column;
-	justify-content:flex-end;
+	justify-content:center;
 	align-items:center;
 	color:#fff;
-	height:10vh;
-	background:#000;
+	background:#c20411;
+  margin-top: 20px;
 }
