@@ -25,14 +25,14 @@
 					{% endif %}
 				</div>
 		</div>
-		{% if not "static/images/Profile.png" in request.user.userprofile.user_profile_image.url  %}
+		{% if request.user.userprofile.user_profile_image.url != "" %}
 		<div class="userImage">
 			<img src= "{{ request.user.userprofile.user_profile_image.url }}">
 			<a href="{% url 'DeleteProfileImage' %}"><i class="fa fa-trash-o"></i></a>
 		</div>
 		{% else %}
 		<div class="userImage">
-			<img src= "{{ request.user.userprofile.user_profile_image.url }}">
+			<img src= "static/images/Profile.png">
 		</div>	
 		</div>
 		{% endif %}

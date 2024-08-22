@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.auth import login, logout, authenticate
 from .forms import (
     UserRegistration,
@@ -218,13 +219,17 @@ def editUserProfile(request):
 
 def deleteUserProfileImage(request):
     try:
-        userObj = UserProfile.objects.get(user=request.user)
-        userObj.user_profile_image = "static/images/Profile.png"
-        userObj.save()
-        messages.success(request, "Profile Image deleted successfully.")
+        user_obj = UserProfile.objects.get(user=request.user)
+        if user_obj.user_profile_image:
+            user_obj.user_profile_image.delete(save=True)  # Delete and save changes in datafiles tooo.
+            user_obj.save()
+            messages.success(request, "Profile Image deleted successfully.")
+        else:
+            messages.warning(request, "No profile image found to delete.")
+    except FileNotFoundError:
+        messages.warning(request, "Profile image not found.")
     except Exception as e:
-        messages.warning(request, "Something went wrong try again after some time.")
-        return redirect("UserProfile")
+        messages.warning(request, "An error occurred: {0}".format(e))
     return redirect("UserProfile")
 
 

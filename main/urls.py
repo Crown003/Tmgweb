@@ -1,10 +1,13 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.static import serve
 import os
 
 urlpatterns = [
+    re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
+    re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
     path("", views.home, name="Home"),
     path("UserSignIn", views.UserSignIn, name="SignIn"),
     path("UserSignUp", views.UserSignUp, name="SignUp"),
@@ -36,3 +39,6 @@ urlpatterns = [
     path("createRoadmap/<int:id>", views.createRoadmap, name="createRoadmap"),
     path("api/User", views.getUser, name="GetUser"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
