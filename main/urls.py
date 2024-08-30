@@ -37,7 +37,9 @@ urlpatterns = [
     path("createGroups", views.createGroup, name="CreateGroups"),
     path("viewGroupsAdmin/<int:id>", views.viewGroups, name="ViewGroupsAdmin"),
     path("createRoadmap/<int:id>", views.createRoadmap, name="createRoadmap"),
+    path("notification", views.notificationService, name="notification"),
     path("api/User", views.getUser, name="GetUser"),
+    path("test/", views.test, name="test"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

@@ -117,7 +117,7 @@ def signout(request):
 
 
 def home(request):
-    return render(request, "home.html")
+    return render(request, "home.html", {"room_name": "broadcast"})
 
 
 def about(request):
@@ -234,6 +234,24 @@ def deleteUserProfileImage(request):
     except Exception as e:
         messages.warning(request, "An error occurred: {0}".format(e))
     return redirect("UserProfile")
+
+
+from asgiref.sync import async_to_sync
+from django.shortcuts import HttpResponse
+from channels.layers import get_channel_layer
+
+
+def test(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "notification_broadcast",
+        {"type": "send_notification", "message": json.dumps("Notification")},
+    )
+    return HttpResponse("Done")
+
+
+def notificationService(request):
+    return render(request, "notification.html", {"room_name": "broadcast"})
 
 
 def userGameDetails(request):

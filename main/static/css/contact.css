@@ -1,6 +1,7 @@
 .main-div{
 padding-top:5em;
 width:100%;
+min-height:80vh;
 color:#fff;
 }
 .main-div h2{

@@ -1,5 +1,8 @@
 {% extends "base.html" %}
-{% block cssPath %}<link rel="stylesheet" href="static/css/contact.css"/>{% endblock %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="static/css/contact.css"/>
+{% endblock %}
 {% block title %} Contact Us{% endblock %}
 {% block body %}
 <div class="main-div">
@@ -16,10 +19,10 @@
     </div>
     <div class="row">
       <div class="col-25">
-        <label for="subject">Subject</label>
+        <label for="Subject">Subject</label>
       </div>
       <div class="col-75">
-        <input type="text" name="Subject" placeholder="Write subject.." ></input>
+        <input type="text" id="Subject" name="Subject" placeholder="Write subject.." ></input>
       </div>
     </div>
      <div class="row">

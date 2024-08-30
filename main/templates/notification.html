@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block cssPath %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/notification.css' %}">
+{% endblock %}
+{% block title %} Notification {% endblock %}
+{% block body %}
+<div class="notify-container">
+    <div class="data-area">
+        {% with ''|center:15 as range %}
+        {% for _ in range %}
+        <div class="messages-data">
+            <p id="title"></p>
+            <h4>Title of message</h4>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nulla fuga deserunt aliquam, velit similique neque possimus ipsum tenetur tempora earum vel commodi sint consequatur!</p>
+        </div>
+        {% endfor %}
+    {% endwith %}
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    notificationSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            //document.querySelector('#chat-log').value += (data.message + '\n');
+            // console.log(data);
+            document.querySelector("#title").innerHTML = data;
+            // document.getElementById("notifications-dropdown").innerHTML = "<li class='dropdown-item'>" + data + "</li><hr class='dropdown-divider'>" + document.getElementById("notifications-dropdown").innerHTML;
+            // document.getElementById("notification-badge").innerHTML = parseInt(document.getElementById("notification-badge").innerHTML) + 1;
+        };
+    // let obj = new WebSocket("ws://127.0.0.1:8000/ws/ac/")
+    //     // by general object method
+    //     obj.onopen = () => {
+    //         console.log("websocket connected....")
+    //         obj.send("hii this is a default message.")
+    //     }
+    //     obj.onmessage = (e) => {
+    //         let elmt = document.querySelector("#title");
+    //         elmt.innerHTML = e.data
+    //     }
+</script>
+{% endblock %}
