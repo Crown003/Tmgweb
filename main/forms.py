@@ -155,7 +155,6 @@ class EditTeamDetailsForm(forms.ModelForm):
 
 class DateInput(forms.DateInput):
     input_type = "date"
-
     def __init__(self, attrs=None, format="%Y-%m-%d"):
         super().__init__(attrs={"data-date-format": format})
 
@@ -169,5 +168,5 @@ class CreateTournament(forms.ModelForm):
             "registrations_ends_on": DateInput(),
             "starts_on": DateInput(),
             "ends_on": DateInput(),
-            "manager": forms.SelectMultiple(),  # forms.CheckboxSelectMultiple(),  # Or forms.SelectMultiple() for a dropdown
+            "manager": forms.SelectMultiple(),
         }
