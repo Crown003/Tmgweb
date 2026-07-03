@@ -1,21 +1,42 @@
 {% extends "base.html" %}
-{% block cssPath %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/viewTournament.css' %}"/>
-<link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
-{% endblock %}
-{% block title %} ViewTournament {% endblock %}
+{% block title %} Team Details {% endblock %}
 {% block body %}
-<div class="DataContainer">
-{% if teamDetails != "" %}
- <h1> Team Name : {{ teamDetails.details_of_team }}</h1>
- <h1>Player One : {{ teamDetails.player_one }}</h1>
- <h1>Player Two : {{ teamDetails.player_two }}</h1>
- <h1>Player Three : {{ teamDetails.player_three }}</h1>
- <h1>Player Four : {{ teamDetails.player_four }}</h1>
- <h1>Player Five : {{ teamDetails.player_five }}</h1>
-{% else %}
- <h1> Your Team Profile is not completed complete it first </h1>
-{% endif %}
-</div>
+<main class="w-full min-h-[85vh] px-4 py-12 relative">
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.04)_0%,_transparent_50%)]"></div>
+
+	<div class="relative z-10 max-w-3xl mx-auto">
+		<a href="{% url 'UserProfile' %}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-8 group">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+			Back to Profile
+		</a>
+
+		{% if teamDetails != "" %}
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-8 sm:p-10 backdrop-blur-sm space-y-6">
+			<h2 class="text-2xl font-bold text-white">{{ teamDetails.details_of_team }}</h2>
+			
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				{% with players="player_one,player_two,player_three,player_four,player_five" %}
+				{% for label in "1,2,3,4,5"|make_list %}
+				<div class="p-4 rounded-xl bg-zinc-950/50 border border-zinc-800/50">
+					<span class="block text-xs text-zinc-500 uppercase tracking-wider mb-1">Player {{ label }}</span>
+					<span class="text-sm font-medium text-white">
+						{% if label == "1" %}{{ teamDetails.player_one }}{% endif %}
+						{% if label == "2" %}{{ teamDetails.player_two }}{% endif %}
+						{% if label == "3" %}{{ teamDetails.player_three }}{% endif %}
+						{% if label == "4" %}{{ teamDetails.player_four }}{% endif %}
+						{% if label == "5" %}{{ teamDetails.player_five }}{% endif %}
+					</span>
+				</div>
+				{% endfor %}
+				{% endwith %}
+			</div>
+		</div>
+		{% else %}
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-10 text-center backdrop-blur-sm">
+			<p class="text-zinc-400 mb-4">Your team profile is not completed yet.</p>
+			<a href="{% url 'UserProfile' %}" class="text-sm font-semibold text-red-500 hover:text-red-400 transition-colors">Complete it now &rarr;</a>
+		</div>
+		{% endif %}
+	</div>
+</main>
 {% endblock %}

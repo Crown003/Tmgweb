@@ -1,78 +1,286 @@
 {% extends "base.html" %}
-{% block cssPath %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/management.css' %}"/>
-<link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
-{% endblock %}
-{% block title %} managementArea {% endblock %}
+{% block title %} Management {% endblock %}
 {% block body %}
-<div class="managementAreaContainer">
-	<div class="organiserDetails">
-		<h2>{{ request.user }}</h2>
-		<h3>email : {{ request.user.email }}</h3>
-	{% if request.user.userprofile.is_organiser %}
-    <Button id="createTournyBtn" class="createTournyBtn">CREATE TOURNAMENT</Button>
-		<div id="formShow">
-			<div class="formContainer">
-				<form action="" method="post" enctype="multipart/form-data">
-				<div id="closeCreateTournamentBtn" > 
-					&#10060;
-				</div>
-				{% csrf_token %}
-				{{ createTournamentForm.as_p }}
-				<input type="submit" value="SUBMIT">
+<main class="w-full min-h-[85vh] px-4 py-12 relative">
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.04)_0%,_transparent_50%)]"></div>
+
+	<div class="relative z-10 max-w-6xl mx-auto space-y-10">
+		<a href="{% url 'UserProfile' %}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors group">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+			Back to Profile
+		</a>
+
+		<!-- Header -->
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-8 backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+			<div>
+				<h2 class="text-2xl font-bold text-white mb-1">Management Area</h2>
+				<p class="text-sm text-zinc-500">{{ request.user }} &middot; {{ request.user.email }}</p>
+			</div>
+			{% if request.user.userprofile.is_organiser %}
+			<button id="createTournyBtn" class="px-6 py-2.5 rounded-full text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">
+				Create Tournament
+			</button>
+			{% endif %}
+		</div>
+
+		<!-- Create Tournament Modal -->
+		{% if request.user.userprofile.is_organiser %}
+		<div id="formModal" class="fixed inset-0 z-50 items-center justify-center hidden">
+			<div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="formBackdrop"></div>
+			<div class="relative w-full max-w-xl bg-zinc-900 rounded-2xl border border-zinc-800 p-8 mx-4 transform transition-all translate-y-4 opacity-0 max-h-[85vh] overflow-y-auto" id="formContent">
+				<button id="closeFormBtn" class="absolute top-5 right-5 text-zinc-500 hover:text-white transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
+				
+				<h2 class="text-xl font-bold text-white mb-6">Create Tournament</h2>
+				
+				<form action="" method="post" enctype="multipart/form-data" class="space-y-4 [&_input]:w-full [&_input]:px-4 [&_input]:py-2.5 [&_input]:rounded-xl [&_input]:bg-zinc-950 [&_input]:border [&_input]:border-zinc-800 [&_input]:text-white [&_input]:focus:outline-none [&_input]:focus:border-red-500/50 [&_input]:focus:ring-1 [&_input]:focus:ring-red-500/30 [&_input[type='checkbox']]:w-4 [&_input[type='checkbox']]:h-4 [&_input[type='checkbox']]:px-0 [&_input[type='checkbox']]:py-0 [&_input[type='checkbox']]:rounded [&_input[type='checkbox']]:accent-red-600 [&_input[type='file']]:px-2 [&_input[type='file']]:py-1.5 [&_input[type='file']]:text-xs [&_label]:block [&_label]:text-xs [&_label]:font-semibold [&_label]:text-zinc-400 [&_label]:uppercase [&_label]:tracking-wider [&_label]:mb-1.5 [&_select]:w-full [&_select]:px-4 [&_select]:py-2.5 [&_select]:rounded-xl [&_select]:bg-zinc-950 [&_select]:border [&_select]:border-zinc-800 [&_select]:text-white [&_select]:focus:outline-none [&_select]:focus:border-red-500/50 [&_textarea]:w-full [&_textarea]:px-4 [&_textarea]:py-2.5 [&_textarea]:rounded-xl [&_textarea]:bg-zinc-950 [&_textarea]:border [&_textarea]:border-zinc-800 [&_textarea]:text-white [&_textarea]:focus:outline-none [&_textarea]:focus:border-red-500/50 [&_textarea]:h-24">
+					{% csrf_token %}
+					
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<div>
+							<label>{{ createTournamentForm.organisation.label }}</label>
+							{{ createTournamentForm.organisation }}
+						</div>
+						<div>
+							<label>{{ createTournamentForm.name.label }}</label>
+							{{ createTournamentForm.name }}
+						</div>
+					</div>
+
+					<div>
+						<label>{{ createTournamentForm.description.label }}</label>
+						{{ createTournamentForm.description }}
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<div>
+							<label>{{ createTournamentForm.game.label }}</label>
+							{{ createTournamentForm.game }}
+						</div>
+						<div>
+							<label>{{ createTournamentForm.slots.label }}</label>
+							{{ createTournamentForm.slots }}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+						<div>
+							<label>{{ createTournamentForm.pricePool.label }}</label>
+							{{ createTournamentForm.pricePool }}
+						</div>
+						<div class="flex items-center gap-2 pt-6">
+							{{ createTournamentForm.is_paid }}
+							<label class="mb-0 cursor-pointer select-none normal-case tracking-normal text-xs text-zinc-400 font-medium" for="{{ createTournamentForm.is_paid.id_for_label }}">Is Paid</label>
+						</div>
+						<div>
+							<label>{{ createTournamentForm.priceOfSlot.label }}</label>
+							{{ createTournamentForm.priceOfSlot }}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+						<div>
+							<label>{{ createTournamentForm.starts_on.label }}</label>
+							{{ createTournamentForm.starts_on }}
+						</div>
+						<div>
+							<label>{{ createTournamentForm.ends_on.label }}</label>
+							{{ createTournamentForm.ends_on }}
+						</div>
+						<div>
+							<label>{{ createTournamentForm.registrations_ends_on.label }}</label>
+							{{ createTournamentForm.registrations_ends_on }}
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<div>
+							<label>{{ createTournamentForm.logo.label }}</label>
+							{{ createTournamentForm.logo }}
+						</div>
+						<div>
+							<label>{{ createTournamentForm.main_image.label }}</label>
+							{{ createTournamentForm.main_image }}
+						</div>
+					</div>
+
+					<div>
+						<label>{{ createTournamentForm.manager.label }}</label>
+						{{ createTournamentForm.manager }}
+					</div>
+
+					<div class="pt-4 flex justify-between items-center border-t border-zinc-800/60 mt-6">
+						<button type="button" onclick="closeModal()" class="text-sm text-zinc-500 hover:text-white transition-colors">Cancel</button>
+						<button type="submit" class="px-8 py-2.5 rounded-full text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">Create</button>
+					</div>
 				</form>
 			</div>
+		</div>
 		{% endif %}
-		</div>	
-		<div class="teamContainer" style="margin:0 auto;width:95%;">
-		{% if tournaments.count != 0 %}
-		<H2>YOUR TOURNAMENTS</H2>
-			<Table class ="teamTable">
-				<thead>
-					<tr>
-						<td>TOURNAMENT NAME</td>
-						<td>TOURNAMENT GAME</td>
-						<td>TOTAL SLOTS</td>
-					</tr>
-				</thead>
-				<tbody>
-					{% for tourny in tournaments %}
+
+		<!-- Tournaments Table -->
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-8 backdrop-blur-sm">
+			<h3 class="text-xl font-bold text-white mb-6">Your Tournaments</h3>
+
+			{% if tournaments.count != 0 %}
+			<div class="overflow-x-auto">
+				<table class="w-full text-left text-sm">
+					<thead class="text-xs text-zinc-500 uppercase tracking-wider border-b border-zinc-800">
 						<tr>
-							<td>{{ tourny.name }}</td>
-							<td>{{ tourny.game }}</td>
-							<td>{{ tourny.slots }}</td>
-							<td><a href="{% url 'OrgViewTournament' tourny.id %}">View</a></td>
+							<th class="px-4 py-3">Name</th>
+							<th class="px-4 py-3">Game</th>
+							<th class="px-4 py-3">Slots</th>
+							<th class="px-4 py-3 text-right">Actions</th>
 						</tr>
-					{% endfor %}
-				</tbody>
-			</Table>
+					</thead>
+					<tbody class="divide-y divide-zinc-800/50">
+						{% for tourny in tournaments %}
+						<tr class="hover:bg-zinc-800/30 transition-colors">
+							<td class="px-4 py-3.5 font-medium text-white">{{ tourny.name }}</td>
+							<td class="px-4 py-3.5 text-zinc-400">{{ tourny.game }}</td>
+							<td class="px-4 py-3.5 text-zinc-400">{{ tourny.slots }}</td>
+							<td class="px-4 py-3.5 text-right">
+								<a href="{% url 'OrgViewTournament' tourny.id %}" class="text-red-500 hover:text-red-400 text-xs font-semibold transition-colors">View &rarr;</a>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 			{% else %}
-				<h2> No Tournament Exist. Launch a Tournament.</h2>
+			<div class="text-center py-10">
+				<p class="text-zinc-500">No tournaments exist yet. Launch one!</p>
+			</div>
 			{% endif %}
-			<div id="recived"></div>
 		</div>
 	</div>
-</div>
+</main>
 {% endblock %}
 {% block script %}
 <script>
-let createFromBtn = document.getElementById("createTournyBtn")
-let OpenFormBtn = document.getElementById("createTournyBtn")
-OpenFormBtn.addEventListener("click",showForm);
+	const modal = document.getElementById("formModal");
+	const content = document.getElementById("formContent");
+	const openBtn = document.getElementById("createTournyBtn");
+	const closeBtn = document.getElementById("closeFormBtn");
+	const backdrop = document.getElementById("formBackdrop");
 
-let CloseFormBtn = document.getElementById("closeCreateTournamentBtn")
-CloseFormBtn.addEventListener("click",hideForm)
+	function openModal() {
+		modal.classList.remove("hidden"); modal.classList.add("flex");
+		setTimeout(() => { content.classList.remove("translate-y-4","opacity-0"); content.classList.add("translate-y-0","opacity-100"); }, 10);
+	}
+	function closeModal() {
+		content.classList.remove("translate-y-0","opacity-100"); content.classList.add("translate-y-4","opacity-0");
+		setTimeout(() => { modal.classList.remove("flex"); modal.classList.add("hidden"); }, 200);
+	}
+	if(openBtn) openBtn.addEventListener("click", openModal);
+	if(closeBtn) closeBtn.addEventListener("click", closeModal);
+	if(backdrop) backdrop.addEventListener("click", closeModal);
 
-function showForm(){
-	let form = document.getElementById("formShow")
-	form.style.display = "block";
-	createFromBtn.style.opacity = "0";
-}
-function hideForm(){
-	let form = document.getElementById("formShow")
-	form.style.display = "none";
-	createFromBtn.style.opacity = "1";
-}
+	// Enhancing Manager Field into Search and Add Pills Selector
+	document.addEventListener("DOMContentLoaded", () => {
+		const managerSelect = document.querySelector("select[name='manager']");
+		if (!managerSelect) return;
+
+		// Hide default multiple select element
+		managerSelect.style.display = "none";
+
+		// Create relative wrapper
+		const wrapper = document.createElement("div");
+		wrapper.className = "relative space-y-2";
+		managerSelect.parentNode.insertBefore(wrapper, managerSelect);
+		wrapper.appendChild(managerSelect);
+
+		// Pills container
+		const pillsContainer = document.createElement("div");
+		pillsContainer.className = "flex flex-wrap gap-2 min-h-[40px] p-2 rounded-xl bg-zinc-950/40 border border-zinc-800/50 empty:hidden";
+		wrapper.insertBefore(pillsContainer, managerSelect);
+
+		// Search Input
+		const searchInput = document.createElement("input");
+		searchInput.type = "text";
+		searchInput.placeholder = "Type manager username to add...";
+		searchInput.className = "w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30 transition-colors";
+		wrapper.insertBefore(searchInput, managerSelect);
+
+		// Dropdown element
+		const dropdown = document.createElement("div");
+		dropdown.className = "hidden absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-zinc-950 border border-zinc-800 rounded-xl z-50 shadow-2xl divide-y divide-zinc-850/50";
+		wrapper.insertBefore(dropdown, managerSelect);
+
+		const options = Array.from(managerSelect.options);
+
+		function updatePills() {
+			pillsContainer.innerHTML = "";
+			let hasSelected = false;
+			options.forEach(opt => {
+				if (opt.selected) {
+					hasSelected = true;
+					const pill = document.createElement("span");
+					pill.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20";
+					pill.innerHTML = `
+						<span>${opt.text}</span>
+						<button type="button" class="hover:text-red-300 font-bold ml-1 focus:outline-none">&times;</button>
+					`;
+					pill.querySelector("button").addEventListener("click", () => {
+						opt.selected = false;
+						// Trigger change event for Django form compatibility
+						managerSelect.dispatchEvent(new Event("change"));
+						updatePills();
+					});
+					pillsContainer.appendChild(pill);
+				}
+			});
+			if (!hasSelected) {
+				pillsContainer.style.display = "none";
+			} else {
+				pillsContainer.style.display = "flex";
+			}
+		}
+
+		// Initial load of pills
+		updatePills();
+
+		// Handle filtering and dropdown options display
+		searchInput.addEventListener("input", () => {
+			const query = searchInput.value.toLowerCase().trim();
+			if (!query) {
+				dropdown.classList.add("hidden");
+				return;
+			}
+
+			dropdown.innerHTML = "";
+			const matches = options.filter(opt => opt.text.toLowerCase().includes(query) && !opt.selected);
+
+			if (matches.length === 0) {
+				const noMatch = document.createElement("div");
+				noMatch.className = "px-4 py-2.5 text-xs text-zinc-500";
+				noMatch.textContent = "No matching users found";
+				dropdown.appendChild(noMatch);
+			} else {
+				matches.forEach(opt => {
+					const item = document.createElement("div");
+					item.className = "px-4 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800/50 hover:text-white cursor-pointer transition-colors";
+					item.textContent = opt.text;
+					item.addEventListener("click", () => {
+						opt.selected = true;
+						managerSelect.dispatchEvent(new Event("change"));
+						searchInput.value = "";
+						dropdown.classList.add("hidden");
+						updatePills();
+					});
+					dropdown.appendChild(item);
+				});
+			}
+			dropdown.classList.remove("hidden");
+		});
+
+		// Close dropdown when clicking outside
+		document.addEventListener("click", (e) => {
+			if (!wrapper.contains(e.target)) {
+				dropdown.classList.add("hidden");
+			}
+		});
+	});
 </script>
 {% endblock %}

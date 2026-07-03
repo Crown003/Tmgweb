@@ -51,10 +51,18 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         exclude = ["user", "is_organiser", "is_organiser_staff"]  # "user_profile_image"
+        widgets = {
+            'user_profile_image': forms.FileInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
-        selected_games = self.instance.selected_games.all()
+        self.fields["roles"] = forms.ModelMultipleChoiceField(
+            queryset=Role.objects.all(),
+            required=False,
+            label="Roles",
+            widget=forms.CheckboxSelectMultiple,
+        )
         self.fields["selected_games"] = forms.ModelMultipleChoiceField(
             queryset=Game.objects.all(),
             required=False,

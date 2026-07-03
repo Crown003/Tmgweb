@@ -1,31 +1,55 @@
 {% extends "base.html" %}
-{% block cssPath %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/Tournaments.css' %}"/>
-{% endblock %}
-{% block title %} managementArea {% endblock %}
+{% block title %} Tournaments {% endblock %}
 {% block body %}
-<div class="TournamentBaseContainer" >
-{% for game in games %}
-<h2 style="color:#fff;text-transform:uppercase;">{{ game }} TOURNAMENTS</h2>
-<section class="gameSection">
-	{% for tournament in tournaments %}
-		{% if tournament.game == game %}		
-			  <div class="gameBox">
-				<div class="gameBoxImgCont">
-				  <img src="{{tournament.main_image.url|default:'static/Profile.png'}}" alt="Avatar">
-				 </div>
-				  <div class="gameBoxDetails">
-				    <h4><b>{{ tournament.name }}</b></h4>
-				    <p>Total Slots :{{ tournament.slots }}</p>
-				    <p>PricePool : {{ tournament.pricePool }}</p>
-				    <p>Paid: {{ tournament.is_paid }}</p>
-				    <a href="{% url 'UserViewTournament' tournament.id %}"><Button>View</Button></a>
-				  </div>
-			  </div>
+<main class="w-full min-h-[85vh] px-4 py-12 relative bg-slate-50 dark:bg-[oklch(0%_0_0)] transition-colors">
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(239,68,68,0.03)_0%,_transparent_50%)]"></div>
+
+	<div class="relative z-10 max-w-7xl mx-auto space-y-12">
+		<a href="{% url 'Home' %}" class="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-zinc-500 hover:text-slate-800 dark:hover:text-white transition-colors group">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+			Back
+		</a>
+		
+		<div class="text-center space-y-3">
+			<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">Active Tournaments</h1>
+			<p class="text-slate-500 dark:text-zinc-500 max-w-xl mx-auto">Compete in official TMG hosted events across your favorite titles.</p>
+		</div>
+
+		{% for game in games_with_tournaments %}
+		{% if game.tournamentGame.all.count > 0 %}
+		<div class="space-y-6">
+			<div class="flex items-center gap-4">
+				<h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white uppercase">{{ game.gameName }}</h2>
+				<div class="h-px flex-1 bg-slate-200 dark:bg-zinc-800"></div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				{% for tournament in game.tournamentGame.all %}		
+				<div class="group flex flex-col bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800/60 rounded-2xl overflow-hidden hover:border-[oklch(60%_0.25_25)] hover:scale-[1.01] hover:-translate-y-0.5 shadow-md dark:shadow-2xl transition-all duration-300">
+					<div class="w-full h-44 bg-slate-100 dark:bg-zinc-800 relative overflow-hidden">
+						<img src="{{ tournament.main_image.url|default:'static/images/Profile.png' }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ tournament.name }}">
+						<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider {% if tournament.is_paid %}bg-slate-900/80 text-zinc-300{% else %}bg-red-600/90 text-white{% endif %} backdrop-blur-md">
+							{% if tournament.is_paid %}Paid{% else %}Free{% endif %}
+						</div>
+					</div>
+					<div class="p-6 flex flex-col flex-1">
+						<h3 class="text-base font-bold text-slate-900 dark:text-white mb-3 line-clamp-1">{{ tournament.name }}</h3>
+						<div class="space-y-2 mb-6 text-sm">
+							<div class="flex justify-between"><span class="text-slate-500 dark:text-zinc-500">Slots</span><span class="text-slate-800 dark:text-white font-medium">{{ tournament.slots }}</span></div>
+							<div class="flex justify-between"><span class="text-slate-500 dark:text-zinc-500">Prize Pool</span><span class="text-green-500 font-medium">₹{{ tournament.pricePool }}</span></div>
+						</div>
+						<div class="mt-auto pt-3 border-t border-slate-100 dark:border-zinc-800/50">
+							<a href="{% url 'UserViewTournament' tournament.id %}" class="flex items-center justify-center w-full py-2.5 rounded-full text-xs font-semibold tracking-wider text-slate-650 dark:text-zinc-300 border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800/50 hover:text-slate-900 dark:hover:text-white transition-all">
+								View Details
+							</a>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
 		{% endif %}
-	{% endfor %}
-</section>
-{% endfor %}
-</div>
+		{% endfor %}
+	</div>
+</main>
 {% endblock %}

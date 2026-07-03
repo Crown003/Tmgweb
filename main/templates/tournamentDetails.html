@@ -1,99 +1,144 @@
 {% extends "base.html" %}
-{% block cssPath %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/tournamentDetails.css' %}"/>
-{% endblock %}
-{% block title %} UserProfile {% endblock %}
+{% block title %} Tournament Details {% endblock %}
 {% block body %}
-<main class="tournamentDetailsContainer">
-<div class="mainImg">
-	<img src="{{tournament.main_image.url|default:'static/images/MainBg.jpg' }}">
-</div>
-<section class="detailsSection">
-	<h2>{{ tournament.name }} | organisedBy : <span>{{ tournament.organisation }}</span></h2>
-	<h3>PRICEPOOL : {{ tournament.pricePool }}</h3>
-	<p>TOTAL SLOTS : {{ tournament.slots }} | Paid : {{ tournament.is_paid }}</p>
-	<p> PRICE (per slot): {{ tournament.priceOfSlot }}
-	<p>REGISTRATIONS STARTS FROM : {{ tournament.registrations_starts_from }}</p>
-	<p>REGISTRATIONS ENDS ON : {{ tournament.registrations_ends_on }}</p>
-</section>
-<section id="SelectTeamPopUp">
-	<h2>SELECT YOUR TEAM</h2>
-	<div id="closeRegTeamBtn" > 
-			&#10060;
-	</div>
-	<form id="regForm" action="" method="post">
-	{% csrf_token %}
-	{% if user.teamCreator.all.count != 0 %}
-		{% for team in user.teamCreator.all %}
-		<div>
-			<input type="text" hidden value="{{ team.id }}" name="teamId">
-			<label for="teamSelected">{{ team.teamname }} | {{ team.game }}</label>
-			<input type="radio" value="{{ team.teamname }}" name="teamSelected"><br>		
+<main class="w-full min-h-[85vh] pb-20 relative bg-slate-50 dark:bg-zinc-950 transition-colors">
+	<!-- Cover Image -->
+	<div class="relative w-full h-[350px] md:h-[450px]">
+		<img src="{{ tournament.main_image.url|default:'static/images/MainBg.jpg' }}" class="w-full h-full object-cover" alt="Tournament Cover">
+		<div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/70 to-transparent"></div>
+		
+		<div class="absolute bottom-0 left-0 w-full px-4 pb-10">
+			<div class="max-w-6xl mx-auto">
+				<a href="{% url 'Tournament' %}" class="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors mb-6 group">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+					Back to Tournaments
+				</a>
+				<div class="flex flex-col md:flex-row items-end justify-between gap-6">
+					<div>
+						<p class="text-xs font-semibold text-zinc-450 uppercase tracking-wider mb-2">Organised By: {{ tournament.organisation }}</p>
+						<h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-0">{{ tournament.name }}</h1>
+					</div>
+					<button id="registerBtn" class="px-8 py-3 rounded-full font-bold text-white bg-red-600 hover:bg-red-700 transition-colors shrink-0">
+						Register Now
+					</button>
+				</div>
+			</div>
 		</div>
-		{% endfor %}
-	{% else %}
-		<div>
-			<label>You have no Team created.</label>
-		</div>
-	{% endif %}
-	<h2> or </h2>
-	<a href="{% url 'UserProfile' %}"><p>CREATE TEAM</p></a>
-	<input id="submitRegData" type="submit" value="submit">
-	</form>
-</section>
-<div class="registerBtn">
-	<button id="registerBtn">Register</button>
-</div>
-<section class="descriptionDetails">
-<div>
-<h2>ABOUT TOURNAMENT</h2>
-<p> {{tournament.description}}</p>
-<h2>ROADMAP OF TOURNAMENT</h2>
-{% if roadmap %}
-	<div class="roadmapTableContainer">
-		<table class="roadmapTable">
-			<thead>
-				<tr>
-					<th>Round name</th>
-					<th>Teams in round</th>
-					<th>Advancing teams</th>
-				</tr>
-			</thead>
-			<y>
-				{% for key, value in roadmap.items %}
-				<tr>
-					<td>{{ value.roundName }}</td>
-					<td>{{ value.teamsInRound }}</td>
-					<td>{{ value.advancingTeams }}</td>
-				</tr>
-				{% endfor %}
-			</tbody>	
-		</table>
 	</div>
-	{% else %}
-	<p>tournament roadmap is not updated yet.</p>
-{% endif %}
-</div>
-</section>
+
+	<div class="max-w-6xl mx-auto px-4 mt-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
+		<!-- Main Content -->
+		<div class="lg:col-span-2 space-y-12">
+			<section class="space-y-4">
+				<h2 class="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-zinc-800 pb-3">About</h2>
+				<p class="text-slate-700 dark:text-zinc-400 leading-relaxed whitespace-pre-wrap">{{ tournament.description }}</p>
+			</section>
+
+			<section class="space-y-4">
+				<h2 class="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-zinc-800 pb-3">Roadmap</h2>
+				{% if roadmap %}
+				<div class="overflow-hidden rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm dark:shadow-none">
+					<table class="w-full text-left text-sm">
+						<thead class="text-xs text-slate-500 dark:text-zinc-500 uppercase tracking-wider border-b border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950/50">
+							<tr>
+								<th class="px-5 py-3">Round</th>
+								<th class="px-5 py-3">Teams</th>
+								<th class="px-5 py-3">Advancing</th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-slate-100 dark:divide-zinc-800/50">
+							{% for key, value in roadmap.items %}
+							<tr class="hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors">
+								<td class="px-5 py-3 font-medium text-slate-900 dark:text-white">{{ value.roundName }}</td>
+								<td class="px-5 py-3 text-slate-650 dark:text-zinc-400">{{ value.teamsInRound }}</td>
+								<td class="px-5 py-3 text-slate-650 dark:text-zinc-400">{{ value.advancingTeams }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				{% else %}
+				<div class="p-8 rounded-xl border border-slate-200 dark:border-zinc-800 border-dashed text-center">
+					<p class="text-slate-500 dark:text-zinc-500">Roadmap not published yet.</p>
+				</div>
+				{% endif %}
+			</section>
+		</div>
+
+		<!-- Sidebar -->
+		<div class="lg:col-span-1">
+			<div class="sticky top-24 bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800/60 rounded-2xl p-6 space-y-5 shadow-lg dark:shadow-none backdrop-blur-sm">
+				<h3 class="text-lg font-bold text-slate-900 dark:text-white">Details</h3>
+				<div class="space-y-3">
+					<div class="flex justify-between py-2.5 border-b border-slate-100 dark:border-zinc-800/50 text-sm"><span class="text-slate-500 dark:text-zinc-500">Prize Pool</span><span class="font-bold text-green-600 dark:text-green-500">₹{{ tournament.pricePool }}</span></div>
+					<div class="flex justify-between py-2.5 border-b border-slate-100 dark:border-zinc-800/50 text-sm"><span class="text-slate-500 dark:text-zinc-500">Slots</span><span class="font-semibold text-slate-800 dark:text-white">{{ tournament.slots }}</span></div>
+					<div class="flex justify-between py-2.5 border-b border-slate-100 dark:border-zinc-800/50 text-sm"><span class="text-slate-500 dark:text-zinc-500">Access</span><span class="font-semibold text-slate-800 dark:text-white">{% if tournament.is_paid %}Paid{% else %}Free{% endif %}</span></div>
+					{% if tournament.is_paid %}
+					<div class="flex justify-between py-2.5 border-b border-slate-100 dark:border-zinc-800/50 text-sm"><span class="text-slate-500 dark:text-zinc-500">Per Slot</span><span class="font-semibold text-slate-800 dark:text-white">₹{{ tournament.priceOfSlot }}</span></div>
+					{% endif %}
+					<div class="pt-2 space-y-2">
+						<div><span class="block text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-0.5">Reg. Opens</span><span class="text-sm text-slate-800 dark:text-white">{{ tournament.registrations_starts_from }}</span></div>
+						<div><span class="block text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-0.5">Reg. Closes</span><span class="text-sm text-slate-800 dark:text-white">{{ tournament.registrations_ends_on }}</span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Registration Modal -->
+	<div id="SelectTeamPopUp" class="fixed inset-0 z-50 items-center justify-center hidden">
+		<div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="modalBackdrop"></div>
+		<div class="relative w-full max-w-md bg-zinc-900 rounded-2xl border border-zinc-800 p-8 mx-4 transform transition-all translate-y-4 opacity-0" id="modalContent">
+			<button id="closeRegTeamBtn" class="absolute top-5 right-5 text-zinc-500 hover:text-white transition-colors">
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+			</button>
+			<h2 class="text-xl font-bold text-white mb-6">Select Your Team</h2>
+			<form id="regForm" action="" method="post" class="space-y-4">
+				{% csrf_token %}
+				<div class="space-y-2">
+					{% if user.teamCreator.all.count != 0 %}
+						{% for team in user.teamCreator.all %}
+						<label class="flex items-center justify-between p-3 rounded-xl border border-zinc-800 hover:border-red-500/30 cursor-pointer transition-colors has-[:checked]:border-red-500 has-[:checked]:bg-red-500/5">
+							<div class="flex items-center gap-3">
+								<input type="radio" value="{{ team.teamname }}" name="teamSelected" class="w-3.5 h-3.5 text-red-600 border-zinc-700 bg-zinc-950 focus:ring-red-500/30">
+								<span class="text-sm font-medium text-white">{{ team.teamname }}</span>
+							</div>
+							<span class="text-[10px] font-bold text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded uppercase">{{ team.game }}</span>
+							<input type="hidden" value="{{ team.id }}" name="teamId">
+						</label>
+						{% endfor %}
+					{% else %}
+						<div class="text-center p-6 border border-zinc-800 border-dashed rounded-xl">
+							<p class="text-zinc-500 mb-3 text-sm">No teams created.</p>
+							<a href="{% url 'UserProfile' %}" class="text-sm font-semibold text-red-500 hover:text-red-400 transition-colors">Create Team &rarr;</a>
+						</div>
+					{% endif %}
+				</div>
+				{% if user.teamCreator.all.count != 0 %}
+				<div class="pt-4 flex justify-between items-center">
+					<a href="{% url 'UserProfile' %}" class="text-sm text-zinc-500 hover:text-white transition-colors">Or create new</a>
+					<button type="submit" class="px-8 py-2.5 rounded-full text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">Register</button>
+				</div>
+				{% endif %}
+			</form>
+		</div>
+	</div>
 </main>
 {% endblock %}
 {% block script %}
 <script>
-function showSelectTeam() {
-	let element = document.getElementById("SelectTeamPopUp");
-	element.style.display = "block";
-	};
-function hideSelectTeam() {
-	document.getElementById("regForm").reset();
-	let element = document.getElementById("SelectTeamPopUp");
-	element.style.display = "none";
-	};
-let registerBTN = document.getElementById("registerBtn")
-registerBTN.addEventListener("click", showSelectTeam);
-let SubBtn = document.getElementById("submitRegData")
-SubBtn.addEventListener("click",hideSelectTeam);
-let closeFormBtn = document.getElementById("closeRegTeamBtn")
-closeFormBtn.addEventListener("click",hideSelectTeam);
+	const modal = document.getElementById("SelectTeamPopUp");
+	const mc = document.getElementById("modalContent");
+	document.getElementById("registerBtn").addEventListener("click", () => {
+		modal.classList.remove("hidden"); modal.classList.add("flex");
+		setTimeout(() => { mc.classList.remove("translate-y-4","opacity-0"); mc.classList.add("translate-y-0","opacity-100"); }, 10);
+	});
+	function close() {
+		document.getElementById("regForm").reset();
+		mc.classList.remove("translate-y-0","opacity-100"); mc.classList.add("translate-y-4","opacity-0");
+		setTimeout(() => { modal.classList.remove("flex"); modal.classList.add("hidden"); }, 200);
+	}
+	document.getElementById("closeRegTeamBtn").addEventListener("click", close);
+	document.getElementById("modalBackdrop").addEventListener("click", close);
 </script>
 {% endblock %}

@@ -1,87 +1,96 @@
 {% extends "base.html" %}
-{% block cssPath %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/viewTournament.css' %}"/>
-<link rel="stylesheet" href="{% static 'css/userProfile.css' %}"/>
-{% endblock %}
-{% block title %} ViewTournament {% endblock %}
+{% block title %} Tournament Admin {% endblock %}
 {% block body %}
-<div class="DataContainer">
-	<div class="management-section">
-		<section>
-			<button id="createGroupBtn" class="createGroupBtn">CREATE GROUP</button>
-			<form id="createGroupForm" action="{% url 'CreateGroups' %}" method="POST">
-				{% csrf_token %}
-				<div id="closeCreateGroupBtn" > 
-					&#10060;
-				</div>
-				<select name="round">
-					<option value="one">round 1</option>
-					<option value="two">round 2</option>
-					<option value="three">round 3</option>
-					<option value="four">round 4</option>
-					<option value="five">round 5</option>
-					<option value="six">round 6</option>
-					<option value="seven">round 7</option>
-					<option value="eight">round 8</option>
-					<option value="nine">round 9</option>
-					<option value="ten">round 10</option>
-				</select>
-				<input type="number" name="teamInAGroup" placeholder="Teams in one group"></input>
-				<input type="hidden" name="tournament_id" value="{{ tourny.id }}"></input>
-				<input type="submit" id="createGroupSubmit" value="SUBMIT"></input>
-			</form>
-			<a href="{% url 'ViewGroupsAdmin' tourny.id %}"><button class="createGroupBtn">VIEW GROUPS</button></a>
-			<div>
-				<a href="{% url 'createRoadmap' tourny.id %}"><button class="button">UPLOAD ROADMAP</button></a>
-				<a href="{% url 'createRoadmap' tourny.id %}"><button class="button">GENERATE ROADMAP</button></a>
+<main class="w-full min-h-[85vh] px-4 py-12 relative">
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.04)_0%,_transparent_50%)]"></div>
+
+	<div class="relative z-10 max-w-6xl mx-auto space-y-10">
+		<a href="{% url 'Management' %}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors group">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+			Back to Management
+		</a>
+
+		<!-- Header -->
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-8 backdrop-blur-sm">
+			<h1 class="text-2xl font-bold text-white mb-2">{{ tourny.name }}</h1>
+			<p class="text-sm text-zinc-500">Slots left: <span class="text-white font-semibold">{{ slots_left }}</span></p>
+			
+			<div class="flex flex-wrap gap-3 mt-6">
+				<button id="createGroupBtn" class="px-5 py-2 rounded-full text-xs font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">Create Group</button>
+				<a href="{% url 'ViewGroupsAdmin' tourny.id %}" class="px-5 py-2 rounded-full text-xs font-semibold text-zinc-300 border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors">View Groups</a>
+				<a href="{% url 'createRoadmap' tourny.id %}" class="px-5 py-2 rounded-full text-xs font-semibold text-zinc-300 border border-zinc-800 hover:border-zinc-700 hover:text-white transition-colors">Upload Roadmap</a>
 			</div>
-			<div>
-				<button class="button">DOWNLOAD ROADMAP EXCEL</button>
-				<button class="button">DOWNLAOD GROUPS EXCEL</button>
+		</div>
+
+		<!-- Create Group Modal -->
+		<div id="groupModal" class="fixed inset-0 z-50 items-center justify-center hidden">
+			<div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="groupBackdrop"></div>
+			<div class="relative w-full max-w-md bg-zinc-900 rounded-2xl border border-zinc-800 p-8 mx-4 transform transition-all translate-y-4 opacity-0" id="groupContent">
+				<button id="closeGroupBtn" class="absolute top-5 right-5 text-zinc-500 hover:text-white transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
+				<h2 class="text-xl font-bold text-white mb-6">Create Group</h2>
+				<form action="{% url 'CreateGroups' %}" method="POST" class="space-y-4">
+					{% csrf_token %}
+					<div>
+						<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Round</label>
+						<select name="round" class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white focus:outline-none focus:border-red-500/50">
+							<option value="one">Round 1</option><option value="two">Round 2</option><option value="three">Round 3</option><option value="four">Round 4</option><option value="five">Round 5</option><option value="six">Round 6</option><option value="seven">Round 7</option><option value="eight">Round 8</option><option value="nine">Round 9</option><option value="ten">Round 10</option>
+						</select>
+					</div>
+					<div>
+						<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Teams per Group</label>
+						<input type="number" name="teamInAGroup" placeholder="4" class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white focus:outline-none focus:border-red-500/50">
+					</div>
+					<input type="hidden" name="tournament_id" value="{{ tourny.id }}">
+					<div class="pt-4 flex justify-between items-center">
+						<button type="button" onclick="closeGrpModal()" class="text-sm text-zinc-500 hover:text-white transition-colors">Cancel</button>
+						<button type="submit" class="px-8 py-2.5 rounded-full text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">Create</button>
+					</div>
+				</form>
 			</div>
-		</section>
+		</div>
+
+		<!-- Registered Teams Table -->
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-8 backdrop-blur-sm">
+			<h3 class="text-xl font-bold text-white mb-6">Registered Teams</h3>
+			<div class="overflow-x-auto">
+				<table class="w-full text-left text-sm">
+					<thead class="text-xs text-zinc-500 uppercase tracking-wider border-b border-zinc-800">
+						<tr>
+							<th class="px-4 py-3">Team Name</th>
+							<th class="px-4 py-3">Registered On</th>
+							<th class="px-4 py-3">Registered By</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-zinc-800/50">
+						{% for details in tournamentDetails %}
+						<tr class="hover:bg-zinc-800/30 transition-colors">
+							<td class="px-4 py-3.5 font-medium text-white">{{ details.team.teamname }}</td>
+							<td class="px-4 py-3.5 text-zinc-400">{{ details.regOn }}</td>
+							<td class="px-4 py-3.5 text-zinc-400">{{ details.regBy }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
-	<h1> Tournament : {{ tourny.name }} | <span> slots left: {{ slots_left }}</h1>
-	<div class="RegTourneyDetails">
-	<table class="teamTable">
-		<thead>
-		<tr>
-			<td> Team Name</td>
-			<td> Registered On</td>
-			<td> Registered By</td>
-		</tr>
-		</thead>
-		<tbody>
-		{% for  details in tournamentDetails %}
-		<tr>
-			<td>{{ details.team.teamname }}</td>
-			<td>{{ details.regOn }}</td>
-			<td>{{ details.regBy }}</td>
-		</tr>
-		{% endfor %}
-		</tbody>
-	</table>
-	</div>
-</div>
+</main>
 {% endblock %}
 {% block script %}
 <script>
-function showCreateGroupTeam() {
-	let element = document.getElementById("createGroupForm");
-	element.style.transition = "height 2s";
-	element.style.display = "block";
-	};
-function hideCreateGroupTeam() {
-	let element = document.getElementById("createGroupForm")
-	element.style.transition = "all 2s";
-	element.style.display = "none";
-	};
-let createGroupBtn = document.getElementById("createGroupBtn")
-createGroupBtn.addEventListener("click", showCreateGroupTeam);
-let createTeamSubBtn = document.getElementById("createGroupSubmit")
-createTeamSubBtn.addEventListener("click",hideCreateGroupTeam);
-let closeGroupFormBtn = document.getElementById("closeCreateGroupBtn")
-closeGroupFormBtn.addEventListener("click",hideCreateGroupTeam);
+	const grpModal = document.getElementById("groupModal");
+	const grpContent = document.getElementById("groupContent");
+	document.getElementById("createGroupBtn").addEventListener("click", () => {
+		grpModal.classList.remove("hidden"); grpModal.classList.add("flex");
+		setTimeout(() => { grpContent.classList.remove("translate-y-4","opacity-0"); grpContent.classList.add("translate-y-0","opacity-100"); }, 10);
+	});
+	function closeGrpModal() {
+		grpContent.classList.remove("translate-y-0","opacity-100"); grpContent.classList.add("translate-y-4","opacity-0");
+		setTimeout(() => { grpModal.classList.remove("flex"); grpModal.classList.add("hidden"); }, 200);
+	}
+	document.getElementById("closeGroupBtn").addEventListener("click", closeGrpModal);
+	document.getElementById("groupBackdrop").addEventListener("click", closeGrpModal);
 </script>
 {% endblock %}

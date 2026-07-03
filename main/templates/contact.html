@@ -1,38 +1,47 @@
 {% extends "base.html" %}
-{% block cssPath %}<link rel="stylesheet" href="static/css/contact.css"/>{% endblock %}
-{% block title %} Contact Us{% endblock %}
+{% block title %} Contact Us {% endblock %}
 {% block body %}
-<div class="main-div">
-	<h2>Contact Us</h2>
-	<form autocomplete="off" action="#" method="post">
-	{% csrf_token %}
-    <div class="row">
-      <div class="col-25">
-        <label for="Uname">Your Name</label>
-      </div>
-      <div class="col-75">
-        <input type="text" id="Uname" name="Username" placeholder="Your name..">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="subject">Subject</label>
-      </div>
-      <div class="col-75">
-        <input type="text" name="Subject" placeholder="Write subject.." ></input>
-      </div>
-    </div>
-     <div class="row">
-      <div class="col-25">
-        <label for="message">Your Message</label>
-      </div>
-      <div class="col-75">
-        <textarea id="message" name="Message" placeholder="Write your message.." style="height:200px"></textarea>
-      </div>
-    </div>
-    <div class="row" style="text-align:center;">
-      <input type="submit" value="Submit">
-    </div>
-  </form>
-</div>
+<main class="w-full min-h-[85vh] flex flex-col items-center justify-center px-4 py-20 relative overflow-hidden">
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(220,38,38,0.05)_0%,_transparent_60%)]"></div>
+
+	<div class="relative z-10 w-full max-w-2xl">
+		<a href="{% url 'Home' %}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-8 group">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+			Back
+		</a>
+
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-8 sm:p-12 backdrop-blur-sm">
+			<div class="mb-10">
+				<h2 class="text-3xl font-bold tracking-tight text-white mb-3">Get in Touch</h2>
+				<p class="text-zinc-500">Have a question or want to work together? Drop us a message.</p>
+			</div>
+
+			<form autocomplete="off" action="#" method="post" class="space-y-6">
+				{% csrf_token %}
+				
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+					<div>
+						<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Your Name</label>
+						<input type="text" name="Username" placeholder="John Doe" required class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30 transition-colors">
+					</div>
+					<div>
+						<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Subject</label>
+						<input type="text" name="Subject" placeholder="Tournament inquiry" required class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30 transition-colors">
+					</div>
+				</div>
+				
+				<div>
+					<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Your Message</label>
+					<textarea name="Message" placeholder="How can we help you?" required class="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30 transition-colors min-h-[140px] resize-y"></textarea>
+				</div>
+				
+				<div class="pt-2 flex justify-end">
+					<button type="submit" class="px-10 py-3 rounded-full font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">
+						Send Message
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</main>
 {% endblock %}

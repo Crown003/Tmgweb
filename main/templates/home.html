@@ -1,53 +1,243 @@
 {% extends "base.html" %}
 {% block cssPath %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/Home.css' %}"/>
-<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}"/>
 {% endblock %}
 {% block title %} HOME {% endblock %}
 {% block body %}
-<main>
-	<section class="heroSection">
-		<video autoplay loop muted plays-inline class="backgroundClip">
-			<source src="static/videos/Bg.mp4" type="video/mp4">
-		</video>
-		<img src="static/images/tmgLogo.png" alt="tmgEsportsLogo">
-		<div>
-			<h1 class="mainHeading"><span>TMG</span> ESPORTS</h1>
+<main class="w-full bg-white dark:bg-[oklch(0%_0_0)] text-slate-800 dark:text-[oklch(80%_0_0)] transition-colors">
+	
+	<!-- Hero Section -->
+	<section class="relative w-full min-h-[95vh] flex flex-col items-center justify-start pt-32 text-center overflow-hidden bg-slate-50 dark:bg-[oklch(0%_0_0)] border-b border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] transition-colors">
+		
+		<!-- Premium Background Glow (Wope style) -->
+		<div class="absolute inset-0 z-0">
+			<!-- Ultra-smooth ambient red glow rising from bottom-center -->
+			<div class="absolute bottom-[-15%] left-1/2 -translate-x-1/2 w-[150%] sm:w-[110%] h-[80%] bg-[radial-gradient(ellipse_at_bottom,_rgba(239,68,68,0.08)_0%,_rgba(220,38,38,0.02)_35%,_transparent_70%)] dark:bg-[radial-gradient(ellipse_at_bottom,_rgba(239,68,68,0.12)_0%,_rgba(220,38,38,0.04)_35%,_transparent_70%)]"></div>
+		</div>
+
+		<!-- 3D Perspective Grid with Red Converging Lines -->
+		<div class="absolute bottom-0 left-0 right-0 h-[50vh] z-0 [perspective:600px] overflow-hidden">
+			<!-- Converging Grid Layer -->
+			<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[220%] h-[280%] bg-[linear-gradient(to_right,rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(239,68,68,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(239,68,68,0.06)_1px,transparent_1px)] bg-[size:48px_48px] origin-top [transform:rotateX(68deg)] [mask-image:linear-gradient(to_bottom,white_10%,transparent_75%)]"></div>
+			<!-- Sharp Horizontal Horizon Glow Line (One Prominent divider anchor) -->
+			<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[oklch(60%_0.25_25)] to-transparent shadow-[0_0_30px_6px_rgba(239,68,68,0.2)] dark:shadow-[0_0_30px_6px_rgba(239,68,68,0.4)] opacity-90"></div>
+		</div>
+
+		<!-- Subtle Vector Dot Matrix Background Pattern -->
+		<div class="absolute inset-0 z-0 bg-[radial-gradient(rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)] opacity-60"></div>
+		
+		<!-- Hero Content -->
+		<div class="relative z-10 flex flex-col items-center px-6 max-w-4xl mx-auto space-y-8">
+			<h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-b from-slate-900 via-slate-800 to-slate-500 dark:bg-gradient-to-b dark:from-white dark:via-zinc-200 dark:to-zinc-450 bg-clip-text text-transparent leading-[1.1]">
+				ELEVATE YOUR <br />
+				COMPETITIVE EDGE
+			</h1>
+			
+			<p class="text-sm sm:text-base md:text-lg text-slate-600 dark:text-[oklch(75%_0_0)] max-w-lg leading-relaxed">
+				TMG ESPORTS is your gateway to the thrilling world of competitive gaming. Assemble the finest talent and excel on the grandest stages.
+			</p>
+			
+			<!-- Standardized Primary Pill CTA -->
+			<div class="pt-2">
+				<a href="{% url 'SignUp' %}" class="inline-flex items-center justify-center px-10 py-3.5 rounded-full text-sm font-semibold tracking-wide text-white bg-[oklch(60%_0.25_25)] hover:bg-[oklch(55%_0.25_25)] transition-all shadow-[0_0_40px_rgba(239,68,68,0.25)]">
+					Start Competing
+				</a>
+			</div>
+		</div>
+
+		<!-- Dashboard Preview - Re-engineered for high-end SaaS contrast & mock data -->
+		<div class="relative z-20 w-full max-w-5xl px-6 mt-20 sm:mt-28 transition-all duration-500 hover:scale-[1.005]">
+			<div class="rounded-t-2xl border border-slate-200 dark:border-[oklch(100%_0_0_/_0.12)] border-b-0 bg-white/90 dark:bg-[oklch(8%_0_0_/_0.80)] backdrop-blur-2xl shadow-2xl dark:shadow-[0_-35px_110px_-10px_rgba(239,68,68,0.15)] overflow-hidden h-[340px]">
+				<!-- Window Header Bar -->
+				<div class="h-11 border-b border-slate-100 dark:border-[oklch(100%_0_0_/_0.06)] bg-slate-50 dark:bg-[oklch(5%_0_0)] px-5 flex items-center justify-between">
+					<div class="flex gap-2">
+						<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-[oklch(20%_0_0)]"></div>
+						<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-[oklch(20%_0_0)]"></div>
+						<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-[oklch(20%_0_0)]"></div>
+					</div>
+					<div class="text-[10px] font-semibold tracking-wider text-slate-500 dark:text-[oklch(60%_0_0)] uppercase flex items-center gap-2">
+						<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+						TMG Live System Monitoring
+					</div>
+				</div>
+
+				<!-- Mock Premium App Interface Layout -->
+				<div class="flex h-[299px] text-left">
+					<!-- Sidebar navigation simulation -->
+					<div class="w-48 border-r border-slate-100 dark:border-[oklch(100%_0_0_/_0.06)] bg-slate-50 dark:bg-[oklch(5%_0_0)] p-4 flex flex-col justify-between hidden sm:flex">
+						<div class="space-y-4">
+							<div class="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-[oklch(50%_0_0)]">Navigation</div>
+							<nav class="space-y-1">
+								<a class="flex items-center gap-2 text-xs font-semibold px-2 py-1.5 rounded-lg bg-slate-200/55 dark:bg-[oklch(100%_0_0_/_0.05)] text-slate-900 dark:text-[oklch(95%_0_0)] cursor-pointer select-none">Overview</a>
+								<a class="flex items-center gap-2 text-xs font-medium px-2 py-1.5 rounded-lg text-slate-500 dark:text-[oklch(65%_0_0)] hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer select-none">Tournaments</a>
+								<a class="flex items-center gap-2 text-xs font-medium px-2 py-1.5 rounded-lg text-slate-500 dark:text-[oklch(65%_0_0)] hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer select-none">Live Leaderboards</a>
+							</nav>
+						</div>
+						<div class="text-[9px] font-medium text-slate-400 dark:text-[oklch(40%_0_0)]">TMG Esports Platform v1.2</div>
+					</div>
+					<!-- Main Simulator Space -->
+					<div class="flex-1 p-6 space-y-6 overflow-hidden bg-white dark:bg-[oklch(8%_0_0)]">
+						<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+							<div class="p-4 rounded-xl bg-slate-50 dark:bg-[oklch(12%_0_0)] border border-slate-100 dark:border-[oklch(100%_0_0_/_0.06)] space-y-1 hover:border-slate-300 dark:hover:border-white/10 transition-colors cursor-pointer select-none">
+								<div class="text-[9px] text-slate-400 dark:text-[oklch(50%_0_0)] font-bold uppercase tracking-widest">Active Prize Pools</div>
+								<div class="text-xl font-bold text-slate-900 dark:text-white">$120,450</div>
+							</div>
+							<div class="p-4 rounded-xl bg-slate-50 dark:bg-[oklch(12%_0_0)] border border-slate-100 dark:border-[oklch(100%_0_0_/_0.06)] space-y-1 hover:border-slate-300 dark:hover:border-white/10 transition-colors cursor-pointer select-none">
+								<div class="text-[9px] text-slate-400 dark:text-[oklch(50%_0_0)] font-bold uppercase tracking-widest">Registered Teams</div>
+								<div class="text-xl font-bold text-slate-900 dark:text-white">1,842 Teams</div>
+							</div>
+							<div class="p-4 rounded-xl bg-slate-50 dark:bg-[oklch(12%_0_0)] border border-slate-100 dark:border-[oklch(100%_0_0_/_0.06)] space-y-1 hover:border-slate-300 dark:hover:border-white/10 transition-colors cursor-pointer select-none">
+								<div class="text-[9px] text-slate-400 dark:text-[oklch(50%_0_0)] font-bold uppercase tracking-widest">System Concurrency</div>
+								<div class="text-xl font-bold text-white">99.8% Online</div>
+							</div>
+						</div>
+						
+						<!-- Weekly Match Graph Representation -->
+						<div class="p-4 rounded-xl bg-slate-50 dark:bg-[oklch(12%_0_0)] border border-slate-100 dark:border-[oklch(100%_0_0_/_0.06)] h-32 flex flex-col justify-between hover:border-slate-300 dark:hover:border-white/10 transition-colors cursor-pointer select-none">
+							<div class="text-[9px] text-slate-400 dark:text-[oklch(50%_0_0)] font-bold uppercase tracking-widest mb-2">Weekly Matches Activity</div>
+							<div class="flex items-end justify-between h-16 pt-2">
+								<div class="w-[8%] bg-slate-200 dark:bg-[oklch(20%_0_0)] h-[25%] rounded-sm"></div>
+								<div class="w-[8%] bg-slate-200 dark:bg-[oklch(20%_0_0)] h-[40%] rounded-sm"></div>
+								<div class="w-[8%] bg-slate-200 dark:bg-[oklch(20%_0_0)] h-[30%] rounded-sm"></div>
+								<div class="w-[8%] bg-slate-200 dark:bg-[oklch(20%_0_0)] h-[55%] rounded-sm"></div>
+								<div class="w-[8%] bg-[oklch(60%_0.25_25)] h-[85%] rounded-sm shadow-[0_0_15px_rgba(239,68,68,0.4)]"></div>
+								<div class="w-[8%] bg-slate-200 dark:bg-[oklch(20%_0_0)] h-[45%] rounded-sm"></div>
+								<div class="w-[8%] bg-slate-200 dark:bg-[oklch(20%_0_0)] h-[60%] rounded-sm"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
-	<section class="aboutSection">
-		<div>
-			<h1 class="mainHeading">ABOUT US</h1>
-			<hr>
+
+	<!-- About Section (Slightly Lifted Charcoal - oklch(14%_0_0)) -->
+	<section class="relative py-28 px-6 overflow-hidden bg-slate-100 dark:bg-[oklch(14%_0_0)] border-b border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] transition-colors">
+		<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(239,68,68,0.02)_0%,_transparent_60%)]"></div>
+
+		<div class="relative z-10 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+			<div class="space-y-8">
+				<h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-[oklch(100%_0_0)] leading-tight">
+					Built for the finest gaming talent.
+				</h2>
+				<div class="space-y-6 text-slate-650 dark:text-[oklch(75%_0_0)] leading-relaxed text-sm md:text-base">
+					<p>TMG eSports is a renowned gaming team fueled by an unyielding passion for competitive gaming. Dive deeper into who we are, discover details about upcoming competitions, and get to know our exceptional players.</p>
+					<p>Our mission is clear - to assemble the finest gaming talent and provide them with the platform they need to excel on the grandest stages of the gaming world.</p>
+				</div>
+				<a href="{% url 'Contact' %}" class="inline-flex items-center gap-2 text-sm font-semibold text-[oklch(60%_0.25_25)] hover:text-[oklch(55%_0.25_25)] transition-colors">
+					Learn more about us
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+				</a>
+			</div>
+			<!-- Elevated Container Card style -->
+			<div class="relative w-full h-[450px] bg-white dark:bg-[oklch(20%_0_0)] border border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] rounded-2xl p-8 sm:p-10 shadow-2xl overflow-hidden group flex flex-col justify-between">
+				<div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.01)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:24px_24px] rounded-2xl"></div>
+				
+				<!-- Card Header Info -->
+				<div class="relative z-10 space-y-2">
+					<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-[oklch(60%_0.25_25)] bg-[oklch(60%_0.25_25_/_0.08)] border border-[oklch(60%_0.25_25_/_0.15)]">
+						Platform Statistics
+					</div>
+					<h3 class="text-xl font-bold text-slate-900 dark:text-white">TMG Legacy & Milestones</h3>
+				</div>
+
+				<!-- Stats Display Grid -->
+				<div class="relative z-10 grid grid-cols-2 gap-6 my-auto">
+					<div class="space-y-1">
+						<span class="text-3xl sm:text-4xl font-extrabold text-[oklch(60%_0.25_25)] tracking-tight">10K+</span>
+						<span class="block text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Active Gamers</span>
+						<p class="text-[10px] text-slate-400 dark:text-zinc-500">Competing daily in tournaments</p>
+					</div>
+					<div class="space-y-1">
+						<span class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">$250K+</span>
+						<span class="block text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Prizes Awarded</span>
+						<p class="text-[10px] text-slate-400 dark:text-zinc-500">Distributed securely across events</p>
+					</div>
+					<div class="space-y-1">
+						<span class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">500+</span>
+						<span class="block text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Tournaments</span>
+						<p class="text-[10px] text-slate-400 dark:text-zinc-500">Successfully hosted on platform</p>
+					</div>
+					<div class="space-y-1">
+						<span class="text-3xl sm:text-4xl font-extrabold text-[oklch(60%_0.25_25)] tracking-tight">99.9%</span>
+						<span class="block text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Match Fairplay</span>
+						<p class="text-[10px] text-slate-400 dark:text-zinc-500">Strict anti-cheat protocols</p>
+					</div>
+				</div>
+
+				<!-- Card Footer Indicator -->
+				<div class="relative z-10 flex items-center justify-between border-t border-slate-100 dark:border-zinc-800/50 pt-4 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
+					<span>Verification Engine Active</span>
+					<div class="flex items-center gap-1.5">
+						<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+						<span>Real-Time Sync</span>
+					</div>
+				</div>
+
+				<img src="{% static 'images/tmgLogo.png' %}" class="absolute bottom-8 right-8 w-40 opacity-[0.03] grayscale invert group-hover:scale-105 transition-transform duration-500 pointer-events-none" alt="TMG">
+			</div>
 		</div>
-		<p>Welcome to TMG eSports, your gateway to the thrilling world of competitive gaming. TMG eSports is a renowned gaming team fueled by an unyielding passion for the art of competitive gaming. As you explore our website, you'll dive deeper into who we are, discover details about upcoming competitions, get to know our exceptional players, and much more.
-		At TMG eSports, our mission is clear - to assemble the finest gaming talent and provide them with the platform they need to excel on the grandest stages of the gaming world. We take pride in being a collective of passionate and highly skilled gamers, each driven by an unwavering desire to win and dedicated to delivering an exhilarating experience to our devoted fan base.</p>
-		<Button id="primaryButton">EXPLORE</Button>
 	</section>
-	<section class="ourTeamSection">
-		<div>
-			<h1 class="mainHeading">OUR TEAM</h1>
-			<hr>
-		</div>
-		<div id="sliderCont">
-		{% include 'Slider.html' %}
+
+	<!-- Services Section (Pure Midnight Black - oklch(0%_0_0)) -->
+	<section class="relative py-28 px-6 overflow-hidden bg-white dark:bg-[oklch(0%_0_0)] border-b border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] transition-colors">
+		<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_rgba(239,68,68,0.02)_0%,_transparent_60%)]"></div>
+
+		<div class="relative z-10 max-w-7xl mx-auto space-y-16">
+			<div class="max-w-2xl space-y-4">
+				<h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-[oklch(100%_0_0)]">Comprehensive Services</h2>
+				<p class="text-slate-600 dark:text-[oklch(75%_0_0)]">Everything your team needs to track progress, compete, and climb the global ranks.</p>
+			</div>
+			
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				<!-- Card 1 (Elevated) -->
+				<div class="p-8 rounded-2xl bg-slate-50 dark:bg-[oklch(14%_0_0)] border border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] hover:border-[oklch(60%_0.25_25)] hover:-translate-y-1 transition-all duration-300 shadow-2xl group">
+					<div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-[oklch(20%_0_0)] border border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] flex items-center justify-center mb-6">
+						<svg class="w-5 h-5 text-slate-600 dark:text-[oklch(75%_0_0)] group-hover:text-[oklch(60%_0.25_25)] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+					</div>
+					<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Tournaments</h3>
+					<p class="text-sm text-slate-500 dark:text-[oklch(65%_0_0)] leading-relaxed">Join official TMG hosted tournaments and compete for grand prize pools against the best.</p>
+				</div>
+				<!-- Card 2 (Elevated) -->
+				<div class="p-8 rounded-2xl bg-slate-50 dark:bg-[oklch(14%_0_0)] border border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] hover:border-[oklch(60%_0.25_25)] hover:-translate-y-1 transition-all duration-300 shadow-2xl group">
+					<div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-[oklch(20%_0_0)] border border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] flex items-center justify-center mb-6">
+						<svg class="w-5 h-5 text-slate-600 dark:text-[oklch(75%_0_0)] group-hover:text-[oklch(60%_0.25_25)] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+					</div>
+					<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Team Scrims</h3>
+					<p class="text-sm text-slate-500 dark:text-[oklch(65%_0_0)] leading-relaxed">Practice with the best. Register your team and battle in elite scrims to refine your strategies.</p>
+				</div>
+				<!-- Card 3 (Elevated) -->
+				<div class="p-8 rounded-2xl bg-slate-50 dark:bg-[oklch(14%_0_0)] border border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] hover:border-[oklch(60%_0.25_25)] hover:-translate-y-1 transition-all duration-300 shadow-2xl group">
+					<div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-[oklch(20%_0_0)] border border-slate-200 dark:border-[oklch(100%_0_0_/_0.08)] flex items-center justify-center mb-6">
+						<svg class="w-5 h-5 text-slate-600 dark:text-[oklch(75%_0_0)] group-hover:text-[oklch(60%_0.25_25)] transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+					</div>
+					<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Real-Time Stats</h3>
+					<p class="text-sm text-slate-500 dark:text-[oklch(65%_0_0)] leading-relaxed">Track your progress and climb the ranks with our global statistics and real-time analytics.</p>
+				</div>
+			</div>
 		</div>
 	</section>
-	<section class="servicesSection">
-		<div>
-			<h1 class="mainHeading">SERVICES</h1>
-			<hr>
+
+	<!-- Our Team Section (Slightly Lifted Charcoal - oklch(14%_0_0)) -->
+	<section class="relative py-28 px-6 overflow-hidden bg-slate-100 dark:bg-[oklch(14%_0_0)] transition-colors">
+		<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(239,68,68,0.02)_0%,_transparent_50%)]"></div>
+
+		<div class="relative z-10 max-w-7xl mx-auto space-y-16">
+			<div class="max-w-2xl space-y-4">
+				<h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-[oklch(100%_0_0)]">Our Team</h2>
+				<p class="text-slate-600 dark:text-[oklch(75%_0_0)]">The exceptional players driving TMG ESPORTS.</p>
+			</div>
+			
+			<div class="w-full">
+				{% include 'Slider.html' %}
+			</div>
 		</div>
 	</section>
+
 </main>
 {% endblock %}
 {% block script %}
-
-    <!-- Swiper JS -->
-    <script src="static/js/swiper-bundle.min.js"></script>
-
-    <!-- JavaScript -->
-    <script src="static/js/script.js"></script>
+    <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 {% endblock %}

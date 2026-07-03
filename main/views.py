@@ -71,6 +71,8 @@ def manageSite(request):
 
 
 def UserSignIn(request):
+    if request.user.is_authenticated:
+        return redirect("Home")
     print(request.user.is_authenticated)
     form = UserLogin()
     if request.method == "POST":
@@ -87,6 +89,8 @@ def UserSignIn(request):
 
 
 def UserSignUp(request):
+    if request.user.is_authenticated:
+        return redirect("Home")
     form = UserRegistration()
     if request.method == "POST":
         data = UserRegistration(request.POST)
@@ -476,21 +480,20 @@ def createGroup(request):
 
 
 def TournamentPage(request):
-    # this view shows the Tournaments on portal.
+    # Re-engineered for high-scale performance (prefetch related tournaments for a single optimized SQL query)
     try:
-        games = Game.objects.all()
-        tournaments = Tournament.objects.all()
-    except Game.DoesNotExist:
+        games = Game.objects.prefetch_related('tournamentGame').all()
+    except Exception as e:
         messages.warning(
             request,
-            "Something wents wrong. Unable to get tournaments at this moment please try again later after some time. ",
+            "Something went wrong. Unable to get tournaments at this moment. Please try again later.",
         )
+        games = []
     return render(
         request,
         "Tournaments.html",
         {
-            "games": games if games else [],
-            "tournaments": tournaments if tournaments else [],
+            "games_with_tournaments": games,
         },
     )
 

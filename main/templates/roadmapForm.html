@@ -1,32 +1,52 @@
 {% extends "base.html" %}
-{% block cssPath %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/roadmapForm.css' %}"/>{% endblock %}
-{% block title %} ViewTournament {% endblock %}
+{% block title %} Roadmap Form {% endblock %}
 {% block body %}
-	<form style="background:#fff;padding-top:100px;" method="post" action="">
-  {% csrf_token %}
-  {% for i in list %}
-  <div class="form-container">
-      <legend>Round {{ i }}</legend>
-      <div>
-        <label for="round_name_{{ i }}">Name of Round {{ i }}:</label>
-        <input type="text" id="round_name_{{ i }}" name="round_name_{{ i }}" placeholder="Enter Round Name">
-      </div>
-      <div>
-        <label for="number_of_teams_{{ i }}">Number of Teams:</label>
-        <input type="number" id="number_of_teams_{{ i }}" name="number_of_teams_{{ i }}" placeholder="Enter Number of Teams In This Round">
-      </div>
-      <div>
-        <label for="teams_qualify_{{ i }}">Number of Teams Qualify for Next Round:</label>
-        <input type="number" id="teams_qualify_{{ i }}" name="teams_qualify_{{ i }}" placeholder="Enter Total Number OF Teams Qualify For Next Roound">
-      </div>
-      <div>
-        <label style="display:inline-block" for="last_round_{{i}}">is this is last Round ?</label>
-        <input class="confirmCheckbox" type="checkbox" name="last_round_{{ i }}" id="last_round{{ i }}">
-      </div>
-    </div>
-  {% endfor %}
-  <input type="submit">
-</form>
+<main class="w-full min-h-[85vh] px-4 py-12 relative">
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(220,38,38,0.04)_0%,_transparent_50%)]"></div>
+
+	<div class="relative z-10 max-w-3xl mx-auto">
+		<a href="javascript:history.back()" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-8 group">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+			Back
+		</a>
+
+		<div class="bg-zinc-900/60 border border-zinc-800/60 rounded-2xl p-8 sm:p-10 backdrop-blur-sm">
+			<h2 class="text-2xl font-bold text-white mb-8">Configure Roadmap</h2>
+			
+			<form method="post" action="" class="space-y-8">
+				{% csrf_token %}
+				{% for i in list %}
+				<div class="p-6 rounded-xl bg-zinc-950/50 border border-zinc-800/50 space-y-4">
+					<h3 class="text-base font-bold text-white">Round {{ i }}</h3>
+					
+					<div>
+						<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Round Name</label>
+						<input type="text" name="round_name_{{ i }}" placeholder="e.g. Quarter Finals" class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30">
+					</div>
+					
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<div>
+							<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Teams in Round</label>
+							<input type="number" name="number_of_teams_{{ i }}" placeholder="16" class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30">
+						</div>
+						<div>
+							<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Teams Qualify</label>
+							<input type="number" name="teams_qualify_{{ i }}" placeholder="8" class="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/30">
+						</div>
+					</div>
+					
+					<label class="flex items-center gap-3 text-sm text-zinc-400 cursor-pointer">
+						<input type="checkbox" name="last_round_{{ i }}" class="w-4 h-4 rounded border-zinc-700 bg-zinc-950 text-red-600 focus:ring-red-500/30">
+						This is the last round
+					</label>
+				</div>
+				{% endfor %}
+
+				<div class="flex justify-end">
+					<button type="submit" class="px-10 py-3 rounded-full font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">Save Roadmap</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</main>
 {% endblock %}

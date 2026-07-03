@@ -1,17 +1,54 @@
 {% extends "base.html" %}
-{% block cssPath %}<link rel="stylesheet" href="static/css/EditUserProfile.css"/>{% endblock %}
-{% block title %} UserProfile {% endblock %}
+{% block title %} Edit Profile {% endblock %}
 {% block body %}
-<div class="EditUserContainer">
-	<div class="FormContainer">	
-		<h1>EDIT YOUR PROFILE</h1>
-		<form action="{% url 'EditUserProfile' %}" method="POST" enctype="multipart/form-data">
-			{% csrf_token %}	
-			{{ user_form.as_p }}
-			{{ profile_form.as_p }}
-			<div style="display:flex;justify-content:center;">
-					<input id="EditUserSubmit" type="submit" value="Submit"/>
+<main class="w-full min-h-[85vh] flex items-center justify-center px-4 py-20 relative overflow-hidden bg-slate-50 dark:bg-[oklch(0%_0_0)] transition-colors">
+	<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(239,68,68,0.04)_0%,_transparent_60%)]"></div>
+
+	<div class="relative z-10 w-full max-w-2xl">
+		<a href="{% url 'UserProfile' %}" class="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-zinc-500 hover:text-slate-900 dark:hover:text-white transition-colors mb-8 group">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+			Back to Profile
+		</a>
+
+		<div class="bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800/60 rounded-2xl p-8 sm:p-10 shadow-xl dark:shadow-2xl backdrop-blur-sm">
+			<div class="mb-8">
+				<h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">Edit Profile</h2>
+				<p class="text-sm text-slate-500 dark:text-zinc-500">Update your account details and profile image.</p>
 			</div>
-		</form>
-	</div>	
+
+			<form action="{% url 'EditUserProfile' %}" method="POST" enctype="multipart/form-data" class="space-y-5 [&_input]:w-full [&_input]:px-4 [&_input]:py-2.5 [&_input]:rounded-xl [&_input]:bg-slate-50 dark:[&_input]:bg-zinc-950 [&_input]:border [&_input]:border-slate-200 dark:[&_input]:border-zinc-800 [&_input]:text-slate-900 dark:[&_input]:text-white [&_input]:focus:outline-none [&_input]:focus:border-red-500/50 [&_input]:focus:ring-1 [&_input]:focus:ring-red-500/30 [&_input]:transition-colors [&_input[type='checkbox']]:w-4 [&_input[type='checkbox']]:h-4 [&_input[type='checkbox']]:px-0 [&_input[type='checkbox']]:py-0 [&_input[type='checkbox']]:rounded [&_input[type='checkbox']]:accent-red-650 [&_label]:block [&_label]:text-xs [&_label]:font-semibold [&_label]:text-slate-650 dark:[&_label]:text-zinc-400 [&_label]:uppercase [&_label]:tracking-wider [&_label]:mb-1.5 [&_select]:w-full [&_select]:px-4 [&_select]:py-2.5 [&_select]:rounded-xl [&_select]:bg-slate-50 dark:[&_select]:bg-zinc-950 [&_select]:border [&_select]:border-slate-200 dark:[&_select]:border-zinc-800 [&_select]:text-slate-900 dark:[&_select]:text-white [&_select]:focus:outline-none [&_select]:focus:border-red-500/50 [&_ul]:space-y-2 [&_ul]:mt-2 [&_li]:text-sm [&_li]:text-slate-500 dark:[&_li]:text-zinc-400 [&_li_label]:flex [&_li_label]:items-center [&_li_label]:gap-2 [&_li_label]:text-sm [&_li_label]:text-slate-650 dark:[&_li_label]:text-zinc-400 [&_li_label]:normal-case [&_li_label]:tracking-normal [&_li_label]:font-normal [&_li_label]:mb-0 [&_.helptext]:block [&_.helptext]:text-[11px] [&_.helptext]:text-slate-500 dark:[&_.helptext]:text-zinc-500 [&_.helptext]:mt-1.5 [&_.helptext]:normal-case [&_.helptext]:tracking-normal [&_.helptext]:font-normal">
+				{% csrf_token %}	
+				
+				<div class="space-y-4">
+					{{ user_form.as_p }}
+				</div>
+				
+				<div class="border-t border-slate-200 dark:border-zinc-800 pt-6 space-y-4">
+					<h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Profile Settings</h3>
+					
+					{% if request.user.userprofile.user_profile_image.url != "" %}
+					<div class="flex items-center gap-4 p-4 rounded-xl bg-slate-50 dark:bg-zinc-950 border border-slate-100 dark:border-zinc-800">
+						<div class="w-16 h-16 rounded-full overflow-hidden border border-slate-200 dark:border-zinc-800 shrink-0">
+							<img src="{{ request.user.userprofile.user_profile_image.url }}" class="w-full h-full object-cover">
+						</div>
+						<div>
+							<span class="block text-xs font-semibold text-slate-700 dark:text-zinc-400 uppercase tracking-wider">Current Photo</span>
+							<span class="text-xs text-slate-500 dark:text-zinc-500">This image is currently active on your public profile</span>
+						</div>
+					</div>
+					{% endif %}
+
+					{{ profile_form.as_p }}
+				</div>
+
+				<div class="pt-4 flex justify-between items-center border-t border-slate-200 dark:border-zinc-800 mt-6">
+					<a href="{% url 'UserProfile' %}" class="text-sm text-slate-550 dark:text-zinc-500 hover:text-slate-800 dark:hover:text-white transition-colors">Cancel</a>
+					<button type="submit" class="px-8 py-2.5 rounded-full text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors">
+						Save Changes
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</main>
 {% endblock %}
